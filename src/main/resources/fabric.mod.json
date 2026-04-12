@@ -16,7 +16,12 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"de.macbrayne.Meowdemic"
+			"de.macbrayne.meowdemic.Meowdemic"
+		]
+	},
+	"custom": {
+		"cardinal-components": [
+			"meowdemic:participant"
 		]
 	},
 	"mixins": [
