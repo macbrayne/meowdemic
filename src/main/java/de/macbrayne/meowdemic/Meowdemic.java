@@ -1,8 +1,11 @@
 package de.macbrayne.meowdemic;
 
+import de.macbrayne.meowdemic.commands.CommandRoot;
 import de.macbrayne.meowdemic.effects.InfectionEffect;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -24,7 +27,8 @@ public class Meowdemic implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-
+		SharedConstants.IS_RUNNING_IN_IDE = true;
+		CommandRegistrationCallback.EVENT.register(CommandRoot::register);
 	}
 
 	public static Identifier id(String path) {

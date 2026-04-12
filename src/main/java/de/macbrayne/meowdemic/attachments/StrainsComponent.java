@@ -10,10 +10,10 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import java.util.Map;
 
 public class StrainsComponent {
+    private static final Codec<Map<String, Strain>> MAP_CODEC = Codec.unboundedMap(Codec.STRING, Strain.CODEC);
     public static final AttachmentType<Map<String, Strain>> TYPE = AttachmentRegistry.create(Meowdemic.id("strains"), builder -> builder
             .initializer(Map::of)
             .persistent(StrainsComponent.MAP_CODEC));
-    private static final Codec<Map<String, Strain>> MAP_CODEC = Codec.unboundedMap(Codec.STRING, Strain.CODEC);
 
     public static StrainsData get(AttachmentTarget target) {
         return new StrainsData(target);
@@ -26,6 +26,9 @@ public class StrainsComponent {
 
         public void addStrain(String id, Strain strain) {
             target.modifyAttached(TYPE, map -> {
+                if(map == null) {
+                    map = new java.util.HashMap<>();
+                }
                 map.put(id, strain);
                 return map;
             });
@@ -33,6 +36,9 @@ public class StrainsComponent {
 
         public void removeStrain(String id) {
             target.modifyAttached(TYPE, map -> {
+                if(map == null) {
+                    return Map.of();
+                }
                 map.remove(id);
                 return map;
             });
