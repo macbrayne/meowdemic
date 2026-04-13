@@ -1,6 +1,7 @@
 package de.macbrayne.meowdemic;
 
 import de.macbrayne.meowdemic.commands.CommandRoot;
+import de.macbrayne.meowdemic.effects.ImmunityEffect;
 import de.macbrayne.meowdemic.effects.InfectionEffect;
 import net.fabricmc.api.ModInitializer;
 
@@ -16,7 +17,8 @@ import org.slf4j.LoggerFactory;
 
 public class Meowdemic implements ModInitializer {
 	public static final String MOD_ID = "meowdemic";
-	public static final Holder<MobEffect> EFFECT = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id("infected"), new InfectionEffect());
+	public static final Holder<MobEffect> INFECTED = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id("infected"), new InfectionEffect());
+	public static final Holder<MobEffect> IMMUNE = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, id("immune"), new ImmunityEffect());
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 

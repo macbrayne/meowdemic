@@ -24,8 +24,9 @@ public class TransmissionComponent {
 
         public void setIfNone(TransmissionEvent transmissionEvent) {
             if(target.getAttached(TYPE) != null) return;
+            if(target.getAttached(ImmunityComponent.TYPE) != null) return;
 
-            MobEffectInstance effect = new MobEffectInstance(Meowdemic.EFFECT,
+            MobEffectInstance effect = new MobEffectInstance(Meowdemic.INFECTED,
                     (int)(60 * 20 * transmissionEvent.strain().recoveryFactor()),
                     0, false, false, false);
             target.addEffect(effect);
