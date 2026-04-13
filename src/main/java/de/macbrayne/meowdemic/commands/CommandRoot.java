@@ -13,6 +13,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CommandRoot {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment) {
@@ -20,7 +21,7 @@ public class CommandRoot {
                 .then(Commands.argument("player", EntityArgument.player()).executes(context -> {
                     Player player = EntityArgument.getPlayer(context, "player");
                     Strain strain = new Strain("Test Strain", List.of(Symptoms.MEOWING), 1, 1, 1);
-                    TransmissionComponent.get(player).set(new TransmissionEvent(null, player.getUUID(), strain));
+                    TransmissionComponent.get(player).setIfNone(new TransmissionEvent(Optional.empty(), player.getUUID(), strain.mutate()));
                     return Command.SINGLE_SUCCESS; // Return a success code
                 })));
     }

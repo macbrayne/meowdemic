@@ -13,4 +13,12 @@ public record Strain(String name, List<Symptoms> symptoms, double transmissionFa
             Codec.DOUBLE.fieldOf("recoveryFactor").forGetter(Strain::recoveryFactor),
             Codec.DOUBLE.fieldOf("immunityFactor").forGetter(Strain::immunityFactor)
     ).apply(instance, Strain::new));
+
+    public Strain mutate() {
+        return new Strain(generateName(name()), symptoms(), transmissionFactor(), recoveryFactor(), immunityFactor());
+    }
+
+    String generateName(String previousName) {
+        return previousName;
+    }
 }
