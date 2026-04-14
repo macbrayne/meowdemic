@@ -51,9 +51,6 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
     public void spread(CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
         Optional<TransmissionEvent> event = TransmissionComponent.get(entity).getOptional();
-        if (entity instanceof Player) {
-            System.out.println("Is present: " + event.isPresent() + " is on client: + " + entity.level().isClientSide());
-        }
         if (event.isEmpty() || !this.isAlive()) return;
 
         Strain strain = event.get().strain();
