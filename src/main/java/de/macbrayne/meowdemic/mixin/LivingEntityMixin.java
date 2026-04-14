@@ -12,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.feline.CatSoundVariants;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -38,7 +39,8 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
     @Shadow
     public abstract boolean isAlive();
 
-    @Unique private int spreadTime;
+    @Unique
+    private int spreadTime;
 
     public LivingEntityMixin(EntityType<?> type, Level level) {
         super(type, level);
@@ -50,7 +52,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
         if (hitResult.getType() != HitResult.Type.MISS) {
             to = hitResult.getLocation();
         }
-            HitResult entityHitResult = ProjectileUtil.getEntityHitResult(entity.level(), entity, from, to, entity.getBoundingBox().expandTowards(entity.getDeltaMovement()).inflate(1), e -> !e.isSpectator(), 1f);
+        HitResult entityHitResult = ProjectileUtil.getEntityHitResult(entity.level(), entity, from, to, entity.getBoundingBox().expandTowards(entity.getDeltaMovement()).inflate(1), e -> !e.isSpectator(), 1f);
         if (entityHitResult != null) {
             hitResult = entityHitResult;
         }
@@ -63,40 +65,47 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void spread(CallbackInfo ci) {
-        Entity entity = (Entity)(Object)this;
-        Optional<TransmissionEvent> event = TransmissionComponent.get((LivingEntity) (Object) this).getOptional();
-        if(event.isEmpty() || !this.isAlive()) return;
+        LivingEntity entity = (LivingEntity) (Object) this;
+        Optional<TransmissionEvent> event = TransmissionComponent.get(entity).getOptional();
+        if (entity instanceof Player) {
+            System.out.println("Is present: " + event.isPresent() + " is on client: + " + entity.level().isClientSide());
+        }
+        if (event.isEmpty() || !this.isAlive()) return;
 
         Strain strain = event.get().strain();
         List<Symptoms> symptoms = strain.symptoms();
         float modifier = Mth.sqrt(symptoms.size());
 
         this.spreadTime++;
-        if(symptoms.contains(Symptoms.MEOWING) && this.random.nextInt((int) (500 * modifier)) <= this.spreadTime) {
+        if (symptoms.contains(Symptoms.MEOWING) && this.random.nextInt((int) (500 * modifier)) <= this.spreadTime) {
             resetSpreadTime();
             // Spread to nearby entities
             System.out.println("Attempting to spread from " + entity.getName().getString());
-            HitResult hitResult = getHitResult(entity.getEyePosition(), entity.getEyePosition().add(entity.getViewVector(1.0F).scale(10 * strain.transmissionFactor())), entity, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
-            if(hitResult.getType() == HitResult.Type.ENTITY) {
-                EntityHitResult entityHitResult = (EntityHitResult) hitResult;
-                if(entityHitResult.getEntity() instanceof LivingEntity target) {
-                    TransmissionComponent.get(target).setIfNone(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), event.get().strain().mutate()));
+            if (!entity.level().isClientSide()) {
+                HitResult hitResult = getHitResult(entity.getEyePosition(), entity.getEyePosition().add(entity.getViewVector(1.0F).scale(10 * strain.transmissionFactor())), entity, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
+                if (hitResult.getType() == HitResult.Type.ENTITY) {
+                    EntityHitResult entityHitResult = (EntityHitResult) hitResult;
+                    if (entityHitResult.getEntity() instanceof LivingEntity target) {
+                        TransmissionComponent.get(target).setIfNone(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), event.get().strain().mutate()));
+                    }
                 }
             }
-            this.makeSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().ambientSound().value());
+            this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().ambientSound().value());
         }
 
-        if(symptoms.contains(Symptoms.PURRING) && this.random.nextInt((int) (500 * modifier)) <= this.spreadTime) {
+        if (symptoms.contains(Symptoms.PURRING) && this.random.nextInt((int) (500 * modifier)) <= this.spreadTime) {
             resetSpreadTime();
 
             System.out.println("Attempting to spread radius from " + entity.getName().getString());
-            List<Entity> nearbyEntities = entity.level().getEntities(entity, entity.getBoundingBox().inflate(10 * strain.transmissionFactor()), e -> e instanceof LivingEntity);
-            for(Entity nearbyEntity : nearbyEntities) {
-                if(nearbyEntity instanceof LivingEntity target) {
-                    TransmissionComponent.get(target).setIfNone(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), event.get().strain().mutate()));
+            if (!entity.level().isClientSide()) {
+                List<Entity> nearbyEntities = entity.level().getEntities(entity, entity.getBoundingBox().inflate(10 * strain.transmissionFactor()), e -> e instanceof LivingEntity);
+                for (Entity nearbyEntity : nearbyEntities) {
+                    if (nearbyEntity instanceof LivingEntity target) {
+                        TransmissionComponent.get(target).setIfNone(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), event.get().strain().mutate()));
+                    }
                 }
             }
-            this.makeSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().purrSound().value());
+            this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().purrSound().value());
         }
     }
 }

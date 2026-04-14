@@ -3,6 +3,7 @@ package de.macbrayne.meowdemic.attachments.entity;
 import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,7 +12,9 @@ import java.util.Optional;
 
 public class TransmissionComponent {
     public static final AttachmentType<TransmissionEvent> TYPE = AttachmentRegistry.create(Meowdemic.id("transmission"), builder -> builder
-            .persistent(TransmissionEvent.CODEC));
+            .persistent(TransmissionEvent.CODEC)
+            .syncWith(TransmissionEvent.STREAM_CODEC, AttachmentSyncPredicate.all())
+            .copyOnDeath());
 
     public static TransmissionData get(LivingEntity target) {
         return new TransmissionData(target);

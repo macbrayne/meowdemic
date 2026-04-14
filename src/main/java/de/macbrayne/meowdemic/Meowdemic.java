@@ -24,7 +24,9 @@ public class Meowdemic implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		SharedConstants.IS_RUNNING_IN_IDE = true;
 		CommandRegistrationCallback.EVENT.register(CommandRoot::register);
+
 	}
 
 	public static Identifier id(String path) {
