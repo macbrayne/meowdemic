@@ -4,6 +4,8 @@ import de.macbrayne.meowdemic.attachments.Attachments;
 import de.macbrayne.meowdemic.commands.CommandRoot;
 import de.macbrayne.meowdemic.effects.ImmunityEffect;
 import de.macbrayne.meowdemic.effects.InfectionEffect;
+import de.macbrayne.meowdemic.events.MessageEvents;
+import eu.pb4.styledchat.StyledChatEvents;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -27,6 +29,7 @@ public class Meowdemic implements ModInitializer {
 	public void onInitialize() {
 		CommandRegistrationCallback.EVENT.register(CommandRoot::register);
 		Attachments.init();
+		StyledChatEvents.MESSAGE_CONTENT.register(MessageEvents::register);
 	}
 
 	public static Identifier id(String path) {
