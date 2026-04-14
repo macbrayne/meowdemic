@@ -1,5 +1,6 @@
 package de.macbrayne.meowdemic;
 
+import de.macbrayne.meowdemic.attachments.Attachments;
 import de.macbrayne.meowdemic.commands.CommandRoot;
 import de.macbrayne.meowdemic.effects.ImmunityEffect;
 import de.macbrayne.meowdemic.effects.InfectionEffect;
@@ -24,9 +25,8 @@ public class Meowdemic implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		SharedConstants.IS_RUNNING_IN_IDE = true;
 		CommandRegistrationCallback.EVENT.register(CommandRoot::register);
-
+		Attachments.init();
 	}
 
 	public static Identifier id(String path) {

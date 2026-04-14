@@ -4,7 +4,6 @@ import de.macbrayne.meowdemic.attachments.entity.TransmissionComponent;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Attackable;
@@ -20,7 +19,6 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.waypoints.WaypointTransmitter;
-import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -33,9 +31,6 @@ import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements Attackable, WaypointTransmitter {
-    @Shadow
-    public abstract void makeSound(@Nullable SoundEvent sound);
-
     @Shadow
     public abstract boolean isAlive();
 
@@ -59,6 +54,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
         return hitResult;
     }
 
+    @Unique
     private void resetSpreadTime() {
         spreadTime = -80;
     }

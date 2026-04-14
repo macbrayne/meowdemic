@@ -1,7 +1,7 @@
 package de.macbrayne.meowdemic.effects;
 
+import de.macbrayne.meowdemic.attachments.Attachments;
 import de.macbrayne.meowdemic.attachments.entity.ImmunityComponent;
-import de.macbrayne.meowdemic.attachments.entity.TransmissionComponent;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
@@ -21,9 +21,9 @@ public class InfectionEffect extends MobEffect {
 
     @Override
     public void onEffectRemoved(MobEffectInstance effectInstance, LivingEntity entity) {
-        TransmissionEvent event = entity.getAttached(TransmissionComponent.TYPE);
+        TransmissionEvent event = entity.getAttached(Attachments.TYPE);
         if(event != null) {
-            entity.removeAttached(TransmissionComponent.TYPE);
+            entity.removeAttached(Attachments.TYPE);
             ImmunityComponent.get(entity).setIfNone(event.strain());
         }
 
