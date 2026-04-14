@@ -21,9 +21,9 @@ public class InfectionEffect extends MobEffect {
 
     @Override
     public void onEffectRemoved(MobEffectInstance effectInstance, LivingEntity entity) {
-        TransmissionEvent event = entity.getAttached(Attachments.TYPE);
+         TransmissionEvent event = entity.getAttached(Attachments.TRANSMISSION);
         if(event != null) {
-            entity.removeAttached(Attachments.TYPE);
+            entity.removeAttached(Attachments.TRANSMISSION);
             ImmunityComponent.get(entity).setIfNone(event.strain());
         }
 

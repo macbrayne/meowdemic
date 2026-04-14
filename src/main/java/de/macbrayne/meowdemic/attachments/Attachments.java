@@ -13,9 +13,9 @@ public class Attachments {
     public static final Logger LOGGER = LoggerFactory.getLogger(Meowdemic.MOD_ID);
     public static final AttachmentType<Strain> IMMUNITY = AttachmentRegistry.create(Meowdemic.id("immunity"), builder -> builder
             .persistent(Strain.CODEC));
-    public static final AttachmentType<TransmissionEvent> TYPE = AttachmentRegistry.create(Meowdemic.id("transmission"), builder -> builder
+    public static final AttachmentType<TransmissionEvent> TRANSMISSION = AttachmentRegistry.create(Meowdemic.id("transmission"), builder -> builder
             .persistent(TransmissionEvent.CODEC)
-            .syncWith(TransmissionEvent.STREAM_CODEC, AttachmentSyncPredicate.all())
+            .syncWith(TransmissionEvent.STREAM_CODEC, AttachmentSyncPredicate.targetOnly())
             .copyOnDeath());
 
     public static void init() {

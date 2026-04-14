@@ -4,6 +4,7 @@ import de.macbrayne.meowdemic.attachments.entity.TransmissionComponent;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
+import de.macbrayne.meowdemic.util.SpreadUtil;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Attackable;
@@ -42,19 +43,6 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
     }
 
     @Unique
-    private static HitResult getHitResult(Vec3 from, Vec3 to, Entity entity, ClipContext.Block blockContext, ClipContext.Fluid fluidContext) {
-        HitResult hitResult = entity.level().clip(new ClipContext(from, to, blockContext, fluidContext, entity));
-        if (hitResult.getType() != HitResult.Type.MISS) {
-            to = hitResult.getLocation();
-        }
-        HitResult entityHitResult = ProjectileUtil.getEntityHitResult(entity.level(), entity, from, to, entity.getBoundingBox().expandTowards(entity.getDeltaMovement()).inflate(1), e -> !e.isSpectator(), 1f);
-        if (entityHitResult != null) {
-            hitResult = entityHitResult;
-        }
-        return hitResult;
-    }
-
-    @Unique
     private void resetSpreadTime() {
         spreadTime = -80;
     }
@@ -73,33 +61,22 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
         float modifier = Mth.sqrt(symptoms.size());
 
         this.spreadTime++;
-        if (symptoms.contains(Symptoms.MEOWING) && this.random.nextInt((int) (500 * modifier)) <= this.spreadTime) {
+        if (symptoms.contains(Symptoms.MEOW_AND_PURR) && this.random.nextInt((int) (500 * modifier)) <= this.spreadTime) {
             resetSpreadTime();
             // Spread to nearby entities
             System.out.println("Attempting to spread from " + entity.getName().getString());
             if (!entity.level().isClientSide()) {
-                HitResult hitResult = getHitResult(entity.getEyePosition(), entity.getEyePosition().add(entity.getViewVector(1.0F).scale(10 * strain.transmissionFactor())), entity, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
-                if (hitResult.getType() == HitResult.Type.ENTITY) {
-                    EntityHitResult entityHitResult = (EntityHitResult) hitResult;
-                    if (entityHitResult.getEntity() instanceof LivingEntity target) {
-                        TransmissionComponent.get(target).setIfNone(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), event.get().strain().mutate()));
-                    }
-                }
+                SpreadUtil.spreadEyeSight(entity, strain.mutate());
             }
             this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().ambientSound().value());
         }
 
-        if (symptoms.contains(Symptoms.PURRING) && this.random.nextInt((int) (500 * modifier)) <= this.spreadTime) {
+        if (symptoms.contains(Symptoms.MEOW_AND_PURR) && this.random.nextInt((int) (500 * modifier)) <= this.spreadTime) {
             resetSpreadTime();
 
             System.out.println("Attempting to spread radius from " + entity.getName().getString());
             if (!entity.level().isClientSide()) {
-                List<Entity> nearbyEntities = entity.level().getEntities(entity, entity.getBoundingBox().inflate(10 * strain.transmissionFactor()), e -> e instanceof LivingEntity);
-                for (Entity nearbyEntity : nearbyEntities) {
-                    if (nearbyEntity instanceof LivingEntity target) {
-                        TransmissionComponent.get(target).setIfNone(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), event.get().strain().mutate()));
-                    }
-                }
+                SpreadUtil.spreadProximity(entity, strain.mutate());
             }
             this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().purrSound().value());
         }

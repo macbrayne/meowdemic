@@ -20,7 +20,7 @@ public class CommandRoot {
         dispatcher.register(Commands.literal("meowdemic")
                 .then(Commands.argument("player", EntityArgument.player()).executes(context -> {
                     Player player = EntityArgument.getPlayer(context, "player");
-                    Strain strain = new Strain("Test Strain", List.of(Symptoms.MEOWING, Symptoms.PURRING), 1, 1, 1);
+                    Strain strain = new Strain("Test Strain", List.of(Symptoms.MEOW_AND_PURR), 1, 1, 1);
                     TransmissionComponent.get(player).setIfNone(new TransmissionEvent(Optional.empty(), player.getUUID(), strain));
                     return Command.SINGLE_SUCCESS; // Return a success code
                 })));

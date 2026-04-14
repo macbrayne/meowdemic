@@ -7,10 +7,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 
 public enum Symptoms implements StringRepresentable {
-    MEOWING("meowing"),
+    MEOW_AND_PURR("meow_and_purr"),
     CAT_EARS("cat_ears"),
     WHISKERS("whiskers"),
-    PURRING("purring"),
     CHAT("chat");
 
     private final String id;
