@@ -20,15 +20,17 @@ public class TransmissionComponent {
             return Optional.ofNullable(target.getAttached(Attachments.TRANSMISSION));
         }
 
-        public void setIfNone(TransmissionEvent transmissionEvent) {
-            if(target.getAttached(Attachments.TRANSMISSION) != null) return;
-            if(target.getAttached(Attachments.IMMUNITY) != null) return;
+        public boolean tryInfecting(TransmissionEvent transmissionEvent) {
+            if(target.getAttached(Attachments.TRANSMISSION) != null) return false;
+            if(target.getAttached(Attachments.IMMUNITY) != null) return false;
+            if(target.getRandom().nextDouble() > transmissionEvent.strain().transmissionFactor()) return false;
 
             MobEffectInstance effect = new MobEffectInstance(Meowdemic.INFECTED,
                     (int)(60 * 20 * transmissionEvent.strain().recoveryFactor()),
                     0, false, false, false);
             target.addEffect(effect);
             target.setAttached(Attachments.TRANSMISSION, transmissionEvent);
+            return true;
         }
 
         public boolean hasSymptom(Symptoms symptom) {

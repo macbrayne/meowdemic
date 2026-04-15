@@ -1,10 +1,12 @@
 package de.macbrayne.meowdemic.mixin;
 
+import de.macbrayne.meowdemic.attachments.entity.ServerStatsComponent;
 import de.macbrayne.meowdemic.attachments.entity.TransmissionComponent;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.util.SpreadUtil;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Attackable;
@@ -70,6 +72,13 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
                 SpreadUtil.spreadProximity(entity, strain.mutate());
             }
             this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().purrSound().value());
+        }
+    }
+
+    @Inject(method = "remove", at = @At("HEAD"))
+    public void meowdemic$onDeath(RemovalReason reason, CallbackInfo ci) {
+        if ((reason == RemovalReason.DISCARDED || reason == RemovalReason.KILLED) && TransmissionComponent.get((LivingEntity) (Object) this).getOptional().isPresent()) {
+            ServerStatsComponent.get((ServerLevel) this.level()).removeCurrentlyInfected();
         }
     }
 }

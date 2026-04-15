@@ -2,6 +2,7 @@ package de.macbrayne.meowdemic.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import de.macbrayne.meowdemic.attachments.entity.ServerStatsComponent;
 import de.macbrayne.meowdemic.attachments.entity.TransmissionComponent;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
@@ -10,25 +11,51 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 public class CommandRoot {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment) {
         dispatcher.register(Commands.literal("meowdemic")
-                .then(Commands.argument("entities", EntityArgument.entities()).executes(context -> {
-                    Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
-                    Strain strain = new Strain("Test Strain", Symptoms.all(), 1, 1, 1);
-                    for(Entity entity : entities) {
-                        if(entity instanceof LivingEntity livingEntity) {
-                            TransmissionComponent.get(livingEntity).setIfNone(new TransmissionEvent(Optional.empty(), livingEntity.getUUID(), strain));
+                .then(Commands.literal("infect")
+                        .then(Commands.argument("entities", EntityArgument.entities())
+                                .executes(context -> {
+                                    Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
+                                    Strain strain = new Strain("Test Strain", Symptoms.all(), 1, 1, 1);
+                                    int infectedCount = 0;
+                                    for (Entity entity : entities) {
+                                        if (entity instanceof LivingEntity livingEntity && TransmissionComponent.get(livingEntity).tryInfecting(new TransmissionEvent(Optional.empty(), livingEntity.getUUID(), strain))) {
+                                            infectedCount++;
+                                        }
+                                    }
+                                    ServerStatsComponent.get(context.getSource().getLevel()).addCurrentlyInfected(infectedCount);
+                                    return infectedCount; // Return a success code
+                                })))
+                .then(Commands.literal("stats").then(
+                        Commands.literal("reset").executes(context -> {
+                            boolean reset = ServerStatsComponent.get(context.getSource().getLevel()).reset();
+                            if(!reset) {
+                                context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats.reset.confirm"), false);
+                            } else {
+                                context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats.reset"), false);
+                            }
+                            return Command.SINGLE_SUCCESS;
                         }
-                    }
-                    return Command.SINGLE_SUCCESS; // Return a success code
+                )).executes(context -> {
+                    CommandSourceStack source = context.getSource();
+                    ServerStatsComponent.ServerStatsData stats = ServerStatsComponent.get(source.getLevel());
+
+                    int currentlyInfected = stats.getCurrentlyInfected();
+                    int totalInfected = stats.getTotalInfected();
+                    int speciesBarriersCrossed = stats.getSpeciesBarriersCrossed();
+                    int strainsCreated = stats.getStrainsCreated();
+
+                    source.sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats", currentlyInfected, totalInfected, speciesBarriersCrossed, strainsCreated), false);
+                    return Command.SINGLE_SUCCESS;
                 })));
     }
 }
