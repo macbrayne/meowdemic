@@ -6,6 +6,8 @@ import net.minecraft.network.VarInt;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 
+import java.util.List;
+
 public enum Symptoms implements StringRepresentable {
     MEOW_AND_PURR("meow_and_purr"),
     CAT_EARS("cat_ears"),
@@ -38,5 +40,9 @@ public enum Symptoms implements StringRepresentable {
                 VarInt.write(buf, value.ordinal());
             }
         };
+    }
+
+    public static List<Symptoms> all() {
+        return List.of(values());
     }
 }

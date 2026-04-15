@@ -2,6 +2,7 @@ package de.macbrayne.meowdemic.attachments.entity;
 
 import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.attachments.Attachments;
+import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,6 +29,11 @@ public class TransmissionComponent {
                     0, false, false, false);
             target.addEffect(effect);
             target.setAttached(Attachments.TRANSMISSION, transmissionEvent);
+        }
+
+        public boolean hasSymptom(Symptoms symptom) {
+            Optional<TransmissionEvent> event = getOptional();
+            return event.isPresent() && event.get().strain().symptoms().contains(symptom);
         }
     }
 }

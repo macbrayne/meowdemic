@@ -1,6 +1,7 @@
 package de.macbrayne.meowdemic.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.macbrayne.meowdemic.util.CatEarsStateAccessor;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.player.PlayerModel;
@@ -21,7 +22,7 @@ public class CatEarsLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
 
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, AvatarRenderState state, float yRot, float xRot) {
-        if(!state.isInvisible) {
+        if(!state.isInvisible && ((CatEarsStateAccessor) state).getShowCatEars()) {
             int overlayCoords = LivingEntityRenderer.getOverlayCoords(state, 0.0F);
             submitNodeCollector.submitModel(
                     this.model, state, poseStack, RenderTypes.entitySolid(state.skin.body().texturePath()), lightCoords, overlayCoords, state.outlineColor, null

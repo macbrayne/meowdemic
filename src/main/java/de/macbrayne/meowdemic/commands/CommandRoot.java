@@ -22,7 +22,7 @@ public class CommandRoot {
         dispatcher.register(Commands.literal("meowdemic")
                 .then(Commands.argument("entities", EntityArgument.entities()).executes(context -> {
                     Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
-                    Strain strain = new Strain("Test Strain", List.of(Symptoms.MEOW_AND_PURR), 1, 1, 1);
+                    Strain strain = new Strain("Test Strain", Symptoms.all(), 1, 1, 1);
                     for(Entity entity : entities) {
                         if(entity instanceof LivingEntity livingEntity) {
                             TransmissionComponent.get(livingEntity).setIfNone(new TransmissionEvent(Optional.empty(), livingEntity.getUUID(), strain));

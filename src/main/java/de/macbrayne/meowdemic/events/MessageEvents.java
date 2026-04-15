@@ -13,8 +13,7 @@ import java.util.Optional;
 public class MessageEvents {
     public static TextNode register(TextNode textNode, PlaceholderContext placeholderContext) {
         if(placeholderContext.entity() instanceof LivingEntity entity) {
-            Optional<TransmissionEvent> data = TransmissionComponent.get(entity).getOptional();
-            if(data.isPresent() && data.get().strain().symptoms().contains(Symptoms.CHAT)) {
+            if(TransmissionComponent.get(entity).hasSymptom(Symptoms.CHAT)) {
                 return TextNode.asSingle(textNode, TextNode.of(" meow :3"));
             }
         }
