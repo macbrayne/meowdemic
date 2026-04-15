@@ -17,11 +17,9 @@
 	"entrypoints": {
 		"main": [
 			"de.macbrayne.meowdemic.Meowdemic"
-		]
-	},
-	"custom": {
-		"cardinal-components": [
-			"meowdemic:participant"
+		],
+		"client": [
+			"de.macbrayne.meowdemic.client.MeowdemicClient"
 		]
 	},
 	"mixins": [
