@@ -24,14 +24,14 @@ public abstract class AvatarRendererMixin<AvatarlikeEntity extends Avatar & Clie
     }
 
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V", at = @At("TAIL"))
-    public void extractContext(AvatarlikeEntity entity, AvatarRenderState state, float partialTicks, CallbackInfo ci) {
+    public void meowdemic$extractContext(AvatarlikeEntity entity, AvatarRenderState state, float partialTicks, CallbackInfo ci) {
         if(entity instanceof Player player && TransmissionComponent.get(player).hasSymptom(Symptoms.CAT_EARS)) {
-            ((CatEarsStateAccessor) state).setShowCatEars(true);
+            ((CatEarsStateAccessor) state).meowdemic$setShowCatEars(true);
         }
     }
 
     @Inject(method = "<init>(Lnet/minecraft/client/renderer/entity/EntityRendererProvider$Context;Z)V", at = @At("RETURN"))
-    void init(EntityRendererProvider.Context context, boolean slimSteve, CallbackInfo ci) {
+    void meowdemic$init(EntityRendererProvider.Context context, boolean slimSteve, CallbackInfo ci) {
         addLayer(new CatEarsLayer(this, context.getModelSet()));
     }
 }

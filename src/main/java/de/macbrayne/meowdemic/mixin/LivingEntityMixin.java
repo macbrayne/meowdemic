@@ -12,13 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.feline.CatSoundVariants;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.waypoints.WaypointTransmitter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -36,19 +30,19 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
     public abstract boolean isAlive();
 
     @Unique
-    private int spreadTime;
+    private int meowdemic$spreadTime;
 
     public LivingEntityMixin(EntityType<?> type, Level level) {
         super(type, level);
     }
 
     @Unique
-    private void resetSpreadTime() {
-        spreadTime = -80;
+    private void meowdemic$resetSpreadTime() {
+        meowdemic$spreadTime = -80;
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
-    public void spread(CallbackInfo ci) {
+    public void meowdemic$spread(CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
         Optional<TransmissionEvent> event = TransmissionComponent.get(entity).getOptional();
         if (event.isEmpty() || !this.isAlive()) return;
@@ -57,9 +51,9 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
         List<Symptoms> symptoms = strain.symptoms();
         float modifier = Mth.sqrt(symptoms.size());
 
-        this.spreadTime++;
-        if (symptoms.contains(Symptoms.MEOW_AND_PURR) && this.random.nextInt((int) (500 * modifier)) <= this.spreadTime) {
-            resetSpreadTime();
+        this.meowdemic$spreadTime++;
+        if (symptoms.contains(Symptoms.MEOW_AND_PURR) && this.random.nextInt((int) (500 * modifier)) <= this.meowdemic$spreadTime) {
+            meowdemic$resetSpreadTime();
             // Spread to nearby entities
             System.out.println("Attempting to spread from " + entity.getName().getString());
             if (!entity.level().isClientSide()) {
@@ -68,8 +62,8 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
             this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().ambientSound().value());
         }
 
-        if (symptoms.contains(Symptoms.MEOW_AND_PURR) && this.random.nextInt((int) (500 * modifier)) <= this.spreadTime) {
-            resetSpreadTime();
+        if (symptoms.contains(Symptoms.MEOW_AND_PURR) && this.random.nextInt((int) (500 * modifier)) <= this.meowdemic$spreadTime) {
+            meowdemic$resetSpreadTime();
 
             System.out.println("Attempting to spread radius from " + entity.getName().getString());
             if (!entity.level().isClientSide()) {

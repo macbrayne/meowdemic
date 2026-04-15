@@ -1,7 +1,7 @@
 package de.macbrayne.meowdemic.util;
 
 public interface CatEarsStateAccessor {
-    boolean getShowCatEars();
+    boolean meowdemic$getShowCatEars();
 
-    void setShowCatEars(boolean showCatEars);
+    void meowdemic$setShowCatEars(boolean showCatEars);
 }

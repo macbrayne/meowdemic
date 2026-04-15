@@ -22,7 +22,7 @@ public class CatEarsLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
 
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, AvatarRenderState state, float yRot, float xRot) {
-        if(!state.isInvisible && ((CatEarsStateAccessor) state).getShowCatEars()) {
+        if(!state.isInvisible && ((CatEarsStateAccessor) state).meowdemic$getShowCatEars()) {
             int overlayCoords = LivingEntityRenderer.getOverlayCoords(state, 0.0F);
             submitNodeCollector.submitModel(
                     this.model, state, poseStack, RenderTypes.entitySolid(state.skin.body().texturePath()), lightCoords, overlayCoords, state.outlineColor, null

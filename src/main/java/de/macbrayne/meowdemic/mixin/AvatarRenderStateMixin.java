@@ -12,12 +12,12 @@ public class AvatarRenderStateMixin extends HumanoidRenderState implements CatEa
     private boolean showCatEars = false;
 
     @Override
-    public boolean getShowCatEars() {
+    public boolean meowdemic$getShowCatEars() {
         return showCatEars;
     }
 
     @Override
-    public void setShowCatEars(boolean showCatEars) {
+    public void meowdemic$setShowCatEars(boolean showCatEars) {
         this.showCatEars = showCatEars;
     }
 }
