@@ -27,6 +27,7 @@ public class Meowdemic implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		SharedConstants.IS_RUNNING_IN_IDE = true;
 		CommandRegistrationCallback.EVENT.register(CommandRoot::register);
 		Attachments.init();
 		StyledChatEvents.MESSAGE_CONTENT.register(MessageEvents::register);

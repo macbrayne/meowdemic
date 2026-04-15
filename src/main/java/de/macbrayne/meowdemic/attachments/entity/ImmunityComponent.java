@@ -26,6 +26,7 @@ public class ImmunityComponent {
                     0, false, false, false);
             target.addEffect(effect);
             target.setAttached(Attachments.IMMUNITY, strain);
+            PlayerStatsComponent.get(target).increaseTimesCured();
         }
     }
 }

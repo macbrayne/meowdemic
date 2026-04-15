@@ -1,5 +1,6 @@
 package de.macbrayne.meowdemic.util;
 
+import de.macbrayne.meowdemic.attachments.entity.PlayerStatsComponent;
 import de.macbrayne.meowdemic.attachments.entity.ServerStatsComponent;
 import de.macbrayne.meowdemic.attachments.entity.TransmissionComponent;
 import de.macbrayne.meowdemic.data.Strain;
@@ -23,6 +24,7 @@ public class SpreadUtil {
             EntityHitResult entityHitResult = (EntityHitResult) hitResult;
             if (entityHitResult.getEntity() instanceof LivingEntity target && TransmissionComponent.get(target).tryInfecting(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
                 ServerStatsComponent.get((ServerLevel) target.level()).addCurrentlyInfected(1);
+                PlayerStatsComponent.get(entity).addEntitiesInfected(1);
                 if (!target.getType().equals(entity.getType())) {
                     ServerStatsComponent.get((ServerLevel) target.level()).addSpeciesBarriersCrossed(1);
                 }
@@ -44,6 +46,7 @@ public class SpreadUtil {
         }
         ServerStatsComponent.get((ServerLevel) entity.level()).addCurrentlyInfected(infectedCount);
         ServerStatsComponent.get((ServerLevel) entity.level()).addSpeciesBarriersCrossed(speciesCount);
+        PlayerStatsComponent.get(entity).addEntitiesInfected(infectedCount);
     }
 
     private static HitResult getHitResult(Vec3 from, Vec3 to, Entity entity, ClipContext.Block blockContext, ClipContext.Fluid fluidContext) {

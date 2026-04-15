@@ -7,7 +7,6 @@ import de.macbrayne.meowdemic.data.TransmissionEvent;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.minecraft.network.codec.ByteBufCodecs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,14 +20,19 @@ public class Attachments {
             .copyOnDeath());
 
     public static class PlayerStats {
-        public static final AttachmentType<Integer> PEOPLE_INFECTED = AttachmentRegistry.create(Meowdemic.id("people_infected"), builder -> builder
+        public static final AttachmentType<Integer> ENTITIES_INFECTED = AttachmentRegistry.create(Meowdemic.id("entities_infected"), builder -> builder
                 .persistent(Codec.INT)
-                .syncWith(ByteBufCodecs.VAR_INT, AttachmentSyncPredicate.targetOnly())
+                .initializer(() -> 0)
                 .copyOnDeath());
 
         public static final AttachmentType<Integer> TIMES_CURED = AttachmentRegistry.create(Meowdemic.id("times_cured"), builder -> builder
                 .persistent(Codec.INT)
-                .syncWith(ByteBufCodecs.VAR_INT, AttachmentSyncPredicate.targetOnly())
+                .initializer(() -> 0)
+                .copyOnDeath());
+
+        public static final AttachmentType<Integer> POINTS_DELTA = AttachmentRegistry.create(Meowdemic.id("points"), builder -> builder
+                .persistent(Codec.INT)
+                .initializer(() -> 0)
                 .copyOnDeath());
 
         public static void init() {
