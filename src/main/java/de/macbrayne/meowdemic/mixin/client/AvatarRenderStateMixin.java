@@ -1,6 +1,6 @@
-package de.macbrayne.meowdemic.mixin;
+package de.macbrayne.meowdemic.mixin.client;
 
-import de.macbrayne.meowdemic.util.CatEarsStateAccessor;
+import de.macbrayne.meowdemic.client.renderer.CatEarsStateAccessor;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import org.spongepowered.asm.mixin.Mixin;

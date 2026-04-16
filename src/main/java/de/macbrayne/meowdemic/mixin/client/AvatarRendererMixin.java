@@ -1,9 +1,9 @@
-package de.macbrayne.meowdemic.mixin;
+package de.macbrayne.meowdemic.mixin.client;
 
-import de.macbrayne.meowdemic.attachments.entity.TransmissionComponent;
+import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import de.macbrayne.meowdemic.client.renderer.CatEarsLayer;
 import de.macbrayne.meowdemic.data.Symptoms;
-import de.macbrayne.meowdemic.util.CatEarsStateAccessor;
+import de.macbrayne.meowdemic.client.renderer.CatEarsStateAccessor;
 import net.minecraft.client.entity.ClientAvatarEntity;
 import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -25,7 +25,7 @@ public abstract class AvatarRendererMixin<AvatarlikeEntity extends Avatar & Clie
 
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V", at = @At("TAIL"))
     public void meowdemic$extractContext(AvatarlikeEntity entity, AvatarRenderState state, float partialTicks, CallbackInfo ci) {
-        if(entity instanceof Player player && TransmissionComponent.get(player).hasSymptom(Symptoms.CAT_EARS)) {
+        if(entity instanceof Player player && TransmissionAttachment.get(player).hasSymptom(Symptoms.CAT_EARS)) {
             ((CatEarsStateAccessor) state).meowdemic$setShowCatEars(true);
         }
     }

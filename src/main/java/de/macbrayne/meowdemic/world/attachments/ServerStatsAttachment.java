@@ -1,9 +1,8 @@
-package de.macbrayne.meowdemic.attachments.entity;
+package de.macbrayne.meowdemic.world.attachments;
 
-import de.macbrayne.meowdemic.attachments.Attachments;
 import net.minecraft.server.level.ServerLevel;
 
-public class ServerStatsComponent {
+public class ServerStatsAttachment {
     static boolean confirmReset;
     public static ServerStatsData get(ServerLevel target) {
         return new ServerStatsData(target);

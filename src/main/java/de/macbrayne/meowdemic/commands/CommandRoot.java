@@ -2,9 +2,9 @@ package de.macbrayne.meowdemic.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import de.macbrayne.meowdemic.attachments.entity.PlayerStatsComponent;
-import de.macbrayne.meowdemic.attachments.entity.ServerStatsComponent;
-import de.macbrayne.meowdemic.attachments.entity.TransmissionComponent;
+import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
+import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
@@ -30,27 +30,27 @@ public class CommandRoot {
                                     Strain strain = new Strain("Test Strain", Symptoms.all(), 1, 1, 1);
                                     int infectedCount = 0;
                                     for (Entity entity : entities) {
-                                        if (entity instanceof LivingEntity livingEntity && TransmissionComponent.get(livingEntity).tryInfecting(new TransmissionEvent(Optional.empty(), livingEntity.getUUID(), strain))) {
+                                        if (entity instanceof LivingEntity livingEntity && TransmissionAttachment.get(livingEntity).tryInfecting(new TransmissionEvent(Optional.empty(), livingEntity.getUUID(), strain))) {
                                             infectedCount++;
                                         }
                                     }
-                                    ServerStatsComponent.get(context.getSource().getLevel()).addCurrentlyInfected(infectedCount);
+                                    ServerStatsAttachment.get(context.getSource().getLevel()).addCurrentlyInfected(infectedCount);
                                     return infectedCount; // Return a success code
                                 })))
                 .then(Commands.literal("stats")
                         .then(Commands.literal("player").then(
                                 Commands.argument("player", EntityArgument.player()).executes(context -> {
                                     ServerPlayer target = EntityArgument.getPlayer(context, "player");
-                                    int timesInfected = PlayerStatsComponent.get(target).getEntitiesInfected();
-                                    int timesCured = PlayerStatsComponent.get(target).getTimesCured();
-                                    int points = PlayerStatsComponent.get(target).getPoints();
+                                    int timesInfected = PlayerStatsAttachment.get(target).getEntitiesInfected();
+                                    int timesCured = PlayerStatsAttachment.get(target).getTimesCured();
+                                    int points = PlayerStatsAttachment.get(target).getPoints();
                                     context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats.player", timesInfected, timesCured, points), false);
                                     return Command.SINGLE_SUCCESS;
                                 })
                         ))
                         .then(Commands.literal("global").then(
                                 Commands.literal("reset").executes(context -> {
-                                            boolean reset = ServerStatsComponent.get(context.getSource().getLevel()).reset();
+                                            boolean reset = ServerStatsAttachment.get(context.getSource().getLevel()).reset();
                                             if (!reset) {
                                                 context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats.reset.confirm"), false);
                                             } else {
@@ -60,7 +60,7 @@ public class CommandRoot {
                                         }
                                 )).executes(context -> {
                             CommandSourceStack source = context.getSource();
-                            ServerStatsComponent.ServerStatsData stats = ServerStatsComponent.get(source.getLevel());
+                            ServerStatsAttachment.ServerStatsData stats = ServerStatsAttachment.get(source.getLevel());
 
                             int currentlyInfected = stats.getCurrentlyInfected();
                             int totalInfected = stats.getTotalInfected();

@@ -1,12 +1,18 @@
-package de.macbrayne.meowdemic.attachments.entity;
+package de.macbrayne.meowdemic.world.attachments.entity;
 
-import de.macbrayne.meowdemic.attachments.Attachments;
-import de.macbrayne.meowdemic.util.LevelCalc;
+import de.macbrayne.meowdemic.world.attachments.Attachments;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 
-public class PlayerStatsComponent {
+public class PlayerStatsAttachment {
     public static PlayerStatsData get(LivingEntity target) {
         return new PlayerStatsData(target);
+    }
+
+    public static int calcPoints(int infected) {
+        if (infected < 5) return 0;
+        if (infected < 40) return Mth.log2(2 * infected / 5) / Mth.log2(2);
+        return infected / 40 + 3;
     }
 
     public record PlayerStatsData(LivingEntity target) {
@@ -29,7 +35,7 @@ public class PlayerStatsComponent {
         }
 
         public int getPoints() {
-            return LevelCalc.calcPoints(getEntitiesInfected()) - target.getAttachedOrCreate(Attachments.PlayerStats.POINTS_DELTA);
+            return calcPoints(getEntitiesInfected()) - target.getAttachedOrCreate(Attachments.PlayerStats.POINTS_DELTA);
         }
 
         public void removePoints(int amount) {

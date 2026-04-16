@@ -1,7 +1,6 @@
 package de.macbrayne.meowdemic.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.macbrayne.meowdemic.util.CatEarsStateAccessor;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.player.PlayerModel;

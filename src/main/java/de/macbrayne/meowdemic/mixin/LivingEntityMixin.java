@@ -1,11 +1,11 @@
 package de.macbrayne.meowdemic.mixin;
 
-import de.macbrayne.meowdemic.attachments.entity.ServerStatsComponent;
-import de.macbrayne.meowdemic.attachments.entity.TransmissionComponent;
+import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
-import de.macbrayne.meowdemic.util.SpreadUtil;
+import de.macbrayne.meowdemic.world.SpreadUtil;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -46,7 +46,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
     @Inject(method = "tick", at = @At("TAIL"))
     public void meowdemic$spread(CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
-        Optional<TransmissionEvent> event = TransmissionComponent.get(entity).getOptional();
+        Optional<TransmissionEvent> event = TransmissionAttachment.get(entity).getOptional();
         if (event.isEmpty() || !this.isAlive()) return;
 
         Strain strain = event.get().strain();
@@ -77,8 +77,8 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
 
     @Inject(method = "remove", at = @At("HEAD"))
     public void meowdemic$onDeath(RemovalReason reason, CallbackInfo ci) {
-        if ((reason == RemovalReason.DISCARDED || reason == RemovalReason.KILLED) && TransmissionComponent.get((LivingEntity) (Object) this).getOptional().isPresent()) {
-            ServerStatsComponent.get((ServerLevel) this.level()).removeCurrentlyInfected();
+        if ((reason == RemovalReason.DISCARDED || reason == RemovalReason.KILLED) && TransmissionAttachment.get((LivingEntity) (Object) this).getOptional().isPresent()) {
+            ServerStatsAttachment.get((ServerLevel) this.level()).removeCurrentlyInfected();
         }
     }
 }

@@ -1,14 +1,14 @@
-package de.macbrayne.meowdemic.attachments.entity;
+package de.macbrayne.meowdemic.world.attachments.entity;
 
 import de.macbrayne.meowdemic.Meowdemic;
-import de.macbrayne.meowdemic.attachments.Attachments;
+import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.data.Strain;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Optional;
 
-public class ImmunityComponent {
+public class ImmunityAttachment {
     public static ImmunityData get(LivingEntity target) {
         return new ImmunityData(target);
     }
@@ -26,7 +26,7 @@ public class ImmunityComponent {
                     0, false, false, false);
             target.addEffect(effect);
             target.setAttached(Attachments.IMMUNITY, strain);
-            PlayerStatsComponent.get(target).increaseTimesCured();
+            PlayerStatsAttachment.get(target).increaseTimesCured();
         }
     }
 }

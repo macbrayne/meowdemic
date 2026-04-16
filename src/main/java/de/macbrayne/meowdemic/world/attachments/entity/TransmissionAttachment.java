@@ -1,7 +1,7 @@
-package de.macbrayne.meowdemic.attachments.entity;
+package de.macbrayne.meowdemic.world.attachments.entity;
 
 import de.macbrayne.meowdemic.Meowdemic;
-import de.macbrayne.meowdemic.attachments.Attachments;
+import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -9,7 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Optional;
 
-public class TransmissionComponent {
+public class TransmissionAttachment {
 
     public static TransmissionData get(LivingEntity target) {
         return new TransmissionData(target);

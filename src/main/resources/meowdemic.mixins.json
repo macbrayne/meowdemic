@@ -12,7 +12,7 @@
     "requireAnnotations": true
   },
   "client": [
-    "AvatarRendererMixin",
-    "AvatarRenderStateMixin"
+    "client.AvatarRendererMixin",
+    "client.AvatarRenderStateMixin"
   ]
 }

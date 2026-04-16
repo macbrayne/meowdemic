@@ -1,4 +1,4 @@
-package de.macbrayne.meowdemic.attachments;
+package de.macbrayne.meowdemic.world.attachments;
 
 import com.mojang.serialization.Codec;
 import de.macbrayne.meowdemic.Meowdemic;

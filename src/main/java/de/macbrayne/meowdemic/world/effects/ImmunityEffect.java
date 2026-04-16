@@ -1,6 +1,6 @@
-package de.macbrayne.meowdemic.effects;
+package de.macbrayne.meowdemic.world.effects;
 
-import de.macbrayne.meowdemic.attachments.Attachments;
+import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.data.Strain;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;

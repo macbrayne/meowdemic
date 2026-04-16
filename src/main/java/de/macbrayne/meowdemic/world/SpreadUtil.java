@@ -1,8 +1,8 @@
-package de.macbrayne.meowdemic.util;
+package de.macbrayne.meowdemic.world;
 
-import de.macbrayne.meowdemic.attachments.entity.PlayerStatsComponent;
-import de.macbrayne.meowdemic.attachments.entity.ServerStatsComponent;
-import de.macbrayne.meowdemic.attachments.entity.TransmissionComponent;
+import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
+import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import net.minecraft.server.level.ServerLevel;
@@ -22,11 +22,11 @@ public class SpreadUtil {
         HitResult hitResult = getHitResult(entity.getEyePosition(), entity.getEyePosition().add(entity.getViewVector(1.0F).scale(10 * strain.transmissionFactor())), entity, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
         if (hitResult.getType() == HitResult.Type.ENTITY) {
             EntityHitResult entityHitResult = (EntityHitResult) hitResult;
-            if (entityHitResult.getEntity() instanceof LivingEntity target && TransmissionComponent.get(target).tryInfecting(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
-                ServerStatsComponent.get((ServerLevel) target.level()).addCurrentlyInfected(1);
-                PlayerStatsComponent.get(entity).addEntitiesInfected(1);
+            if (entityHitResult.getEntity() instanceof LivingEntity target && TransmissionAttachment.get(target).tryInfecting(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
+                ServerStatsAttachment.get((ServerLevel) target.level()).addCurrentlyInfected(1);
+                PlayerStatsAttachment.get(entity).addEntitiesInfected(1);
                 if (!target.getType().equals(entity.getType())) {
-                    ServerStatsComponent.get((ServerLevel) target.level()).addSpeciesBarriersCrossed(1);
+                    ServerStatsAttachment.get((ServerLevel) target.level()).addSpeciesBarriersCrossed(1);
                 }
             }
         }
@@ -37,16 +37,16 @@ public class SpreadUtil {
         int infectedCount = 0;
         int speciesCount = 0;
         for (Entity nearbyEntity : nearbyEntities) {
-            if (nearbyEntity instanceof LivingEntity target && TransmissionComponent.get(target).tryInfecting(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
+            if (nearbyEntity instanceof LivingEntity target && TransmissionAttachment.get(target).tryInfecting(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
                 infectedCount++;
                 if (!nearbyEntity.getType().equals(entity.getType())) {
                     speciesCount++;
                 }
             }
         }
-        ServerStatsComponent.get((ServerLevel) entity.level()).addCurrentlyInfected(infectedCount);
-        ServerStatsComponent.get((ServerLevel) entity.level()).addSpeciesBarriersCrossed(speciesCount);
-        PlayerStatsComponent.get(entity).addEntitiesInfected(infectedCount);
+        ServerStatsAttachment.get((ServerLevel) entity.level()).addCurrentlyInfected(infectedCount);
+        ServerStatsAttachment.get((ServerLevel) entity.level()).addSpeciesBarriersCrossed(speciesCount);
+        PlayerStatsAttachment.get(entity).addEntitiesInfected(infectedCount);
     }
 
     private static HitResult getHitResult(Vec3 from, Vec3 to, Entity entity, ClipContext.Block blockContext, ClipContext.Fluid fluidContext) {

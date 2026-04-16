@@ -1,9 +1,9 @@
 package de.macbrayne.meowdemic;
 
-import de.macbrayne.meowdemic.attachments.Attachments;
+import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.commands.CommandRoot;
-import de.macbrayne.meowdemic.effects.ImmunityEffect;
-import de.macbrayne.meowdemic.effects.InfectionEffect;
+import de.macbrayne.meowdemic.world.effects.ImmunityEffect;
+import de.macbrayne.meowdemic.world.effects.InfectionEffect;
 import de.macbrayne.meowdemic.events.MessageEvents;
 import eu.pb4.styledchat.StyledChatEvents;
 import net.fabricmc.api.ModInitializer;
