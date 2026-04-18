@@ -24,8 +24,8 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class MeowdemicItems {
-    public static final ConsumeEffect.Type<ApplyStatusEffectsConsumeEffect> AFFECT = registerConsumeEffect(
-            "affect", ApplyStatusEffectsConsumeEffect.CODEC, ApplyStatusEffectsConsumeEffect.STREAM_CODEC
+    public static final ConsumeEffect.Type<AffectionConsumeEffect> AFFECT = registerConsumeEffect(
+            "affect", AffectionConsumeEffect.CODEC, AffectionConsumeEffect.STREAM_CODEC
     );
 
     public static final Consumable VACCINE_CONSUMABLE = Consumables.defaultDrink()

@@ -79,8 +79,6 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
         }
 
         if (symptoms.contains(Symptoms.FOOD) && this.random.nextInt((int) (500 * modifier)) <= this.meowdemic$spreadTime) {
-            meowdemic$resetSpreadTime();
-
             System.out.println("Attempting to infect food from " + entity.getName().getString());
             if(!level().isClientSide() && entity.getMainHandItem().has(DataComponents.CONSUMABLE)) {
                 Consumable oldConsumable = entity.getMainHandItem().get(DataComponents.CONSUMABLE);
@@ -91,9 +89,13 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
                         .sound(oldConsumable.sound());
                 for(ConsumeEffect onConsumeEffect : oldConsumable.onConsumeEffects()) {
                     builder.onConsume(onConsumeEffect);
+                    if(onConsumeEffect instanceof AffectionConsumeEffect) {
+                        return;
+                    }
                 }
                 builder.onConsume(new AffectionConsumeEffect(Optional.of(this.getUUID()), strain, false, 0.85f));
                 entity.getMainHandItem().set(DataComponents.CONSUMABLE, builder.build());
+                meowdemic$resetSpreadTime();
             }
         }
     }

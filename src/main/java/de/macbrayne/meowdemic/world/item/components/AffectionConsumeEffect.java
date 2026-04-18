@@ -1,6 +1,7 @@
 package de.macbrayne.meowdemic.world.item.components;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
@@ -8,7 +9,7 @@ import de.macbrayne.meowdemic.world.attachments.entity.ImmunityAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import de.macbrayne.meowdemic.world.item.MeowdemicItems;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,13 +21,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 public record AffectionConsumeEffect(Optional<UUID> source, Strain strain, boolean vaccinate, float modifier) implements ConsumeEffect {
-    public static final Codec<AffectionConsumeEffect> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<AffectionConsumeEffect> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             UUIDUtil.CODEC.optionalFieldOf("source").forGetter(AffectionConsumeEffect::source),
             Strain.CODEC.fieldOf("strain").forGetter(AffectionConsumeEffect::strain),
             Codec.BOOL.fieldOf("vaccinate").forGetter(AffectionConsumeEffect::vaccinate),
             Codec.FLOAT.fieldOf("modifier").forGetter(AffectionConsumeEffect::modifier)
     ).apply(instance, AffectionConsumeEffect::new));
-    public static final StreamCodec<FriendlyByteBuf, AffectionConsumeEffect> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, AffectionConsumeEffect> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), AffectionConsumeEffect::source,
             Strain.STREAM_CODEC, AffectionConsumeEffect::strain,
             ByteBufCodecs.BOOL, AffectionConsumeEffect::vaccinate,
