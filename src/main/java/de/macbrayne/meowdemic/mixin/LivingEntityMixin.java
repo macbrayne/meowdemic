@@ -1,11 +1,13 @@
 package de.macbrayne.meowdemic.mixin;
 
-import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
-import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.world.SpreadUtil;
+import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
+import de.macbrayne.meowdemic.world.item.components.AffectionConsumeEffect;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -14,6 +16,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.feline.CatSoundVariants;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.waypoints.WaypointTransmitter;
 import org.spongepowered.asm.mixin.Mixin;
@@ -72,6 +76,25 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
                 SpreadUtil.spreadProximity(entity, strain.mutate());
             }
             this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().purrSound().value());
+        }
+
+        if (symptoms.contains(Symptoms.FOOD) && this.random.nextInt((int) (500 * modifier)) <= this.meowdemic$spreadTime) {
+            meowdemic$resetSpreadTime();
+
+            System.out.println("Attempting to infect food from " + entity.getName().getString());
+            if(!level().isClientSide() && entity.getMainHandItem().has(DataComponents.CONSUMABLE)) {
+                Consumable oldConsumable = entity.getMainHandItem().get(DataComponents.CONSUMABLE);
+                Consumable.Builder builder = Consumable.builder()
+                        .consumeSeconds(oldConsumable.consumeSeconds())
+                        .animation(oldConsumable.animation())
+                        .hasConsumeParticles(oldConsumable.hasConsumeParticles())
+                        .sound(oldConsumable.sound());
+                for(ConsumeEffect onConsumeEffect : oldConsumable.onConsumeEffects()) {
+                    builder.onConsume(onConsumeEffect);
+                }
+                builder.onConsume(new AffectionConsumeEffect(Optional.of(this.getUUID()), strain, false, 0.85f));
+                entity.getMainHandItem().set(DataComponents.CONSUMABLE, builder.build());
+            }
         }
     }
 

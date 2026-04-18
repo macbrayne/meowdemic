@@ -11,7 +11,7 @@ import java.util.List;
 public enum Symptoms implements StringRepresentable {
     MEOW_AND_PURR("meow_and_purr"),
     CAT_EARS("cat_ears"),
-    WHISKERS("whiskers"),
+    FOOD("food"),
     CHAT("chat");
 
     private final String id;
