@@ -1,7 +1,6 @@
 package de.macbrayne.meowdemic.world.effects;
 
-import de.macbrayne.meowdemic.world.attachments.Attachments;
-import de.macbrayne.meowdemic.data.Strain;
+import de.macbrayne.meowdemic.world.attachments.entity.ImmunityAttachment;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -15,11 +14,7 @@ public class ImmunityEffect extends MobEffect {
 
     @Override
     public void onEffectRemoved(MobEffectInstance effectInstance, LivingEntity entity) {
-        Strain event = entity.getAttached(Attachments.IMMUNITY);
-        if(event != null) {
-            entity.removeAttached(Attachments.IMMUNITY);
-        }
-
+        ImmunityAttachment.get(entity).remove();
         super.onEffectRemoved(effectInstance, entity);
     }
 }

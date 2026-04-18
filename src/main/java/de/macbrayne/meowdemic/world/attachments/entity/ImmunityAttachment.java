@@ -18,15 +18,20 @@ public class ImmunityAttachment {
             return Optional.ofNullable(target.getAttached(Attachments.IMMUNITY));
         }
 
-        public void setIfNone(Strain strain) {
-            if(target.getAttached(Attachments.IMMUNITY) != null) return;
+        public boolean setIfNone(Strain strain, float modifier) {
+            if(target.getAttached(Attachments.IMMUNITY) != null) return false;
 
             MobEffectInstance effect = new MobEffectInstance(Meowdemic.IMMUNE,
-                    (int)(60 * 20 * strain.immunityFactor()),
+                    (int)(60 * 20 * strain.immunityFactor() * modifier),
                     0, false, false, false);
             target.addEffect(effect);
             target.setAttached(Attachments.IMMUNITY, strain);
             PlayerStatsAttachment.get(target).increaseTimesCured();
+            return true;
+        }
+
+        public void remove() {
+            target.removeAttached(Attachments.IMMUNITY);
         }
     }
 }

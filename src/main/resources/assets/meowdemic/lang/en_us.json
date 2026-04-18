@@ -5,5 +5,8 @@
   "commands.meowdemic.meowdemic.stats": "Currently infected: %s\nTotal infected: %s\nSpecies barriers crossed: %s\nStrains created: %s",
   "commands.meowdemic.meowdemic.stats.player": "Times infected: %s\nTime cured: %s\nPoints: %s",
   "commands.meowdemic.meowdemic.stats.reset.confirm": "Reset server stats? This cannot be undone! Rerun /meowdemic stats reset to confirm.",
-  "commands.meowdemic.meowdemic.stats.reset": "Reset server stats."
+  "commands.meowdemic.meowdemic.stats.reset": "Reset server stats.",
+
+  "item.meowdemic.vaccine": "Vaccine"
+
 }

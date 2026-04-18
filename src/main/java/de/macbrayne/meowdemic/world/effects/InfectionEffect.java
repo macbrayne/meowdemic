@@ -27,7 +27,7 @@ public class InfectionEffect extends MobEffect {
         if(event != null && !entity.level().isClientSide()) {
             entity.removeAttached(Attachments.TRANSMISSION);
             ServerStatsAttachment.get((ServerLevel) entity.level()).removeCurrentlyInfected();
-            ImmunityAttachment.get(entity).setIfNone(event.strain());
+            ImmunityAttachment.get(entity).setIfNone(event.strain(), 1f);
         }
 
         super.onEffectRemoved(effectInstance, entity);
