@@ -2,12 +2,12 @@ package de.macbrayne.meowdemic.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
-import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
-import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
+import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -27,7 +27,7 @@ public class CommandRoot {
                         .then(Commands.argument("entities", EntityArgument.entities())
                                 .executes(context -> {
                                     Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
-                                    Strain strain = new Strain("Test Strain", Symptoms.all(), 1, 1, 1);
+                                    Strain strain = new Strain("α.1 Cat", Symptoms.all(), 1, 1, 1);
                                     int infectedCount = 0;
                                     for (Entity entity : entities) {
                                         if (entity instanceof LivingEntity livingEntity && TransmissionAttachment.get(livingEntity).tryInfecting(new TransmissionEvent(Optional.empty(), livingEntity.getUUID(), strain))) {
