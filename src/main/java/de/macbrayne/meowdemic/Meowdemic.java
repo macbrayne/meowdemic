@@ -36,7 +36,11 @@ public class Meowdemic implements ModInitializer {
 		MeowdemicItems.init();
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS)
 				.register((creativeTab) -> creativeTab.accept(MeowdemicItems.VACCINE));
-
+		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+				.register((creativeTab) -> {
+					creativeTab.accept(MeowdemicItems.SWAB);
+					creativeTab.accept(MeowdemicItems.SWAB_SAMPLE);
+				});
 	}
 
 	public static Identifier id(String path) {

@@ -6,14 +6,13 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 import java.util.concurrent.CompletableFuture;
 
 public class MeowdemicTagProvider extends FabricTagsProvider.ItemTagsProvider {
-    public static final TagKey<Item> INFECTABLE = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Meowdemic.MOD_ID, "infectable"));
+    public static final TagKey<Item> INFECTABLE = TagKey.create(Registries.ITEM, Meowdemic.id("infectable"));
 
     public MeowdemicTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registryLookupFuture) {
         super(output, registryLookupFuture);
