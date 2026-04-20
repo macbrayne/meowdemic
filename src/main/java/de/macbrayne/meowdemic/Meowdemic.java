@@ -1,14 +1,13 @@
 package de.macbrayne.meowdemic;
 
-import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.commands.CommandRoot;
+import de.macbrayne.meowdemic.events.MessageEvents;
+import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.world.effects.ImmunityEffect;
 import de.macbrayne.meowdemic.world.effects.InfectionEffect;
-import de.macbrayne.meowdemic.events.MessageEvents;
 import de.macbrayne.meowdemic.world.item.MeowdemicItems;
 import eu.pb4.styledchat.StyledChatEvents;
 import net.fabricmc.api.ModInitializer;
-
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.SharedConstants;

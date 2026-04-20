@@ -3,7 +3,9 @@
   "package": "de.macbrayne.meowdemic.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "ShapedRecipeMixin",
+    "WolfMixin"
   ],
   "injectors": {
     "defaultRequire": 1

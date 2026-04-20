@@ -7,6 +7,8 @@
   "commands.meowdemic.meowdemic.stats.reset.confirm": "Reset server stats? This cannot be undone! Rerun /meowdemic stats reset to confirm.",
   "commands.meowdemic.meowdemic.stats.reset": "Reset server stats.",
 
-  "item.meowdemic.vaccine": "Vaccine"
+  "item.meowdemic.vaccine": "Vaccine",
+  "item.meowdemic.swab": "Swab",
+  "item.meowdemic.swab_sample": "Swab Sample"
 
 }

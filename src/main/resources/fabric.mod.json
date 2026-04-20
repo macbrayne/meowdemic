@@ -20,6 +20,9 @@
 		],
 		"client": [
 			"de.macbrayne.meowdemic.client.MeowdemicClient"
+		],
+		"fabric-datagen": [
+			"de.macbrayne.meowdemic.datagen.MeowdemicDatagen"
 		]
 	},
 	"mixins": [

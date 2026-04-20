@@ -46,4 +46,12 @@ public record AffectionConsumeEffect(Optional<UUID> source, Strain strain, boole
         }
         return TransmissionAttachment.get(user).tryInfecting(new TransmissionEvent(source, target.getUUID(), strain()));
     }
+
+    public static AffectionConsumeEffect vaccinate(Strain strain) {
+        return new AffectionConsumeEffect(Optional.empty(), strain, true, 2f);
+    }
+
+    public static AffectionConsumeEffect infect(Optional<UUID> source, Strain strain) {
+        return new AffectionConsumeEffect(source, strain, false, 0.85f);
+    }
 }

@@ -2,8 +2,6 @@ package de.macbrayne.meowdemic.world.item;
 
 import com.mojang.serialization.MapCodec;
 import de.macbrayne.meowdemic.Meowdemic;
-import de.macbrayne.meowdemic.data.Strain;
-import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.world.item.components.AffectionConsumeEffect;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
@@ -17,10 +15,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.Consumables;
-import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 public class MeowdemicItems {
@@ -31,11 +28,12 @@ public class MeowdemicItems {
     public static final Consumable VACCINE_CONSUMABLE = Consumables.defaultDrink()
             .consumeSeconds(5.0F)
             .sound(SoundEvents.HONEY_DRINK)
-            .onConsume(new AffectionConsumeEffect(Optional.empty(), new Strain("", Symptoms.all(), 1, 1, 1), true, 1))
             .build();
 
     public static final Item VACCINE = registerItem("vaccine", Item::new, new Item.Properties()
             .component(DataComponents.CONSUMABLE, VACCINE_CONSUMABLE));
+    public static final Item SWAB = registerItem("swab", Item::new, new Item.Properties().component(DataComponents.MAX_STACK_SIZE, 16));
+    public static final Item SWAB_SAMPLE = registerItem("swab_sample", Item::new, new Item.Properties().component(DataComponents.MAX_STACK_SIZE, 16));
 
     public static <T extends Item> T registerItem(String name, Function<Item.Properties, T> itemFactory, Item.Properties settings) {
         // Create the item key.
@@ -58,5 +56,21 @@ public class MeowdemicItems {
             final String name, final MapCodec<T> codec, final StreamCodec<RegistryFriendlyByteBuf, T> streamCodec
     ) {
         return Registry.register(BuiltInRegistries.CONSUME_EFFECT_TYPE, name, new ConsumeEffect.Type<>(codec, streamCodec));
+    }
+
+    public static Consumable.@Nullable Builder addEffect(Consumable oldConsumable, AffectionConsumeEffect effect) {
+        Consumable.Builder builder = Consumable.builder()
+                .consumeSeconds(oldConsumable.consumeSeconds())
+                .animation(oldConsumable.animation())
+                .hasConsumeParticles(oldConsumable.hasConsumeParticles())
+                .sound(oldConsumable.sound());
+        for(ConsumeEffect onConsumeEffect : oldConsumable.onConsumeEffects()) {
+            builder.onConsume(onConsumeEffect);
+            if(onConsumeEffect instanceof AffectionConsumeEffect) {
+                return null;
+            }
+        }
+        builder.onConsume(effect);
+        return builder;
     }
 }
