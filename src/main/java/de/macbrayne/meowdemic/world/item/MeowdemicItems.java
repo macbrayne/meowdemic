@@ -20,7 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
-import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -60,10 +59,14 @@ public class MeowdemicItems {
                     creativeTab.accept(MeowdemicItems.SWAB);
                     creativeTab.accept(MeowdemicItems.SWAB_SAMPLE);
                 });
-        ItemStack defaultVaccine = VACCINE.getDefaultInstance();
-        defaultVaccine.get(DataComponents.CONSUMABLE).onConsumeEffects().add(AffectionConsumeEffect.vaccinate(new Strain(Symptoms.all(), 1, 1, 1, 1)));
+
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS)
-                .register((creativeTab) -> creativeTab.accept(defaultVaccine));
+                .register((creativeTab) -> {
+                    ItemStack defaultVaccine = VACCINE.getDefaultInstance();
+                    Consumable consumable = addEffect(VACCINE_CONSUMABLE, AffectionConsumeEffect.vaccinate(new Strain(Symptoms.all(), 1, 1, 1, 1)));
+                    defaultVaccine.set(DataComponents.CONSUMABLE, consumable);
+                    creativeTab.accept(defaultVaccine);
+                });
     }
 
     private static <T extends ConsumeEffect> ConsumeEffect.Type<T> registerConsumeEffect(
@@ -72,19 +75,19 @@ public class MeowdemicItems {
         return Registry.register(BuiltInRegistries.CONSUME_EFFECT_TYPE, name, new ConsumeEffect.Type<>(codec, streamCodec));
     }
 
-    public static Consumable.@Nullable Builder addEffect(Consumable oldConsumable, AffectionConsumeEffect effect) {
+    public static Consumable addEffect(Consumable oldConsumable, AffectionConsumeEffect effect) {
         Consumable.Builder builder = Consumable.builder()
                 .consumeSeconds(oldConsumable.consumeSeconds())
                 .animation(oldConsumable.animation())
                 .hasConsumeParticles(oldConsumable.hasConsumeParticles())
                 .sound(oldConsumable.sound());
-        for(ConsumeEffect onConsumeEffect : oldConsumable.onConsumeEffects()) {
+        for (ConsumeEffect onConsumeEffect : oldConsumable.onConsumeEffects()) {
             builder.onConsume(onConsumeEffect);
             if(onConsumeEffect instanceof AffectionConsumeEffect) {
                 return null;
             }
         }
         builder.onConsume(effect);
-        return builder;
+        return builder.build();
     }
 }
