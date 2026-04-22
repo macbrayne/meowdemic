@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
 
 @Mixin(LivingEntity.class)
@@ -54,7 +54,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
         if (event.isEmpty() || !this.isAlive()) return;
 
         Strain strain = event.get().strain();
-        List<Symptoms> symptoms = strain.symptoms();
+        HashSet<Symptoms> symptoms = strain.symptoms();
         float modifier = Mth.sqrt(symptoms.size());
 
         this.meowdemic$spreadTime++;
@@ -63,7 +63,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
             // Spread to nearby entities
             System.out.println("Attempting to spread from " + entity.getName().getString());
             if (!entity.level().isClientSide()) {
-                SpreadUtil.spreadEyeSight(entity, strain.mutate());
+                SpreadUtil.spreadEyeSight(entity, strain);
             }
             this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().ambientSound().value());
         }
@@ -73,7 +73,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
 
             System.out.println("Attempting to spread radius from " + entity.getName().getString());
             if (!entity.level().isClientSide()) {
-                SpreadUtil.spreadProximity(entity, strain.mutate());
+                SpreadUtil.spreadProximity(entity, strain);
             }
             this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().purrSound().value());
         }

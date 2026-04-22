@@ -1,13 +1,15 @@
 package de.macbrayne.meowdemic.world.attachments.entity;
 
 import de.macbrayne.meowdemic.Meowdemic;
-import de.macbrayne.meowdemic.world.attachments.Attachments;
+import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
+import de.macbrayne.meowdemic.world.attachments.Attachments;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 public class TransmissionAttachment {
 
@@ -31,6 +33,10 @@ public class TransmissionAttachment {
             target.addEffect(effect);
             target.setAttached(Attachments.TRANSMISSION, transmissionEvent);
             return true;
+        }
+
+        public void mutate(UnaryOperator<Strain> operator) {
+            target.modifyAttached(Attachments.TRANSMISSION, transmissionEvent -> TransmissionEvent.mutate(transmissionEvent, operator));
         }
 
         public boolean hasSymptom(Symptoms symptom) {

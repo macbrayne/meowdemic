@@ -6,6 +6,7 @@ import net.minecraft.network.VarInt;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 
+import java.util.HashSet;
 import java.util.List;
 
 public enum Symptoms implements StringRepresentable {
@@ -42,7 +43,7 @@ public enum Symptoms implements StringRepresentable {
         };
     }
 
-    public static List<Symptoms> all() {
-        return List.of(values());
+    public static HashSet<Symptoms> all() {
+        return new HashSet<>(List.of(values()));
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 
 public record TransmissionEvent(Optional<UUID> source, UUID target, Strain strain) {
     public static final Codec<TransmissionEvent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -21,4 +22,9 @@ public record TransmissionEvent(Optional<UUID> source, UUID target, Strain strai
             UUIDUtil.STREAM_CODEC, TransmissionEvent::target,
             Strain.STREAM_CODEC, TransmissionEvent::strain,
             TransmissionEvent::new);
+
+    public static TransmissionEvent mutate(TransmissionEvent event, UnaryOperator<Strain> operator) {
+        if(event == null) return null;
+        return new TransmissionEvent(event.source(), event.target(), operator.apply(event.strain()));
+    }
 }
