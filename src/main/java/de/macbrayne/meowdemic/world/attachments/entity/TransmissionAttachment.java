@@ -7,6 +7,7 @@ import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
 import de.macbrayne.meowdemic.world.effects.MeowdemicEffects;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 public class TransmissionAttachment {
+    private static final RandomSource random = RandomSource.create();
 
     public static TransmissionData get(LivingEntity target) {
         return new TransmissionData(target);
@@ -24,17 +26,16 @@ public class TransmissionAttachment {
             return Optional.ofNullable(target.getAttached(Attachments.TRANSMISSION));
         }
 
-        public boolean infect(TransmissionEvent transmissionEvent) {
-            if(target.getAttached(Attachments.TRANSMISSION) != null) return false;
-            if(target.getAttached(Attachments.INCUBATION) != null) return false;
-            if(target.getAttached(Attachments.IMMUNITY) != null) return false;
+        public void infect(TransmissionEvent transmissionEvent) {
+            if(target.getAttached(Attachments.TRANSMISSION) != null) return;
+            if(target.getAttached(Attachments.INCUBATION) != null) return;
+            if(target.getAttached(Attachments.IMMUNITY) != null) return;
 
             MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.INFECTED,
-                    (int)(60 * 20 * transmissionEvent.strain().recoveryFactor()),
+                    (int)(60 * 20 * transmissionEvent.strain().recoveryFactor() * (random.nextGaussian() + 1)),
                     0, false, false, false);
             target.addEffect(effect);
             target.setAttached(Attachments.TRANSMISSION, transmissionEvent);
-            return true;
         }
 
         public void mutate(UnaryOperator<Strain> operator) {

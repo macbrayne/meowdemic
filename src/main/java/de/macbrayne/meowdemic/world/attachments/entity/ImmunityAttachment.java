@@ -3,12 +3,15 @@ package de.macbrayne.meowdemic.world.attachments.entity;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.world.effects.MeowdemicEffects;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Optional;
 
 public class ImmunityAttachment {
+    private static final RandomSource random = RandomSource.create();
+
     public static ImmunityData get(LivingEntity target) {
         return new ImmunityData(target);
     }
@@ -22,7 +25,7 @@ public class ImmunityAttachment {
             if(target.getAttached(Attachments.IMMUNITY) != null) return false;
 
             MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.IMMUNE,
-                    (int)(60 * 20 * strain.immunityFactor() * modifier),
+                    (int)(60 * 20 * strain.immunityFactor() * modifier * (random.nextGaussian() + 1)),
                     0, false, false, false);
             target.addEffect(effect);
             target.setAttached(Attachments.IMMUNITY, strain);

@@ -3,12 +3,15 @@ package de.macbrayne.meowdemic.world.attachments.entity;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.world.effects.MeowdemicEffects;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Optional;
 
 public class IncubationAttachment {
+    private static final RandomSource random = RandomSource.create();
+
     public static IncubationData get(LivingEntity target) {
         return new IncubationData(target);
     }
@@ -25,7 +28,7 @@ public class IncubationAttachment {
             if(target.getRandom().nextDouble() > event.strain().transmissionFactor()) return false;
 
             MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.INCUBATING,
-                    (int)(60 * 20 * event.strain().incubationFactor()),
+                    (int)(60 * 20 * event.strain().incubationFactor() * (random.nextGaussian() + 1)),
                     0, false, false, false);
             target.addEffect(effect);
             target.setAttached(Attachments.INCUBATION, event);
