@@ -1,6 +1,7 @@
 {
   "effect.meowdemic.infected": "Meowww :3",
   "effect.meowdemic.immune": "You feel safe... for now.",
+  "effect.meowdemic.incubating": "You feel a bit woozy...?",
 
   "commands.meowdemic.meowdemic.stats": "Currently infected: %s\nTotal infected: %s\nSpecies barriers crossed: %s\nStrains created: %s",
   "commands.meowdemic.meowdemic.stats.player": "Times infected: %s\nTime cured: %s\nPoints: %s",

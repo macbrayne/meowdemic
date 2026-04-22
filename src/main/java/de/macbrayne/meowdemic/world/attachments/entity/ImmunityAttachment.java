@@ -1,8 +1,8 @@
 package de.macbrayne.meowdemic.world.attachments.entity;
 
-import de.macbrayne.meowdemic.Meowdemic;
-import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.data.Strain;
+import de.macbrayne.meowdemic.world.attachments.Attachments;
+import de.macbrayne.meowdemic.world.effects.MeowdemicEffects;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -21,7 +21,7 @@ public class ImmunityAttachment {
         public boolean setIfNone(Strain strain, float modifier) {
             if(target.getAttached(Attachments.IMMUNITY) != null) return false;
 
-            MobEffectInstance effect = new MobEffectInstance(Meowdemic.IMMUNE,
+            MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.IMMUNE,
                     (int)(60 * 20 * strain.immunityFactor() * modifier),
                     0, false, false, false);
             target.addEffect(effect);

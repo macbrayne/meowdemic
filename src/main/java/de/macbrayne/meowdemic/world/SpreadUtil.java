@@ -1,10 +1,10 @@
 package de.macbrayne.meowdemic.world;
 
-import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
-import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
-import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
+import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.IncubationAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,7 +22,7 @@ public class SpreadUtil {
         HitResult hitResult = getHitResult(entity.getEyePosition(), entity.getEyePosition().add(entity.getViewVector(1.0F).scale(10 * strain.transmissionFactor())), entity, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
         if (hitResult.getType() == HitResult.Type.ENTITY) {
             EntityHitResult entityHitResult = (EntityHitResult) hitResult;
-            if (entityHitResult.getEntity() instanceof LivingEntity target && TransmissionAttachment.get(target).tryInfecting(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
+            if (entityHitResult.getEntity() instanceof LivingEntity target && IncubationAttachment.get(target).tryIncubate(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
                 ServerStatsAttachment.get((ServerLevel) target.level()).addCurrentlyInfected(1);
                 PlayerStatsAttachment.get(entity).addEntitiesInfected(1);
                 if (!target.getType().equals(entity.getType())) {
@@ -37,7 +37,7 @@ public class SpreadUtil {
         int infectedCount = 0;
         int speciesCount = 0;
         for (Entity nearbyEntity : nearbyEntities) {
-            if (nearbyEntity instanceof LivingEntity target && TransmissionAttachment.get(target).tryInfecting(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
+            if (nearbyEntity instanceof LivingEntity target && IncubationAttachment.get(target).tryIncubate(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
                 infectedCount++;
                 if (!nearbyEntity.getType().equals(entity.getType())) {
                     speciesCount++;

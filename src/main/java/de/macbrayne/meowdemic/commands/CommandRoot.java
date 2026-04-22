@@ -6,8 +6,8 @@ import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.IncubationAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
-import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -30,7 +30,7 @@ public class CommandRoot {
                                     Strain strain = new Strain("α.1 Cat", Symptoms.all(), 1, 1, 1);
                                     int infectedCount = 0;
                                     for (Entity entity : entities) {
-                                        if (entity instanceof LivingEntity livingEntity && TransmissionAttachment.get(livingEntity).tryInfecting(new TransmissionEvent(Optional.empty(), livingEntity.getUUID(), strain))) {
+                                        if (entity instanceof LivingEntity livingEntity && IncubationAttachment.get(livingEntity).tryIncubate(new TransmissionEvent(Optional.empty(), livingEntity.getUUID(), strain))) {
                                             infectedCount++;
                                         }
                                     }

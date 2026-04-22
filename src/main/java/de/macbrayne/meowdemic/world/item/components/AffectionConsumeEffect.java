@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.world.attachments.entity.ImmunityAttachment;
-import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.IncubationAttachment;
 import de.macbrayne.meowdemic.world.item.MeowdemicItems;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -44,7 +44,7 @@ public record AffectionConsumeEffect(Optional<UUID> source, Strain strain, boole
         if(vaccinate) {
             return ImmunityAttachment.get(user).setIfNone(strain(), 2f);
         }
-        return TransmissionAttachment.get(user).tryInfecting(new TransmissionEvent(source, target.getUUID(), strain()));
+        return IncubationAttachment.get(user).tryIncubate(new TransmissionEvent(source, target.getUUID(), strain()));
     }
 
     public static AffectionConsumeEffect vaccinate(Strain strain) {
