@@ -23,6 +23,9 @@ public record Strain(String name, HashSet<Symptoms> symptoms, double incubationF
     ).apply(instance, Strain::new));
     public static final StreamCodec<FriendlyByteBuf, Strain> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, Strain::name, Symptoms.STREAM_CODEC.apply(ByteBufCodecs.list()).map(HashSet::new, ArrayList::new), Strain::symptoms, ByteBufCodecs.DOUBLE, Strain::incubationFactor, ByteBufCodecs.DOUBLE, Strain::transmissionFactor, ByteBufCodecs.DOUBLE, Strain::recoveryFactor, ByteBufCodecs.DOUBLE, Strain::immunityFactor, Strain::new);
 
+    public Strain(HashSet<Symptoms> symptoms, double incubationFactor, double transmissionFactor, double recoveryFactor, double immunityFactor) {
+        this(generateName(), symptoms, incubationFactor, transmissionFactor, recoveryFactor, immunityFactor);
+    }
 
     public Strain addSymptom(Symptoms newSymptom) {
         if (symptoms().contains(newSymptom)) {
@@ -30,43 +33,58 @@ public record Strain(String name, HashSet<Symptoms> symptoms, double incubationF
         }
         HashSet<Symptoms> newSymptoms = new HashSet<>(symptoms());
         newSymptoms.add(newSymptom);
-        return new Strain(generateName(name()), newSymptoms, incubationFactor(), transmissionFactor(), recoveryFactor(), immunityFactor());
+        return new Strain(modifyName(name()), newSymptoms, incubationFactor(), transmissionFactor(), recoveryFactor(), immunityFactor());
     }
 
     public Strain withIncubationFactor(double newIncubationFactor) {
-        return new Strain(generateName(name()), symptoms(), newIncubationFactor, transmissionFactor(), recoveryFactor(), immunityFactor());
+        return new Strain(modifyName(name()), symptoms(), newIncubationFactor, transmissionFactor(), recoveryFactor(), immunityFactor());
     }
 
     public Strain withTransmissionFactor(double newTransmissionFactor) {
-        return new Strain(generateName(name()), symptoms(), incubationFactor(), newTransmissionFactor, recoveryFactor(), immunityFactor());
+        return new Strain(modifyName(name()), symptoms(), incubationFactor(), newTransmissionFactor, recoveryFactor(), immunityFactor());
     }
 
     public Strain withRecoveryFactor(double newRecoveryFactor) {
-        return new Strain(generateName(name()), symptoms(), incubationFactor(), transmissionFactor(), newRecoveryFactor, immunityFactor());
+        return new Strain(modifyName(name()), symptoms(), incubationFactor(), transmissionFactor(), newRecoveryFactor, immunityFactor());
     }
 
     public Strain withImmunityFactor(double newImmunityFactor) {
-        return new Strain(generateName(name()), symptoms(), incubationFactor(), transmissionFactor(), recoveryFactor(), newImmunityFactor);
+        return new Strain(modifyName(name()), symptoms(), incubationFactor(), transmissionFactor(), recoveryFactor(), newImmunityFactor);
     }
 
-    private static String generateName(String previousName) {
+    private static String modifyName(String previousName) {
         RandomSource random = RandomSource.create();
         String[] parts = splitName(previousName);
+        String[] newParts = generateNameParts();
         float rand = random.nextFloat();
         if (rand < 0.1f) {
-            char rndCar = (char) ('α' + random.nextInt(24));
-            parts[0] = rndCar + "";
+            parts[0] = newParts[0];
         }
         if (rand < 0.3f) {
-            int rndNum = random.nextInt(99) + 1;
-            parts[1] = rndNum + "";
+            parts[1] = newParts[1];
         }
         if (rand < 0.8f) {
-            String rndEntity = BuiltInRegistries.ENTITY_TYPE.getRandom(random).get().value().getDescription().getString();
-            System.out.println(rndEntity);
-            parts[2] = rndEntity;
+            parts[2] = newParts[2];
         }
         return parts[0] + "." + parts[1] + " " + parts[2];
+    }
+
+    public static String generateName() {
+        String[] parts = generateNameParts();
+        return parts[0] + "." + parts[1] + " " + parts[2];
+    }
+
+    private static String[] generateNameParts() {
+        RandomSource random = RandomSource.create();
+        float rand = random.nextFloat();
+        String[] parts = new String[3];
+        char rndCar = (char) ('α' + random.nextInt(24));
+        parts[0] = rndCar + "";
+        int rndNum = random.nextInt(99) + 1;
+        parts[1] = rndNum + "";
+        String rndEntity = BuiltInRegistries.ENTITY_TYPE.getRandom(random).get().value().getDescription().getString();
+        parts[2] = rndEntity;
+        return parts;
     }
 
     private static String[] splitName(String name) {

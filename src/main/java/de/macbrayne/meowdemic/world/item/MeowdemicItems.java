@@ -2,7 +2,10 @@ package de.macbrayne.meowdemic.world.item;
 
 import com.mojang.serialization.MapCodec;
 import de.macbrayne.meowdemic.Meowdemic;
+import de.macbrayne.meowdemic.data.Strain;
+import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.world.item.components.AffectionConsumeEffect;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -11,7 +14,9 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
@@ -48,7 +53,17 @@ public class MeowdemicItems {
     }
 
     public static void init() {
-
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS)
+                .register((creativeTab) -> creativeTab.accept(MeowdemicItems.VACCINE));
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+                .register((creativeTab) -> {
+                    creativeTab.accept(MeowdemicItems.SWAB);
+                    creativeTab.accept(MeowdemicItems.SWAB_SAMPLE);
+                });
+        ItemStack defaultVaccine = VACCINE.getDefaultInstance();
+        defaultVaccine.get(DataComponents.CONSUMABLE).onConsumeEffects().add(AffectionConsumeEffect.vaccinate(new Strain(Symptoms.all(), 1, 1, 1, 1)));
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS)
+                .register((creativeTab) -> creativeTab.accept(defaultVaccine));
     }
 
     private static <T extends ConsumeEffect> ConsumeEffect.Type<T> registerConsumeEffect(

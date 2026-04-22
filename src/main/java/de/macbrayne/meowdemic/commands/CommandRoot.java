@@ -27,7 +27,7 @@ public class CommandRoot {
                         .then(Commands.argument("entities", EntityArgument.entities())
                                 .executes(context -> {
                                     Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
-                                    Strain strain = new Strain("α.1 Cat", Symptoms.all(), 1, 1, 1, 1);
+                                    Strain strain = new Strain(Symptoms.all(), 1, 1, 1, 1);
                                     int infectedCount = 0;
                                     for (Entity entity : entities) {
                                         if (entity instanceof LivingEntity livingEntity && IncubationAttachment.get(livingEntity).tryIncubate(new TransmissionEvent(Optional.empty(), livingEntity.getUUID(), strain))) {
