@@ -25,7 +25,7 @@ public class IncubationAttachment {
             if(target.getRandom().nextDouble() > event.strain().transmissionFactor()) return false;
 
             MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.INCUBATING,
-                    (int)(60 * 20 * event.strain().transmissionFactor()), //TODO: Move to incubation factor
+                    (int)(60 * 20 * event.strain().incubationFactor()),
                     0, false, false, false);
             target.addEffect(effect);
             target.setAttached(Attachments.INCUBATION, event);

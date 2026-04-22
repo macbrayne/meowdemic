@@ -4,7 +4,9 @@ import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.world.attachments.Attachments;
+import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
 import de.macbrayne.meowdemic.world.effects.MeowdemicEffects;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -36,6 +38,7 @@ public class TransmissionAttachment {
         }
 
         public void mutate(UnaryOperator<Strain> operator) {
+            ServerStatsAttachment.get((ServerLevel) target.level()).addStrainsCreated();
             target.modifyAttached(Attachments.TRANSMISSION, transmissionEvent -> TransmissionEvent.mutate(transmissionEvent, operator));
         }
 
