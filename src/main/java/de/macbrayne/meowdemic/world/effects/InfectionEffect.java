@@ -1,9 +1,9 @@
 package de.macbrayne.meowdemic.world.effects;
 
-import de.macbrayne.meowdemic.world.attachments.Attachments;
-import de.macbrayne.meowdemic.world.attachments.entity.ImmunityAttachment;
-import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
+import de.macbrayne.meowdemic.world.attachments.Attachments;
+import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.ImmunityAttachment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
@@ -21,16 +21,13 @@ public class InfectionEffect extends MobEffect {
         super.onEffectAdded(effectInstance, entity);
     }
 
-    @Override
-    public void onEffectRemoved(MobEffectInstance effectInstance, LivingEntity entity) {
+    public static void onRemove(MobEffectInstance effectInstance, LivingEntity entity) {
         TransmissionEvent event = entity.getAttached(Attachments.TRANSMISSION);
         if(event != null && !entity.level().isClientSide()) {
             entity.removeAttached(Attachments.TRANSMISSION);
             ServerStatsAttachment.get((ServerLevel) entity.level()).removeCurrentlyInfected();
             ImmunityAttachment.get(entity).setIfNone(event.strain(), 1f);
         }
-
-        super.onEffectRemoved(effectInstance, entity);
     }
 
     @Override

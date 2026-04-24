@@ -25,7 +25,7 @@ public class ImmunityAttachment {
             if(target.getAttached(Attachments.IMMUNITY) != null) return false;
 
             MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.IMMUNE,
-                    (int)(60 * 20 * strain.immunityFactor() * modifier * (random.nextGaussian() + 1)),
+                    (int)(60 * 20 * strain.immunityFactor() * modifier * (random.nextGaussian() * 0.5 + 1)),
                     0, false, false, false);
             target.addEffect(effect);
             target.setAttached(Attachments.IMMUNITY, strain);

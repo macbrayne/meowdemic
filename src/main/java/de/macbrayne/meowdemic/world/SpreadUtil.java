@@ -7,6 +7,7 @@ import de.macbrayne.meowdemic.world.attachments.entity.IncubationAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
@@ -14,8 +15,10 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class SpreadUtil {
     public static void spreadEyeSight(LivingEntity entity, Strain strain) {
@@ -35,17 +38,17 @@ public class SpreadUtil {
     public static void spreadProximity(LivingEntity entity, Strain strain) {
         List<Entity> nearbyEntities = entity.level().getEntities(entity, entity.getBoundingBox().inflate(10 * strain.transmissionFactor()), e -> e instanceof LivingEntity);
         int infectedCount = 0;
-        int speciesCount = 0;
+        Set<EntityType<?>> speciesCount = new HashSet<>();
         for (Entity nearbyEntity : nearbyEntities) {
             if (nearbyEntity instanceof LivingEntity target && IncubationAttachment.get(target).tryIncubate(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
                 infectedCount++;
                 if (!nearbyEntity.getType().equals(entity.getType())) {
-                    speciesCount++;
+                    speciesCount.add(nearbyEntity.getType());
                 }
             }
         }
         ServerStatsAttachment.get((ServerLevel) entity.level()).addCurrentlyInfected(infectedCount);
-        ServerStatsAttachment.get((ServerLevel) entity.level()).addSpeciesBarriersCrossed(speciesCount);
+        ServerStatsAttachment.get((ServerLevel) entity.level()).addSpeciesBarriersCrossed(speciesCount.size());
         PlayerStatsAttachment.get(entity).addEntitiesInfected(infectedCount);
     }
 

@@ -12,9 +12,7 @@ public class ImmunityEffect extends MobEffect {
         super(MobEffectCategory.NEUTRAL, 0xFF0000);
     }
 
-    @Override
-    public void onEffectRemoved(MobEffectInstance effectInstance, LivingEntity entity) {
+    public static void onRemove(MobEffectInstance effectInstance, LivingEntity entity) {
         ImmunityAttachment.get(entity).remove();
-        super.onEffectRemoved(effectInstance, entity);
     }
 }

@@ -32,7 +32,7 @@ public class TransmissionAttachment {
             if(target.getAttached(Attachments.IMMUNITY) != null) return;
 
             MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.INFECTED,
-                    (int)(60 * 20 * transmissionEvent.strain().recoveryFactor() * (random.nextGaussian() + 1)),
+                    (int)(60 * 20 * transmissionEvent.strain().recoveryFactor() * (random.nextGaussian() * 0.5 + 1)),
                     0, false, false, false);
             target.addEffect(effect);
             target.setAttached(Attachments.TRANSMISSION, transmissionEvent);

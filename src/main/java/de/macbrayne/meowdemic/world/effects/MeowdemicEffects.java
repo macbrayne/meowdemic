@@ -1,6 +1,10 @@
 package de.macbrayne.meowdemic.world.effects;
 
 import de.macbrayne.meowdemic.Meowdemic;
+import de.macbrayne.meowdemic.world.attachments.entity.ImmunityAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.IncubationAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
+import net.fabricmc.fabric.api.entity.event.v1.effect.ServerMobEffectEvents;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -12,6 +16,26 @@ public class MeowdemicEffects {
     public static final Holder<MobEffect> INCUBATING = Registry.registerForHolder(BuiltInRegistries.MOB_EFFECT, Meowdemic.id("incubating"), new IncubationEffect());
 
     public static void init() {
+        ServerMobEffectEvents.ALLOW_EARLY_REMOVE.register((instance, entity, ctx) -> {
+            if (IncubationAttachment.get(entity) != null && instance.getEffect() == INCUBATING)
+                return false;
+            if (TransmissionAttachment.get(entity) != null && instance.getEffect() == INFECTED)
+                return false;
+            if (ImmunityAttachment.get(entity) != null && instance.getEffect() == IMMUNE)
+                return false;
+            return true;
+        });
 
+        ServerMobEffectEvents.AFTER_REMOVE.register((instance, entity, ctx) -> {
+            if(instance.getEffect() == INCUBATING) {
+                IncubationEffect.onRemove(instance, entity);
+            }
+            if(instance.getEffect() == INFECTED) {
+                InfectionEffect.onRemove(instance, entity);
+            }
+            if(instance.getEffect() == IMMUNE) {
+                ImmunityEffect.onRemove(instance, entity);
+            }
+        });
     }
 }
