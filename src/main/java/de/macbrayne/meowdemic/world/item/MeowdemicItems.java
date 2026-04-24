@@ -52,8 +52,6 @@ public class MeowdemicItems {
     }
 
     public static void init() {
-        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS)
-                .register((creativeTab) -> creativeTab.accept(MeowdemicItems.VACCINE));
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
                 .register((creativeTab) -> {
                     creativeTab.accept(MeowdemicItems.SWAB);
