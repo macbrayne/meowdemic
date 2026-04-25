@@ -1,12 +1,12 @@
 package de.macbrayne.meowdemic.client.gui;
 
 import com.mojang.blaze3d.platform.Window;
-import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import dev.chailotl.bento_gui.client.FlowAxis;
 import dev.chailotl.bento_gui.client.elements.*;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
@@ -39,7 +39,7 @@ public class UpgradeGachaScreen extends Screen {
                 .flowAxis(FlowAxis.HORIZONTAL)
                 .alignCenter()
                 .alignMiddle()
-                .padding(20, 40, 0, 0)
+                .padding(20)
                 .build();
         Panel body = ScrollPanel.ofMenu()
                 .dimensions(true, true)
@@ -70,18 +70,26 @@ public class UpgradeGachaScreen extends Screen {
                 .build();
 
         Label points = Label.builder()
-                .text(Component.translatable("gui.meowdemic.upgrade_gui.points", playerStats.getPoints() * 160))
+                .text(Component.translatable("gui.meowdemic.upgrade_gui.points", playerStats.getPoints()))
+                .build();
+
+        Button exit = Button.builder()
+                .text(Component.translatable("gui.meowdemic.upgrade_gui.exit").withStyle(ChatFormatting.RED))
+                .onPress(self -> onClose())
+                .padding(0)
+                .width(16)
                 .build();
 
         header.addChild(title);
         header.addChild(empty);
         header.addChild(points);
+        header.addChild(exit);
 
         // Add elements to body
-        Image image = Image.builder()
+        /*Image image = Image.builder()
                 .image(Meowdemic.id("textures/gui/upgrades/cat_ears.png"))
                 .dimensions(16, 16)
-                .build();
+                .build();*/
 
         Label upgradeTitle = Label.builder()
                 .text(Component.translatable("gui.meowdemic.upgrade_gui.current.title", attachment.strain().name()))
@@ -96,23 +104,27 @@ public class UpgradeGachaScreen extends Screen {
                 .height(true)
                 .build();
 
-        body.addChild(image);
+        //body.addChild(image);
         body.addChild(upgradeTitle);
         body.addChild(description);
 
         // Add elements to footer
-        TextField<String> searchField = TextField.ofString()
-                .placeholder(Component.literal("Search..."))
-                .width(true)
-                .maxWidth(200)
+        Button ratesButton = Button.builder()
+                .text(Component.literal("Rates"))
+                .width(40)
                 .build();
-        Button doneButton = Button.builder()
-                .text(Component.literal("Done"))
+        Panel emptyTwo = Panel.builder()
+                .dimensions(true, 32)
+                .build();
+        Button gachaButton = Button.builder()
+                .text(Component.translatable("gui.meowdemic.upgrade_gui.gacha"))
+                .width(200)
                 .onPress(self -> onClose())
                 .build();
 
-        footer.addChild(searchField);
-        footer.addChild(doneButton);
+        footer.addChild(ratesButton);
+        footer.addChild(emptyTwo);
+        footer.addChild(gachaButton);
 
         // Add root as drawable child
         addRenderableWidget(root);

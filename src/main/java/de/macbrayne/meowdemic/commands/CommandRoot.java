@@ -43,7 +43,7 @@ public class CommandRoot {
                                     ServerPlayer target = EntityArgument.getPlayer(context, "player");
                                     int timesInfected = PlayerStatsAttachment.get(target).getEntitiesInfected();
                                     int timesCured = PlayerStatsAttachment.get(target).getTimesCured();
-                                    int points = PlayerStatsAttachment.get(target).getPoints() * 160;
+                                    int points = PlayerStatsAttachment.get(target).getPoints();
                                     context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats.player", timesInfected, timesCured, points), false);
                                     return Command.SINGLE_SUCCESS;
                                 })
