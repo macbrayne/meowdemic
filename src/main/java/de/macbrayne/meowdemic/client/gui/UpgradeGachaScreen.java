@@ -1,17 +1,17 @@
 package de.macbrayne.meowdemic.client.gui;
 
+import com.mojang.blaze3d.platform.Window;
+import de.macbrayne.meowdemic.Meowdemic;
+import de.macbrayne.meowdemic.data.TransmissionEvent;
+import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.StringWidget;
-import net.minecraft.client.gui.components.toasts.SystemToast;
-import net.minecraft.client.gui.layouts.FrameLayout;
-import net.minecraft.client.gui.layouts.LinearLayout;
+import dev.chailotl.bento_gui.client.FlowAxis;
+import dev.chailotl.bento_gui.client.elements.*;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 
 public class UpgradeGachaScreen extends Screen {
-    protected final LinearLayout layout = LinearLayout.vertical().spacing(8);
     private RandomSource random;
 
     public UpgradeGachaScreen() {
@@ -20,24 +20,101 @@ public class UpgradeGachaScreen extends Screen {
 
     @Override
     protected void init() {
-        this.random = RandomSource.create();
-        this.layout.defaultCellSetting().alignHorizontallyCenter();
-        this.layout.addChild(new StringWidget(this.title, this.font));
-        this.layout.addChild(Button.builder(Component.literal("Upgrade"), b -> {
-            Upgrades randUpgrade = Upgrades.getRandom(random);
-            this.minecraft.getToastManager().addToast(
-                    SystemToast.multiline(this.minecraft, SystemToast.SystemToastId.NARRATOR_TOGGLE, Component.literal("Upgrade:"), Component.literal(randUpgrade + ""))
-            );
-            TransmissionAttachment.get(minecraft.player).mutate(randUpgrade.apply());
-        }).width(280).build());
+        TransmissionEvent attachment = TransmissionAttachment.get(minecraft.player).getOptional().get();
+        PlayerStatsAttachment.PlayerStatsData playerStats = PlayerStatsAttachment.get(minecraft.player);
 
-        this.layout.visitWidgets(this::addRenderableWidget);
-        this.repositionElements();
-    }
+        Window window = minecraft.getWindow();
+        int width = window.getGuiScaledWidth();
+        int height = window.getGuiScaledHeight();
 
-    @Override
-    protected void repositionElements() {
-        this.layout.arrangeElements();
-        FrameLayout.centerInRectangle(this.layout, this.getRectangle());
+        // The root panel that will contain everything
+        Panel root = Panel.builder()
+                .dimensions(width, height)
+                .spacing(1)
+                .build();
+
+        // Add elements to root
+        Panel header = Panel.builder()
+                .dimensions(true, 32)
+                .flowAxis(FlowAxis.HORIZONTAL)
+                .alignCenter()
+                .alignMiddle()
+                .padding(20, 40, 0, 0)
+                .build();
+        Panel body = ScrollPanel.ofMenu()
+                .dimensions(true, true)
+                .alignCenter()
+                .padding(10, 0)
+                .spacing(10)
+                .build();
+        Panel footer = Panel.builder()
+                .dimensions(true, 32)
+                .alignCenter()
+                .alignMiddle()
+                .padding(20, 0)
+                .spacing(8)
+                .flowAxis(FlowAxis.HORIZONTAL)
+                .build();
+
+        root.addChild(header);
+        root.addChild(body);
+        root.addChild(footer);
+
+
+        Label title = Label.builder()
+                .text(Component.translatable("gui.meowdemic.upgrade_gui.title"))
+                .build();
+
+        Panel empty = Panel.builder()
+                .dimensions(true, 32)
+                .build();
+
+        Label points = Label.builder()
+                .text(Component.translatable("gui.meowdemic.upgrade_gui.points", playerStats.getPoints() * 160))
+                .build();
+
+        header.addChild(title);
+        header.addChild(empty);
+        header.addChild(points);
+
+        // Add elements to body
+        Image image = Image.builder()
+                .image(Meowdemic.id("textures/gui/upgrades/cat_ears.png"))
+                .dimensions(16, 16)
+                .build();
+
+        Label upgradeTitle = Label.builder()
+                .text(Component.translatable("gui.meowdemic.upgrade_gui.current.title", attachment.strain().name()))
+                .padding(0, 0, 4, 0)
+                .build();
+        Paragraph description = Paragraph.builder()
+                .text(Component.translatable("gui.meowdemic.upgrade_gui.current.list", Component.translatable("gui.meowdemic.upgrade_gui.incubation", attachment.strain().incubationFactor()),
+                        Component.translatable("gui.meowdemic.upgrade_gui.immunity", attachment.strain().immunityFactor()),
+                        Component.translatable("gui.meowdemic.upgrade_gui.recovery", attachment.strain().recoveryFactor()),
+                        Component.translatable("gui.meowdemic.upgrade_gui.transmission", attachment.strain().transmissionFactor())))
+                .width(true)
+                .height(true)
+                .build();
+
+        body.addChild(image);
+        body.addChild(upgradeTitle);
+        body.addChild(description);
+
+        // Add elements to footer
+        TextField<String> searchField = TextField.ofString()
+                .placeholder(Component.literal("Search..."))
+                .width(true)
+                .maxWidth(200)
+                .build();
+        Button doneButton = Button.builder()
+                .text(Component.literal("Done"))
+                .onPress(self -> onClose())
+                .build();
+
+        footer.addChild(searchField);
+        footer.addChild(doneButton);
+
+        // Add root as drawable child
+        addRenderableWidget(root);
     }
 }

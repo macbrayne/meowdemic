@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.client.gui.UpgradeGachaScreen;
 import de.macbrayne.meowdemic.client.renderer.ModelLayers;
+import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
@@ -30,7 +31,7 @@ public class MeowdemicClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openScreen.consumeClick()) {
-                if (client.player != null) {
+                if (client.player != null && TransmissionAttachment.get(client.player).getOptional().isPresent()) {
                     client.setScreen(new UpgradeGachaScreen());
                 }
             }

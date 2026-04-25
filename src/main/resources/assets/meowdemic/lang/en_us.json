@@ -4,7 +4,7 @@
   "effect.meowdemic.incubating": "You feel a bit woozy...?",
 
   "commands.meowdemic.meowdemic.stats": "Currently infected: %s\nTotal infected: %s\nSpecies barriers crossed: %s\nStrains created: %s",
-  "commands.meowdemic.meowdemic.stats.player": "Times infected: %s\nTime cured: %s\nPoints: %s",
+  "commands.meowdemic.meowdemic.stats.player": "Times infected: %s\nTime cured: %s\nMeowgems: %s",
   "commands.meowdemic.meowdemic.stats.reset.confirm": "Reset server stats? This cannot be undone! Rerun /meowdemic stats reset to confirm.",
   "commands.meowdemic.meowdemic.stats.reset": "Reset server stats.",
 
@@ -13,5 +13,17 @@
   "item.meowdemic.swab_sample": "Swab Sample",
 
   "tooltip.meowdemic.strain": ":3",
-  "tooltip.meowdemic.vaccine_strain": "Vaccinates against:"
+  "tooltip.meowdemic.vaccine_strain": "Vaccinates against:",
+
+  "gui.meowdemic.upgrade_gui.title": "Upgrades",
+  "gui.meowdemic.upgrade_gui.points": "%s Meowogems",
+  "gui.meowdemic.upgrade_gui.current.list": "%s\n%s\n%s\n%s",
+  "gui.meowdemic.upgrade_gui.incubation": "Incubation length: %sx",
+  "gui.meowdemic.upgrade_gui.transmission": "Transmission chance: %sx",
+  "gui.meowdemic.upgrade_gui.recovery": "Recovery speed: %sx",
+  "gui.meowdemic.upgrade_gui.immunity": "Immunity length: %sx",
+
+  "gui.meowdemic.upgrade_gui.gacha": "Gamble! (cost: 160 Meowogems)",
+
+  "gui.meowdemic.upgrade_gui.current.title": "%s strain"
 }

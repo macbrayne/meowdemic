@@ -13,8 +13,8 @@ repositories {
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
 	maven {
-		name = "Ladysnake Mods"
-		url = 'https://maven.ladysnake.org/releases'
+		name "Chai's Maven"
+		url "https://codeberg.org/api/packages/chai/maven"
 	}
 	maven {
 		url "https://maven.nucleoid.xyz/"
@@ -44,7 +44,7 @@ dependencies {
 	include "maven.modrinth:styled-chat:2.12.0-pre.1+26.1"
 	implementation "maven.modrinth:styled-chat:2.12.0-pre.1+26.1"
 	implementation include("eu.pb4:placeholder-api:3.0.0-beta.2+26.1")
-
+	implementation include("dev.chailotl:bento-gui:${project.bento_gui_version}")
 }
 
 fabricApi {
