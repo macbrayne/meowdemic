@@ -70,7 +70,7 @@ public class MeowdemicItems {
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS)
                 .register((creativeTab) -> {
                     ItemStack defaultVaccine = VACCINE.getDefaultInstance();
-                    Consumable consumable = addConsumableEffect(VACCINE_CONSUMABLE, AffectionConsumeEffect.vaccinate(new Strain(Symptoms.all(), 1, 1, 1, 1)));
+                    Consumable consumable = modifyConsumableEffect(VACCINE_CONSUMABLE, AffectionConsumeEffect.vaccinate(new Strain(Symptoms.all(), 1, 1, 1, 1)));
                     defaultVaccine.set(DataComponents.CONSUMABLE, consumable);
                     defaultVaccine.set(MeowdemicItems.STRAIN_TOOLTIP, new StrainTooltipComponent());
                     creativeTab.accept(defaultVaccine);
@@ -85,17 +85,20 @@ public class MeowdemicItems {
         return Registry.register(BuiltInRegistries.CONSUME_EFFECT_TYPE, name, new ConsumeEffect.Type<>(codec, streamCodec));
     }
 
-    public static Consumable addConsumableEffect(Consumable oldConsumable, AffectionConsumeEffect effect) {
+    public static Consumable modifyConsumableEffect(Consumable oldConsumable, AffectionConsumeEffect effect) {
         Consumable.Builder builder = Consumable.builder()
                 .consumeSeconds(oldConsumable.consumeSeconds())
                 .animation(oldConsumable.animation())
                 .hasConsumeParticles(oldConsumable.hasConsumeParticles())
                 .sound(oldConsumable.sound());
         for (ConsumeEffect onConsumeEffect : oldConsumable.onConsumeEffects()) {
-            builder.onConsume(onConsumeEffect);
-            if(onConsumeEffect instanceof AffectionConsumeEffect) {
-                return null;
+            if(onConsumeEffect instanceof AffectionConsumeEffect old) {
+                if(old.equals(effect)) {
+                    return null;
+                }
+                continue;
             }
+            builder.onConsume(onConsumeEffect);
         }
         builder.onConsume(effect);
         return builder.build();
