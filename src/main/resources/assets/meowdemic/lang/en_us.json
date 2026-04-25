@@ -10,6 +10,8 @@
 
   "item.meowdemic.vaccine": "Vaccine",
   "item.meowdemic.swab": "Swab",
-  "item.meowdemic.swab_sample": "Swab Sample"
+  "item.meowdemic.swab_sample": "Swab Sample",
 
+  "tooltip.meowdemic.strain": ":3",
+  "tooltip.meowdemic.vaccine_strain": "Vaccinates against:"
 }

@@ -5,13 +5,17 @@ import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.world.item.components.AffectionConsumeEffect;
+import de.macbrayne.meowdemic.world.item.components.StrainTooltipComponent;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.item.v1.ItemComponentTooltipProviderRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -26,6 +30,11 @@ import java.util.function.Function;
 public class MeowdemicItems {
     public static final ConsumeEffect.Type<AffectionConsumeEffect> AFFECT = registerConsumeEffect(
             "affect", AffectionConsumeEffect.CODEC, AffectionConsumeEffect.STREAM_CODEC
+    );
+    public static final DataComponentType<StrainTooltipComponent> STRAIN_TOOLTIP = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Identifier.fromNamespaceAndPath(Meowdemic.MOD_ID, "strain_tooltip_component"),
+            DataComponentType.<StrainTooltipComponent>builder().persistent(StrainTooltipComponent.CODEC).build()
     );
 
     public static final Consumable VACCINE_CONSUMABLE = Consumables.defaultDrink()
@@ -63,8 +72,11 @@ public class MeowdemicItems {
                     ItemStack defaultVaccine = VACCINE.getDefaultInstance();
                     Consumable consumable = addConsumableEffect(VACCINE_CONSUMABLE, AffectionConsumeEffect.vaccinate(new Strain(Symptoms.all(), 1, 1, 1, 1)));
                     defaultVaccine.set(DataComponents.CONSUMABLE, consumable);
+                    defaultVaccine.set(MeowdemicItems.STRAIN_TOOLTIP, new StrainTooltipComponent());
                     creativeTab.accept(defaultVaccine);
                 });
+
+        ItemComponentTooltipProviderRegistry.addAfter(DataComponents.DAMAGE, STRAIN_TOOLTIP);
     }
 
     private static <T extends ConsumeEffect> ConsumeEffect.Type<T> registerConsumeEffect(

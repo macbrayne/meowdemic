@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import de.macbrayne.meowdemic.world.item.MeowdemicItems;
 import de.macbrayne.meowdemic.world.item.components.AffectionConsumeEffect;
+import de.macbrayne.meowdemic.world.item.components.StrainTooltipComponent;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -48,6 +49,7 @@ public class ShapedRecipeMixin {
                 return result;
             }
             result.set(DataComponents.CONSUMABLE, newConsumable);
+            result.set(MeowdemicItems.STRAIN_TOOLTIP, new StrainTooltipComponent());
         }
 
         System.out.println("Result: " + result.getComponents());

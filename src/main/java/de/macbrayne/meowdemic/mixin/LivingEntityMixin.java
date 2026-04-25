@@ -8,6 +8,7 @@ import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import de.macbrayne.meowdemic.world.item.MeowdemicItems;
 import de.macbrayne.meowdemic.world.item.components.AffectionConsumeEffect;
+import de.macbrayne.meowdemic.world.item.components.StrainTooltipComponent;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -85,6 +86,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
                 Consumable consumable = MeowdemicItems.addConsumableEffect(oldConsumable, AffectionConsumeEffect.infect(Optional.of(this.getUUID()), strain));
                 if (consumable == null) return;
                 entity.getMainHandItem().set(DataComponents.CONSUMABLE, consumable);
+                entity.getMainHandItem().set(MeowdemicItems.STRAIN_TOOLTIP, new StrainTooltipComponent());
                 meowdemic$resetSpreadTime();
             }
         }
