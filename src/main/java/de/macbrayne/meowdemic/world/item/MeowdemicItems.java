@@ -61,7 +61,7 @@ public class MeowdemicItems {
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS)
                 .register((creativeTab) -> {
                     ItemStack defaultVaccine = VACCINE.getDefaultInstance();
-                    Consumable consumable = addEffect(VACCINE_CONSUMABLE, AffectionConsumeEffect.vaccinate(new Strain(Symptoms.all(), 1, 1, 1, 1)));
+                    Consumable consumable = addConsumableEffect(VACCINE_CONSUMABLE, AffectionConsumeEffect.vaccinate(new Strain(Symptoms.all(), 1, 1, 1, 1)));
                     defaultVaccine.set(DataComponents.CONSUMABLE, consumable);
                     creativeTab.accept(defaultVaccine);
                 });
@@ -73,7 +73,7 @@ public class MeowdemicItems {
         return Registry.register(BuiltInRegistries.CONSUME_EFFECT_TYPE, name, new ConsumeEffect.Type<>(codec, streamCodec));
     }
 
-    public static Consumable addEffect(Consumable oldConsumable, AffectionConsumeEffect effect) {
+    public static Consumable addConsumableEffect(Consumable oldConsumable, AffectionConsumeEffect effect) {
         Consumable.Builder builder = Consumable.builder()
                 .consumeSeconds(oldConsumable.consumeSeconds())
                 .animation(oldConsumable.animation())

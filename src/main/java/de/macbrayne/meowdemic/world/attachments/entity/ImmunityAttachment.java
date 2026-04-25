@@ -7,8 +7,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.util.Optional;
-
 public class ImmunityAttachment {
     private static final RandomSource random = RandomSource.create();
 
@@ -17,19 +15,16 @@ public class ImmunityAttachment {
     }
 
     public record ImmunityData(LivingEntity target) {
-        public Optional<Strain> getOptional() {
-            return Optional.ofNullable(target.getAttached(Attachments.IMMUNITY));
-        }
 
         public boolean setIfNone(Strain strain, float modifier) {
-            if(target.getAttached(Attachments.IMMUNITY) != null) return false;
+            if(Attachments.isAffected(target)) return false;
 
             MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.IMMUNE,
                     (int)(60 * 20 * strain.immunityFactor() * modifier * (random.nextGaussian() * 0.5 + 1)),
                     0, false, false, false);
-            target.addEffect(effect);
-            target.setAttached(Attachments.IMMUNITY, strain);
             PlayerStatsAttachment.get(target).increaseTimesCured();
+            target.setAttached(Attachments.IMMUNITY, strain);
+            target.addEffect(effect);
             return true;
         }
 

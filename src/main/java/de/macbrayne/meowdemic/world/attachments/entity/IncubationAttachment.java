@@ -22,16 +22,13 @@ public class IncubationAttachment {
         }
 
         public boolean tryIncubate(TransmissionEvent event) {
-            if(target.getAttached(Attachments.INCUBATION) != null) return false;
-            if(target.getAttached(Attachments.TRANSMISSION) != null) return false;
-            if(target.getAttached(Attachments.IMMUNITY) != null) return false;
-            if(target.getRandom().nextDouble() > event.strain().transmissionFactor()) return false;
+            if(Attachments.isAffected(target)) return false;
 
             MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.INCUBATING,
                     (int)(60 * 20 * event.strain().incubationFactor() * (random.nextGaussian() * 0.5 + 1)),
                     0, false, false, false);
-            target.addEffect(effect);
             target.setAttached(Attachments.INCUBATION, event);
+            target.addEffect(effect);
             return true;
         }
 

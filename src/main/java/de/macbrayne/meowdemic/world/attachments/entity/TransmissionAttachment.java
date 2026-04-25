@@ -27,15 +27,13 @@ public class TransmissionAttachment {
         }
 
         public void infect(TransmissionEvent transmissionEvent) {
-            if(target.getAttached(Attachments.TRANSMISSION) != null) return;
-            if(target.getAttached(Attachments.INCUBATION) != null) return;
-            if(target.getAttached(Attachments.IMMUNITY) != null) return;
+            if(Attachments.isAffected(target)) return;
 
             MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.INFECTED,
                     (int)(60 * 20 * transmissionEvent.strain().recoveryFactor() * (random.nextGaussian() * 0.5 + 1)),
                     0, false, false, false);
-            target.addEffect(effect);
             target.setAttached(Attachments.TRANSMISSION, transmissionEvent);
+            target.addEffect(effect);
         }
 
         public void mutate(UnaryOperator<Strain> operator) {
@@ -46,6 +44,10 @@ public class TransmissionAttachment {
         public boolean hasSymptom(Symptoms symptom) {
             Optional<TransmissionEvent> event = getOptional();
             return event.isPresent() && event.get().strain().symptoms().contains(symptom);
+        }
+
+        public void remove() {
+            target.removeAttached(Attachments.TRANSMISSION);
         }
     }
 }

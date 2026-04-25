@@ -7,6 +7,7 @@ import de.macbrayne.meowdemic.data.TransmissionEvent;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.minecraft.world.entity.LivingEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,5 +72,11 @@ public class Attachments {
         LOGGER.info("Registered data attachments");
         PlayerStats.init();
         ServerStats.init();
+    }
+
+    public static boolean isAffected(LivingEntity entity) {
+        return entity.getAttached(Attachments.INCUBATION) != null ||
+                entity.getAttached(Attachments.TRANSMISSION) != null ||
+                entity.getAttached(Attachments.IMMUNITY) != null;
     }
 }

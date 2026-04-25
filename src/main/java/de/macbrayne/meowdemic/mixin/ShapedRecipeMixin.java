@@ -43,7 +43,7 @@ public class ShapedRecipeMixin {
         System.out.println("Post modify affect: " + affected);
         if (result.has(DataComponents.CONSUMABLE)) {
             Consumable old = result.get(DataComponents.CONSUMABLE);
-            Consumable newConsumable = MeowdemicItems.addEffect(old, affected);
+            Consumable newConsumable = MeowdemicItems.addConsumableEffect(old, affected);
             if(newConsumable == null) {
                 return result;
             }

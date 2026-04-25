@@ -8,17 +8,18 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
+import java.util.Optional;
+
 public class IncubationEffect extends MobEffect {
     public IncubationEffect() {
         super(MobEffectCategory.NEUTRAL, 0xFF0000);
     }
 
     public static void onRemove(MobEffectInstance effectInstance, LivingEntity entity) {
-        if(IncubationAttachment.get(entity).getOptional().isEmpty()) return;
-        if(!entity.level().isClientSide()) {
-            TransmissionEvent event = IncubationAttachment.get(entity).getOptional().get();
+        Optional<TransmissionEvent> event = IncubationAttachment.get(entity).getOptional();
+        if(event.isPresent() && !entity.level().isClientSide()) {
             IncubationAttachment.get(entity).remove();
-            TransmissionAttachment.get(entity).infect(event);
+            TransmissionAttachment.get(entity).infect(event.get());
         }
     }
 }
