@@ -43,9 +43,14 @@ public class Meowdemic implements ModInitializer {
 			RandomSource random = context.player().getRandom();
             Optional<TransmissionEvent> event = TransmissionAttachment.get(context.player()).getOptional();
 			if(event.isPresent() && PlayerStatsAttachment.get(context.player()).getPoints() > 0) {
-				Upgrades upgrade = Upgrades.getRandom(random);
+				int pity = PlayerStatsAttachment.get(context.player()).getGachaPity();
+				Upgrades upgrade = Upgrades.getRandom(random, pity);
 				context.responseSender().sendPacket(new ClientboundGachaResponsePacket(upgrade));
 				PlayerStatsAttachment.get(context.player()).removePoints(1);
+				PlayerStatsAttachment.get(context.player()).increaseGachaPity();
+				if(pity >= 10) {
+					PlayerStatsAttachment.get(context.player()).resetGachaPity();
+				}
 			}
 		});
 

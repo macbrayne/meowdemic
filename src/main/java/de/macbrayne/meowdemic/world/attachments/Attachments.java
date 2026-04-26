@@ -44,6 +44,12 @@ public class Attachments {
                 .initializer(() -> 0)
                 .copyOnDeath());
 
+        public static final AttachmentType<Integer> GACHA_PITY = AttachmentRegistry.create(Meowdemic.id("gacha_pity"), builder -> builder
+                .persistent(Codec.INT)
+                .syncWith(ByteBufCodecs.VAR_INT, AttachmentSyncPredicate.targetOnly())
+                .initializer(() -> 0)
+                .copyOnDeath());
+
         public static void init() {
             LOGGER.info("Registered player stats attachments");
         }

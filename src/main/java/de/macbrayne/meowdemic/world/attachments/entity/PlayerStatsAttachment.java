@@ -35,5 +35,18 @@ public class PlayerStatsAttachment {
             target.getAttachedOrCreate(Attachments.PlayerStats.POINTS_DELTA);
             target.modifyAttached(Attachments.PlayerStats.POINTS_DELTA, integer -> integer + amount);
         }
+
+        public int getGachaPity() {
+            return target.getAttachedOrCreate(Attachments.PlayerStats.GACHA_PITY);
+        }
+
+        public void increaseGachaPity() {
+            target.getAttachedOrCreate(Attachments.PlayerStats.GACHA_PITY);
+            target.modifyAttached(Attachments.PlayerStats.GACHA_PITY, integer -> integer + 1);
+        }
+
+        public void resetGachaPity() {
+            target.setAttached(Attachments.PlayerStats.GACHA_PITY, 0);
+        }
     }
 }

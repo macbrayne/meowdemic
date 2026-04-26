@@ -28,13 +28,21 @@ public enum Upgrades implements StringRepresentable {
          this.id = id;
      }
 
-     public static Upgrades getRandom(RandomSource random) {
+     public static Upgrades getRandom(RandomSource random, int pity) {
+         if(pity >= 10) {
+             return getRandomPity(random);
+         }
+
          int rnd = random.nextInt(100);
 
          if(rnd < 10) {
              return List.of(NEW_SYMPTOM_CAT_EARS, NEW_SYMPTOM_FOOD, NEW_SYMPTOM_CHAT).get(random.nextInt(3));
          }
          return List.of(TRANSMISSION_RATE, IMMUNITY_RATE, RECOVERY_RATE, INCUBATION_RATE).get(random.nextInt(4));
+     }
+
+     public static Upgrades getRandomPity(RandomSource random) {
+         return List.of(NEW_SYMPTOM_CAT_EARS, NEW_SYMPTOM_FOOD, NEW_SYMPTOM_CHAT).get(random.nextInt(3));
      }
 
      public UnaryOperator<Strain> apply() {
