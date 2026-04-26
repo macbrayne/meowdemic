@@ -2,11 +2,12 @@ package de.macbrayne.meowdemic.client.gui;
 
 import com.mojang.blaze3d.platform.Window;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
+import de.macbrayne.meowdemic.network.ServerboundGachaRequestPacket;
 import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import dev.chailotl.bento_gui.client.FlowAxis;
 import dev.chailotl.bento_gui.client.elements.*;
-import net.minecraft.ChatFormatting;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
@@ -39,7 +40,8 @@ public class UpgradeGachaScreen extends Screen {
                 .flowAxis(FlowAxis.HORIZONTAL)
                 .alignCenter()
                 .alignMiddle()
-                .padding(20)
+                .padding(10, 0)
+                .spacing(8)
                 .build();
         Panel body = ScrollPanel.ofMenu()
                 .dimensions(true, true)
@@ -74,7 +76,7 @@ public class UpgradeGachaScreen extends Screen {
                 .build();
 
         Button exit = Button.builder()
-                .text(Component.translatable("gui.meowdemic.upgrade_gui.exit").withStyle(ChatFormatting.RED))
+                .text(Component.translatable("gui.meowdemic.upgrade_gui.exit"))
                 .onPress(self -> onClose())
                 .padding(0)
                 .width(16)
@@ -119,7 +121,12 @@ public class UpgradeGachaScreen extends Screen {
         Button gachaButton = Button.builder()
                 .text(Component.translatable("gui.meowdemic.upgrade_gui.gacha"))
                 .width(200)
-                .onPress(self -> onClose())
+                .onPress(self -> {
+                    if(playerStats.getPoints() > 0) {
+                        ServerboundGachaRequestPacket packet = new ServerboundGachaRequestPacket();
+                        ClientPlayNetworking.send(packet);
+                    }
+                })
                 .build();
 
         footer.addChild(ratesButton);
