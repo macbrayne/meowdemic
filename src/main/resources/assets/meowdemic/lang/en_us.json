@@ -17,14 +17,23 @@
 
   "gui.meowdemic.upgrade_gui.title": "Upgrades",
   "gui.meowdemic.upgrade_gui.points": "%s Meowogems",
-  "gui.meowdemic.upgrade_gui.current.list": "%s\n%s\n%s\n%s",
+  "gui.meowdemic.upgrade_gui.current.list": "%s, %s, %s, %s",
   "gui.meowdemic.upgrade_gui.incubation": "Incubation length: %sx",
   "gui.meowdemic.upgrade_gui.transmission": "Transmission chance: %sx",
   "gui.meowdemic.upgrade_gui.recovery": "Recovery speed: %sx",
   "gui.meowdemic.upgrade_gui.immunity": "Immunity length: %sx",
 
-  "gui.meowdemic.upgrade_gui.gacha": "Gamble! (Cost: 160 Meowogems)",
+  "gui.meowdemic.upgrade_gui.gacha": "Wish 1x (Cost: 160 Meowogems)",
 
   "gui.meowdemic.upgrade_gui.current.title": "%s strain",
-  "gui.meowdemic.upgrade_gui.exit": "X"
+  "gui.meowdemic.upgrade_gui.exit": "X",
+  "gui.meowdemic.upgrade_gui.details": "Details",
+  "gui.meowdemic.upgrade_gui.history": "History",
+
+  "gui.meowdemic.rates.title":  "Details",
+  "gui.meowdemic.rates.common": "Common: %s%%, Pity: %s%%",
+  "gui.meowdemic.rates.uncommon": "Uncommon: %s%%, Pity: %s%%",
+  "gui.meowdemic.gacha_history.title": "History",
+  "gui.meowdemic.gacha_history.entries.description": "Name - Time Received",
+  "gui.meowdemic.gacha_history.entries.entry": "%s - %s"
 }

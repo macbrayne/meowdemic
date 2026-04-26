@@ -2,6 +2,7 @@ package de.macbrayne.meowdemic.world.attachments;
 
 import com.mojang.serialization.Codec;
 import de.macbrayne.meowdemic.Meowdemic;
+import de.macbrayne.meowdemic.data.PullHistoryEvent;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
@@ -11,6 +12,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.world.entity.LivingEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayDeque;
 
 public class Attachments {
     public static final Logger LOGGER = LoggerFactory.getLogger(Meowdemic.MOD_ID);
@@ -48,6 +51,12 @@ public class Attachments {
                 .persistent(Codec.INT)
                 .syncWith(ByteBufCodecs.VAR_INT, AttachmentSyncPredicate.targetOnly())
                 .initializer(() -> 0)
+                .copyOnDeath());
+
+        public static final AttachmentType<ArrayDeque<PullHistoryEvent>> PULL_HISTORY = AttachmentRegistry.create(Meowdemic.id("pull_history"), builder -> builder
+                .persistent(PullHistoryEvent.DEQUE_CODEC)
+                .syncWith(PullHistoryEvent.DEQUE_STREAM_CODEC, AttachmentSyncPredicate.targetOnly())
+                .initializer(() -> new ArrayDeque(10))
                 .copyOnDeath());
 
         public static void init() {

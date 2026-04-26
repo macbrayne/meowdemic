@@ -1,7 +1,10 @@
 package de.macbrayne.meowdemic.world.attachments.entity;
 
+import de.macbrayne.meowdemic.data.PullHistoryEvent;
 import de.macbrayne.meowdemic.world.attachments.Attachments;
 import net.minecraft.world.entity.LivingEntity;
+
+import java.util.ArrayDeque;
 
 public class PlayerStatsAttachment {
     public static PlayerStatsData get(LivingEntity target) {
@@ -47,6 +50,19 @@ public class PlayerStatsAttachment {
 
         public void resetGachaPity() {
             target.setAttached(Attachments.PlayerStats.GACHA_PITY, 0);
+        }
+
+        public ArrayDeque<PullHistoryEvent> getPullHistory() {
+            return target.getAttachedOrCreate(Attachments.PlayerStats.PULL_HISTORY);
+        }
+
+        public void addPullHistoryEvent(PullHistoryEvent event) {
+            target.getAttachedOrCreate(Attachments.PlayerStats.PULL_HISTORY);
+            target.modifyAttached(Attachments.PlayerStats.PULL_HISTORY, list -> {
+                if(list.size() >= 10) list.removeLast();
+                list.add(event);
+                return list;
+            });
         }
     }
 }

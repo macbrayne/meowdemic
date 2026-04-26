@@ -2,55 +2,75 @@ package de.macbrayne.meowdemic.data;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 public enum Upgrades implements StringRepresentable {
-    TRANSMISSION_RATE(strain -> strain.withTransmissionFactor(strain.transmissionFactor() * 1.1), "transmission_rate"),
-    RECOVERY_RATE(strain -> strain.withRecoveryFactor(strain.recoveryFactor() * 0.9), "recovery_rate"),
-    IMMUNITY_RATE(strain -> strain.withImmunityFactor(strain.immunityFactor() * 0.9), "immunity_rate"),
-    INCUBATION_RATE(strain -> strain.withIncubationFactor(strain.incubationFactor() * 0.9), "incubation_rate"),
-    NEW_SYMPTOM_CHAT(strain -> strain.addSymptom(Symptoms.CHAT), "symptom_chat"),
-    NEW_SYMPTOM_FOOD(strain -> strain.addSymptom(Symptoms.FOOD), "symptom_food"),
-    NEW_SYMPTOM_CAT_EARS(strain -> strain.addSymptom(Symptoms.CAT_EARS), "symptom_cat_ears");
+    TRANSMISSION_RATE("transmission_rate", Rarity.COMMON, strain -> strain.withTransmissionFactor(strain.transmissionFactor() * 1.1)),
+    RECOVERY_RATE("recovery_rate", Rarity.COMMON, strain -> strain.withRecoveryFactor(strain.recoveryFactor() * 0.9)),
+    IMMUNITY_RATE("immunity_rate", Rarity.COMMON, strain -> strain.withImmunityFactor(strain.immunityFactor() * 0.9)),
+    INCUBATION_RATE("incubation_rate", Rarity.COMMON, strain -> strain.withIncubationFactor(strain.incubationFactor() * 0.9)),
+    NEW_SYMPTOM_CHAT("symptom_chat", Rarity.UNCOMMON, strain -> strain.addSymptom(Symptoms.CHAT)),
+    NEW_SYMPTOM_FOOD("symptom_food", Rarity.UNCOMMON, strain -> strain.addSymptom(Symptoms.FOOD)),
+    NEW_SYMPTOM_CAT_EARS("symptom_cat_ears", Rarity.UNCOMMON, strain -> strain.addSymptom(Symptoms.CAT_EARS));
 
     private final UnaryOperator<Strain> effect;
     private final String id;
+    private final Rarity rarity;
     public static final Codec<Upgrades> CODEC = StringRepresentable.fromEnum(Upgrades::values);
     public static final StreamCodec<ByteBuf, Upgrades> STREAM_CODEC = CodecUtils.ofEnum(Upgrades.class);
 
-     Upgrades(UnaryOperator<Strain> effect, String id) {
-         this.effect = effect;
-         this.id = id;
-     }
+    public static final List<Upgrades> COMMON_POOL = Arrays.stream(values()).filter(upgrade -> upgrade.rarity == Rarity.COMMON).collect(Collectors.toList());;
+    public static final List<Upgrades> UNCOMMON_POOL = Arrays.stream(values()).filter(upgrade -> upgrade.rarity == Rarity.UNCOMMON).collect(Collectors.toList());;
 
-     public static Upgrades getRandom(RandomSource random, int pity) {
-         if(pity >= 10) {
-             return getRandomPity(random);
-         }
+    Upgrades(String id, Rarity rarity, UnaryOperator<Strain> effect) {
+        this.effect = effect;
+        this.id = id;
+        this.rarity = rarity;
+    }
 
-         int rnd = random.nextInt(100);
+    public static Upgrades getRandom(RandomSource random, int pity) {
+        float rand = random.nextFloat();
+        float commonChance = pity >= 10 ? Rarity.COMMON.pityChance : Rarity.COMMON.chance;
+        if (rand < commonChance) {
+            return COMMON_POOL.get(random.nextInt(COMMON_POOL.size()));
+        } else {
+            return UNCOMMON_POOL.get(random.nextInt(UNCOMMON_POOL.size()));
+        }
+    }
 
-         if(rnd < 10) {
-             return List.of(NEW_SYMPTOM_CAT_EARS, NEW_SYMPTOM_FOOD, NEW_SYMPTOM_CHAT).get(random.nextInt(3));
-         }
-         return List.of(TRANSMISSION_RATE, IMMUNITY_RATE, RECOVERY_RATE, INCUBATION_RATE).get(random.nextInt(4));
-     }
-
-     public static Upgrades getRandomPity(RandomSource random) {
-         return List.of(NEW_SYMPTOM_CAT_EARS, NEW_SYMPTOM_FOOD, NEW_SYMPTOM_CHAT).get(random.nextInt(3));
-     }
-
-     public UnaryOperator<Strain> apply() {
-         return effect;
-     }
+    public UnaryOperator<Strain> apply() {
+        return effect;
+    }
 
     @Override
     public String getSerializedName() {
         return id;
+    }
+
+    public Rarity getRarity() {
+        return rarity;
+    }
+
+    public enum Rarity {
+        COMMON(0.95f, 0.6f), UNCOMMON(0.05f, 0.4f);
+        final public float chance;
+        final public float pityChance;
+
+        Rarity(float chance, float pityChance) {
+            this.chance = chance;
+            this.pityChance = pityChance;
+        }
+
+        public Component getComponent() {
+            return Component.translatable("gui.meowdemic.gacha_history.rarity." + this.name().toLowerCase());
+        }
     }
 }

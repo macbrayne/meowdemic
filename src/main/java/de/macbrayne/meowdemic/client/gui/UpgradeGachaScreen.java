@@ -35,14 +35,6 @@ public class UpgradeGachaScreen extends Screen {
                 .build();
 
         // Add elements to root
-        Panel header = Panel.builder()
-                .dimensions(true, 32)
-                .flowAxis(FlowAxis.HORIZONTAL)
-                .alignCenter()
-                .alignMiddle()
-                .padding(10, 0)
-                .spacing(8)
-                .build();
         Panel body = ScrollPanel.ofMenu()
                 .dimensions(true, true)
                 .alignCenter()
@@ -58,34 +50,9 @@ public class UpgradeGachaScreen extends Screen {
                 .flowAxis(FlowAxis.HORIZONTAL)
                 .build();
 
-        root.addChild(header);
+        root.addChild(CommonGui.addHeader(this, minecraft.player, Component.translatable("gui.meowdemic.upgrade_gui.title")));
         root.addChild(body);
         root.addChild(footer);
-
-
-        Label title = Label.builder()
-                .text(Component.translatable("gui.meowdemic.upgrade_gui.title"))
-                .build();
-
-        Panel empty = Panel.builder()
-                .dimensions(true, 32)
-                .build();
-
-        Label points = Label.builder()
-                .text(Component.translatable("gui.meowdemic.upgrade_gui.points", playerStats.getPoints()))
-                .build();
-
-        Button exit = Button.builder()
-                .text(Component.translatable("gui.meowdemic.upgrade_gui.exit"))
-                .onPress(self -> onClose())
-                .padding(0)
-                .width(16)
-                .build();
-
-        header.addChild(title);
-        header.addChild(empty);
-        header.addChild(points);
-        header.addChild(exit);
 
         // Add elements to body
         /*Image image = Image.builder()
@@ -112,8 +79,14 @@ public class UpgradeGachaScreen extends Screen {
 
         // Add elements to footer
         Button ratesButton = Button.builder()
-                .text(Component.literal("Rates"))
-                .width(40)
+                .text(Component.translatable("gui.meowdemic.upgrade_gui.details"))
+                .width(60)
+                .onPress(self -> minecraft.setScreen(new GachaRatesScreen()))
+                .build();
+        Button historyButton = Button.builder()
+                .text(Component.translatable("gui.meowdemic.upgrade_gui.history"))
+                .width(60)
+                .onPress(self -> minecraft.setScreen(new GachaHistoryScreen()))
                 .build();
         Panel emptyTwo = Panel.builder()
                 .dimensions(true, 32)
@@ -130,6 +103,7 @@ public class UpgradeGachaScreen extends Screen {
                 .build();
 
         footer.addChild(ratesButton);
+        footer.addChild(historyButton);
         footer.addChild(emptyTwo);
         footer.addChild(gachaButton);
 

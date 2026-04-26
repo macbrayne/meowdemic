@@ -1,6 +1,7 @@
 package de.macbrayne.meowdemic;
 
 import de.macbrayne.meowdemic.commands.CommandRoot;
+import de.macbrayne.meowdemic.data.PullHistoryEvent;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.data.Upgrades;
 import de.macbrayne.meowdemic.events.MessageEvents;
@@ -22,6 +23,7 @@ import net.minecraft.util.RandomSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.util.Optional;
 
 public class Meowdemic implements ModInitializer {
@@ -42,14 +44,16 @@ public class Meowdemic implements ModInitializer {
 		ServerPlayNetworking.registerGlobalReceiver(ServerboundGachaRequestPacket.TYPE, (payload, context) -> {
 			RandomSource random = context.player().getRandom();
             Optional<TransmissionEvent> event = TransmissionAttachment.get(context.player()).getOptional();
-			if(event.isPresent() && PlayerStatsAttachment.get(context.player()).getPoints() > 0) {
+            PlayerStatsAttachment.PlayerStatsData stats = PlayerStatsAttachment.get(context.player());
+			if(event.isPresent() && stats.getPoints() > 0) {
 				int pity = PlayerStatsAttachment.get(context.player()).getGachaPity();
 				Upgrades upgrade = Upgrades.getRandom(random, pity);
 				context.responseSender().sendPacket(new ClientboundGachaResponsePacket(upgrade));
-				PlayerStatsAttachment.get(context.player()).removePoints(1);
-				PlayerStatsAttachment.get(context.player()).increaseGachaPity();
+				stats.addPullHistoryEvent(new PullHistoryEvent(upgrade, Instant.now()));
+				stats.removePoints(1);
+				stats.increaseGachaPity();
 				if(pity >= 10) {
-					PlayerStatsAttachment.get(context.player()).resetGachaPity();
+					stats.resetGachaPity();
 				}
 			}
 		});
