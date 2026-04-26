@@ -56,7 +56,7 @@ public class Attachments {
         public static final AttachmentType<ArrayDeque<PullHistoryEvent>> PULL_HISTORY = AttachmentRegistry.create(Meowdemic.id("pull_history"), builder -> builder
                 .persistent(PullHistoryEvent.DEQUE_CODEC)
                 .syncWith(PullHistoryEvent.DEQUE_STREAM_CODEC, AttachmentSyncPredicate.targetOnly())
-                .initializer(() -> new ArrayDeque(10))
+                .initializer(() -> new ArrayDeque<>(10))
                 .copyOnDeath());
 
         public static void init() {

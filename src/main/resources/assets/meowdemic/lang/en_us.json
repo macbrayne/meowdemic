@@ -35,5 +35,6 @@
   "gui.meowdemic.rates.uncommon": "Uncommon: %s%%, Pity: %s%%",
   "gui.meowdemic.gacha_history.title": "History",
   "gui.meowdemic.gacha_history.entries.description": "Name - Time Received",
-  "gui.meowdemic.gacha_history.entries.entry": "%s - %s"
+  "gui.meowdemic.gacha_history.entries.entry": "%s - %s",
+  "gui.meowdemic.upgrade_gui.gacha.tooltip.cant_afford": "Can't afford!"
 }

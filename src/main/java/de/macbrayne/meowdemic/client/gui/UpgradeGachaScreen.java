@@ -8,6 +8,8 @@ import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import dev.chailotl.bento_gui.client.FlowAxis;
 import dev.chailotl.bento_gui.client.elements.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
@@ -95,12 +97,16 @@ public class UpgradeGachaScreen extends Screen {
                 .text(Component.translatable("gui.meowdemic.upgrade_gui.gacha"))
                 .width(200)
                 .onPress(self -> {
-                    if(playerStats.getPoints() > 0) {
+                    if(playerStats.canAffordPull()) {
                         ServerboundGachaRequestPacket packet = new ServerboundGachaRequestPacket();
                         ClientPlayNetworking.send(packet);
                     }
                 })
                 .build();
+        if(!playerStats.canAffordPull()) {
+            gachaButton.setEnabled(false);
+            gachaButton.setTooltip(Tooltip.create(Component.translatable("gui.meowdemic.upgrade_gui.gacha.tooltip.cant_afford").withStyle(ChatFormatting.RED)));
+        }
 
         footer.addChild(ratesButton);
         footer.addChild(historyButton);

@@ -68,12 +68,14 @@ public class GachaHistoryScreen extends Screen {
 
         Label historyDescription = Label.builder()
                 .text(Component.translatable("gui.meowdemic.gacha_history.entries.description"))
+                .width(true)
                 .build();
         body.addChild(historyDescription);
 
         for(PullHistoryEvent upgrade : playerStats.getPullHistory()) {
             Label upgradeEntry = Label.builder()
-                    .text(Component.translatable("gui.meowdemic.gacha_history.entries.entry", upgrade.upgrade().name(), dateTimeFormatter.format(upgrade.timeReceived())))
+                    .text(Component.translatable("gui.meowdemic.gacha_history.entries.entry", upgrade.upgrade().getSerializedName(), dateTimeFormatter.format(upgrade.timeReceived())))
+                    .width(true)
                     .build();
             body.addChild(upgradeEntry);
         }

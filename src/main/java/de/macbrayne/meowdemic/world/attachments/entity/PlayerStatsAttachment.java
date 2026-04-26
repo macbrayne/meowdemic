@@ -31,7 +31,11 @@ public class PlayerStatsAttachment {
         }
 
         public int getPoints() {
-            return (getEntitiesInfected() - target.getAttachedOrCreate(Attachments.PlayerStats.POINTS_DELTA)) * 32;
+            return (getEntitiesInfected() - target.getAttachedOrCreate(Attachments.PlayerStats.POINTS_DELTA) * 5) * 32;
+        }
+
+        public boolean canAffordPull() {
+            return getPoints() >= 160;
         }
 
         public void removePoints(int amount) {
@@ -59,9 +63,10 @@ public class PlayerStatsAttachment {
         public void addPullHistoryEvent(PullHistoryEvent event) {
             target.getAttachedOrCreate(Attachments.PlayerStats.PULL_HISTORY);
             target.modifyAttached(Attachments.PlayerStats.PULL_HISTORY, list -> {
-                if(list.size() >= 10) list.removeLast();
-                list.add(event);
-                return list;
+                ArrayDeque<PullHistoryEvent> result = new ArrayDeque<>(list);
+                if(result.size() >= 10) result.removeFirst();
+                result.add(event);
+                return result;
             });
         }
     }
