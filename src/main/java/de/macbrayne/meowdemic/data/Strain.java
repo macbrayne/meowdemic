@@ -89,7 +89,7 @@ public record Strain(String name, HashSet<Symptoms> symptoms, double incubationF
 
     private static String[] splitName(String name) {
         String[] part1and2 = name.split("\\.");
-        String[] part2and3 = part1and2[1].split(" ");
+        String[] part2and3 = part1and2[1].split(" ", 2);
         return new String[]{part1and2[0], part2and3[0], part2and3[1]};
     }
 }

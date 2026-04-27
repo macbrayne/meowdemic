@@ -23,6 +23,7 @@ public class IncubationAttachment {
 
         public boolean tryIncubate(TransmissionEvent event) {
             if(Attachments.isAffected(target)) return false;
+            if(event.strain().transmissionFactor() < random.nextFloat()) return false;
 
             MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.INCUBATING,
                     (int)(60 * 20 * event.strain().incubationFactor() * (random.nextGaussian() * 0.5 + 1)),

@@ -3,13 +3,16 @@
 	"id": "meowdemic",
 	"version": "${version}",
 	"name": "Meowdemic",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Meow? Meow! :3",
 	"authors": [
-		"Me!"
+		"macbrayne"
+	],
+	"contributors": [
+		"TheFluffycart55"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/macbrayne/meowdemic/",
+		"sources": "https://github.com/macbrayne/meowdemic"
 	},
 	"license": "EUPL-1.2",
 	"icon": "assets/meowdemic/icon.png",

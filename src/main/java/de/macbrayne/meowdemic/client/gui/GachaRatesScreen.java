@@ -1,12 +1,14 @@
 package de.macbrayne.meowdemic.client.gui;
 
 import com.mojang.blaze3d.platform.Window;
+import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.data.Upgrades;
 import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import dev.chailotl.bento_gui.client.FlowAxis;
 import dev.chailotl.bento_gui.client.elements.*;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -36,7 +38,7 @@ public class GachaRatesScreen extends Screen {
                 .dimensions(true, true)
                 .alignCenter()
                 .padding(10, 0)
-                .spacing(10)
+                .spacing(5)
                 .build();
         Panel footer = Panel.builder()
                 .dimensions(true, 32)
@@ -58,18 +60,50 @@ public class GachaRatesScreen extends Screen {
                 .build();
 
         Paragraph common = Paragraph.builder()
-                .text(Component.translatable("gui.meowdemic.rates.common", Upgrades.Rarity.COMMON.chance, Upgrades.Rarity.COMMON.pityChance))
+                .text(Component.translatable("gui.meowdemic.rates.common", (int)(Upgrades.Rarity.COMMON.chance * 100), (int)(Upgrades.Rarity.COMMON.pityChance * 100)))
                 .width(true)
                 .build();
 
+        Panel commonUpgradesPanel = Panel.builder()
+                .dimensions(true, true)
+                .spacing(4)
+                .flowAxis(FlowAxis.HORIZONTAL)
+                .build();
+        for(Upgrades commonUpgrade : Upgrades.COMMON_POOL) {
+            System.out.println(commonUpgrade.getSerializedName());
+            Image icon = Image.builder()
+                    .image(Meowdemic.id("textures/gui/upgrades/" + commonUpgrade.getSerializedName() + ".png"))
+                    .dimensions(32, 32)
+                    .tooltip(Tooltip.create(Component.translatable("gui.meowdemic.upgrades." + commonUpgrade.getSerializedName())))
+                    .build();
+            commonUpgradesPanel.addChild(icon);
+        }
+
         Paragraph uncommon = Paragraph.builder()
-                .text(Component.translatable("gui.meowdemic.rates.uncommon", Upgrades.Rarity.UNCOMMON.chance, Upgrades.Rarity.UNCOMMON.pityChance))
+                .text(Component.translatable("gui.meowdemic.rates.uncommon", (int)(Upgrades.Rarity.UNCOMMON.chance * 100), (int)(Upgrades.Rarity.UNCOMMON.pityChance * 100)))
                 .width(true)
                 .build();
+
+        Panel uncommonUpgradesPanel = Panel.builder()
+                .dimensions(true, true)
+                .spacing(4)
+                .flowAxis(FlowAxis.HORIZONTAL)
+                .build();
+        for(Upgrades uncommonUpgrade : Upgrades.UNCOMMON_POOL) {
+            Image icon = Image.builder()
+                    .image(Meowdemic.id("textures/gui/upgrades/" + uncommonUpgrade.getSerializedName() + ".png"))
+                    .dimensions(32, 32)
+                    .tooltip(Tooltip.create(Component.translatable("gui.meowdemic.upgrades." + uncommonUpgrade.getSerializedName())))
+                    .build();
+            uncommonUpgradesPanel.addChild(icon);
+        }
 
         body.addChild(upgradeTitle);
         body.addChild(common);
+        body.addChild(commonUpgradesPanel);
         body.addChild(uncommon);
+        body.addChild(uncommonUpgradesPanel);
+
 
         // Add elements to footer
         Button gachaButton = Button.builder()

@@ -36,5 +36,13 @@
   "gui.meowdemic.gacha_history.title": "History",
   "gui.meowdemic.gacha_history.entries.description": "Name - Time Received",
   "gui.meowdemic.gacha_history.entries.entry": "%s - %s",
-  "gui.meowdemic.upgrade_gui.gacha.tooltip.cant_afford": "Can't afford!"
+  "gui.meowdemic.upgrade_gui.gacha.tooltip.cant_afford": "Can't afford!",
+
+  "gui.meowdemic.upgrades.incubation_rate": "Incubation",
+  "gui.meowdemic.upgrades.transmission_rate": "Transmission",
+  "gui.meowdemic.upgrades.recovery_rate": "Recovery",
+  "gui.meowdemic.upgrades.immunity_rate": "Immunity",
+  "gui.meowdemic.upgrades.symptom_food": "Symptom: Food",
+  "gui.meowdemic.upgrades.symptom_chat": "Symptom: Chat",
+  "gui.meowdemic.upgrades.symptom_cat_ears": "Symptom: Cat Ears"
 }
