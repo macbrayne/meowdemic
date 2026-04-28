@@ -70,7 +70,6 @@ public class GachaRatesScreen extends Screen {
                 .flowAxis(FlowAxis.HORIZONTAL)
                 .build();
         for(Upgrades commonUpgrade : Upgrades.COMMON_POOL) {
-            System.out.println(commonUpgrade.getSerializedName());
             Image icon = Image.builder()
                     .image(Meowdemic.id("textures/gui/upgrades/" + commonUpgrade.getSerializedName() + ".png"))
                     .dimensions(32, 32)

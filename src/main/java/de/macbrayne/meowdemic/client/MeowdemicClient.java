@@ -2,6 +2,7 @@ package de.macbrayne.meowdemic.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import de.macbrayne.meowdemic.Meowdemic;
+import de.macbrayne.meowdemic.client.gui.GachaPullScreen;
 import de.macbrayne.meowdemic.client.gui.UpgradeGachaScreen;
 import de.macbrayne.meowdemic.client.renderer.ModelLayers;
 import de.macbrayne.meowdemic.network.ClientboundGachaResponsePacket;
@@ -20,7 +21,7 @@ public class MeowdemicClient implements ClientModInitializer {
         ModelLayers.registerModelLayers();
 
         ClientPlayNetworking.registerGlobalReceiver(ClientboundGachaResponsePacket.TYPE, (payload, context) -> {
-            System.out.println(payload.upgrade() + " received from server!");
+            context.client().setScreen(new GachaPullScreen(payload.upgrade()));
         });
 
         KeyMapping.Category CATEGORY = KeyMapping.Category.register(

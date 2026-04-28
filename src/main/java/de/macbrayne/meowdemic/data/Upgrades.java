@@ -38,7 +38,7 @@ public enum Upgrades implements StringRepresentable {
 
     public static Upgrades getRandom(RandomSource random, int pity) {
         float rand = random.nextFloat();
-        float commonChance = pity >= 10 ? Rarity.COMMON.pityChance : Rarity.COMMON.chance;
+        float commonChance = Rarity.COMMON.getChance(pity);
         if (rand < commonChance) {
             return COMMON_POOL.get(random.nextInt(COMMON_POOL.size()));
         } else {
@@ -71,6 +71,10 @@ public enum Upgrades implements StringRepresentable {
 
         public Component getComponent() {
             return Component.translatable("gui.meowdemic.gacha_history.rarity." + this.name().toLowerCase());
+        }
+
+        public float getChance(int pity) {
+            return pity >= 10 ? pityChance : chance;
         }
     }
 }
