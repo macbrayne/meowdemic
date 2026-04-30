@@ -3,6 +3,7 @@ package de.macbrayne.meowdemic.world.item.components;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.world.attachments.entity.ImmunityAttachment;
@@ -48,10 +49,10 @@ public record AffectionConsumeEffect(Optional<UUID> source, Strain strain, boole
     }
 
     public static AffectionConsumeEffect vaccinate(Strain strain) {
-        return new AffectionConsumeEffect(Optional.empty(), strain, true, 2f);
+        return new AffectionConsumeEffect(Optional.empty(), strain, true, Meowdemic.getConfig().vaccineMultiplier());
     }
 
     public static AffectionConsumeEffect infect(Optional<UUID> source, Strain strain) {
-        return new AffectionConsumeEffect(source, strain, false, 0.85f);
+        return new AffectionConsumeEffect(source, strain, false, Meowdemic.getConfig().foodMultiplier());
     }
 }

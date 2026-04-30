@@ -1,5 +1,6 @@
 package de.macbrayne.meowdemic.world.attachments.entity;
 
+import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
@@ -30,7 +31,7 @@ public class TransmissionAttachment {
             if(Attachments.isAffected(target)) return;
 
             MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.INFECTED,
-                    (int)(60 * 20 * transmissionEvent.strain().recoveryFactor() * (random.nextGaussian() * 0.5 + 1)),
+                    (int)(60 * 20 * transmissionEvent.strain().recoveryFactor() * (random.nextGaussian() * 0.25 + 1) * Meowdemic.getConfig().recoveryTimeMultiplier()),
                     0, false, false, false);
             target.setAttached(Attachments.TRANSMISSION, transmissionEvent);
             target.addEffect(effect);

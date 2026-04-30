@@ -7,6 +7,17 @@
   "commands.meowdemic.meowdemic.stats.player": "Times infected: %s\nTime cured: %s\nMeowogems: %s",
   "commands.meowdemic.meowdemic.stats.reset.confirm": "Reset server stats? This cannot be undone! Rerun /meowdemic stats reset to confirm.",
   "commands.meowdemic.meowdemic.stats.reset": "Reset server stats.",
+  "commands.meowdemic.meowdemic.infect.invalid_symptom": "Symptoms have to be comma separated (sorry for the incomplete brigadier support)",
+
+  "commands.meowdemic.meowdemic.config.get": "Incubation time: %sx, Recovery time %sx, Immunity time %sx, Radius: %sx, Vaccination duration: %sx, Food duration: %sx",
+  "commands.meowdemic.meowdemic.config.set": "Set %s to %s",
+  "commands.meowdemic.meowdemic.config.incubationTimeMultiplier": "incubation time multiplier",
+  "commands.meowdemic.meowdemic.config.recoveryTimeMultiplier": "recovery time multiplier",
+  "commands.meowdemic.meowdemic.config.immunityTimeMultiplier": "immunity time multiplier",
+  "commands.meowdemic.meowdemic.config.transmissionRadiusMultiplier": "transmission radius multiplier",
+  "commands.meowdemic.meowdemic.config.vaccinationDurationMultiplier": "vaccination duration multiplier",
+  "commands.meowdemic.meowdemic.config.foodSymptomDurationMultiplier": "food symptom duration multiplier",
+  "commands.meowdemic.meowdemic.config.set.minimumSpreadTime": "minimum spread time",
 
   "item.meowdemic.vaccine": "Vaccine",
   "item.meowdemic.swab": "Swab",

@@ -1,5 +1,6 @@
 package de.macbrayne.meowdemic.mixin;
 
+import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
@@ -45,7 +46,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
 
     @Unique
     private void meowdemic$resetSpreadTime() {
-        meowdemic$spreadTime = -80;
+        meowdemic$spreadTime = -Meowdemic.getConfig().minimumSpreadTime();
     }
 
     @Inject(method = "tick", at = @At("TAIL"))

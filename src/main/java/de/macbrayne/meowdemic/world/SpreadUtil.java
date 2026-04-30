@@ -1,5 +1,6 @@
 package de.macbrayne.meowdemic.world;
 
+import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
@@ -22,7 +23,7 @@ import java.util.Set;
 
 public class SpreadUtil {
     public static void spreadEyeSight(LivingEntity entity, Strain strain) {
-        HitResult hitResult = getHitResult(entity.getEyePosition(), entity.getEyePosition().add(entity.getViewVector(1.0F).scale(10 * strain.transmissionFactor())), entity, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
+        HitResult hitResult = getHitResult(entity.getEyePosition(), entity.getEyePosition().add(entity.getViewVector(1.0F).scale(strain.transmissionFactor() * Meowdemic.getConfig().radiusMultiplier())), entity, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
         if (hitResult.getType() == HitResult.Type.ENTITY) {
             EntityHitResult entityHitResult = (EntityHitResult) hitResult;
             if (entityHitResult.getEntity() instanceof LivingEntity target && IncubationAttachment.get(target).tryIncubate(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
@@ -36,7 +37,7 @@ public class SpreadUtil {
     }
 
     public static void spreadProximity(LivingEntity entity, Strain strain) {
-        List<Entity> nearbyEntities = entity.level().getEntities(entity, entity.getBoundingBox().inflate(10 * strain.transmissionFactor()), e -> e instanceof LivingEntity);
+        List<Entity> nearbyEntities = entity.level().getEntities(entity, entity.getBoundingBox().inflate(strain.transmissionFactor() * Meowdemic.getConfig().radiusMultiplier()), e -> e instanceof LivingEntity);
         int infectedCount = 0;
         Set<EntityType<?>> speciesCount = new HashSet<>();
         for (Entity nearbyEntity : nearbyEntities) {

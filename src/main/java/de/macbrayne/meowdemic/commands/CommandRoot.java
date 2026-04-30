@@ -2,12 +2,22 @@ package de.macbrayne.meowdemic.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.FloatArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import de.macbrayne.meowdemic.Meowdemic;
+import de.macbrayne.meowdemic.data.Config;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.data.Symptoms;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.world.attachments.ServerStatsAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.ImmunityAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.IncubationAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
+import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
+import it.unimi.dsi.fastutil.floats.Float2ObjectFunction;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -18,6 +28,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 
 public class CommandRoot {
@@ -25,17 +36,36 @@ public class CommandRoot {
         dispatcher.register(Commands.literal("meowdemic")
                 .then(Commands.literal("infect")
                         .then(Commands.argument("entities", EntityArgument.entities())
+                                .then(Commands.argument("incubationFactor", FloatArgumentType.floatArg(0.1f, 10f))
+                                        .then(Commands.argument("transmissionFactor", FloatArgumentType.floatArg(0.1f, 10f))
+                                                .then(Commands.argument("recoveryFactor", FloatArgumentType.floatArg(0.1f, 10f))
+                                                        .then(Commands.argument("immunityFactor", FloatArgumentType.floatArg(0.1f, 10f))
+                                                                .then(Commands.argument("symptoms", StringArgumentType.greedyString())
+                                                                        .executes(context -> {
+                                                                            Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
+                                                                            float incubationFactor = FloatArgumentType.getFloat(context, "incubationFactor");
+                                                                            float transmissionFactor = FloatArgumentType.getFloat(context, "transmissionFactor");
+                                                                            float recoveryFactor = FloatArgumentType.getFloat(context, "recoveryFactor");
+                                                                            float immunityFactor = FloatArgumentType.getFloat(context, "immunityFactor");
+                                                                            String symptomsInput = StringArgumentType.getString(context, "symptoms");
+                                                                            String[] symptomsArray = symptomsInput.split(",");
+                                                                            HashSet<Symptoms> symptomsList = new HashSet<>();
+                                                                            for (String symptomName : symptomsArray) {
+                                                                                try {
+                                                                                    Symptoms symptom = Symptoms.valueOf(symptomName.trim().toUpperCase());
+                                                                                    symptomsList.add(symptom);
+                                                                                } catch (IllegalArgumentException e) {
+                                                                                    context.getSource().sendFailure(Component.translatable("commands.meowdemic.meowdemic.infect.invalid_symptom", symptomName));
+                                                                                    return 0; // Return 0 to indicate failure
+                                                                                }
+                                                                            }
+                                                                            Strain strain = new Strain(symptomsList, incubationFactor, transmissionFactor, recoveryFactor, immunityFactor);
+                                                                            return infect(entities, strain, context);
+                                                                        }))))))
                                 .executes(context -> {
                                     Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
                                     Strain strain = new Strain(Symptoms.all(), 1, 1, 1, 1);
-                                    int infectedCount = 0;
-                                    for (Entity entity : entities) {
-                                        if (entity instanceof LivingEntity livingEntity && IncubationAttachment.get(livingEntity).tryIncubate(new TransmissionEvent(Optional.empty(), livingEntity.getUUID(), strain))) {
-                                            infectedCount++;
-                                        }
-                                    }
-                                    ServerStatsAttachment.get(context.getSource().getLevel()).addCurrentlyInfected(infectedCount);
-                                    return infectedCount; // Return a success code
+                                    return infect(entities, strain, context); // Return a success code
                                 })))
                 .then(Commands.literal("stats")
                         .then(Commands.literal("player").then(
@@ -69,6 +99,99 @@ public class CommandRoot {
 
                             source.sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats", currentlyInfected, totalInfected, speciesBarriersCrossed, strainsCreated), false);
                             return Command.SINGLE_SUCCESS;
-                        }))));
+                        })))
+                .then(Commands.literal("cure")
+                        .then(Commands.argument("entities", EntityArgument.entities())
+                                .executes(context -> {
+                                    return cure(EntityArgument.getEntities(context, "entities"));
+                                })))
+                .then(Commands.literal("reload")
+                        .executes(context -> {
+                            Meowdemic.reloadConfig();
+                            return Command.SINGLE_SUCCESS;
+                        }))
+                .then(getConfig()));
+    }
+
+    private static LiteralArgumentBuilder<CommandSourceStack> getConfig() {
+        return Commands.literal("config")
+                .then(Commands.literal("get")
+                        .executes(context -> {
+                            Config config = Meowdemic.getConfig();
+                            String incubationTimeMultiplier = String.format("%.2f", config.incubationTimeMultiplier());
+                            String recoveryTimeMultiplier = String.format("%.2f", config.recoveryTimeMultiplier());
+                            String immunityTimeMultiplier = String.format("%.2f", config.immunityTimeMultiplier());
+                            String radiusMultiplier = String.format("%.2f", config.radiusMultiplier());
+                            String vaccineMultiplier = String.format("%.2f", config.vaccineMultiplier());
+                            String foodMultiplier = String.format("%.2f", config.foodMultiplier());
+                            context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.config.get",
+                                    incubationTimeMultiplier, recoveryTimeMultiplier, immunityTimeMultiplier,
+                                    radiusMultiplier, vaccineMultiplier, foodMultiplier), false);
+                            return Command.SINGLE_SUCCESS;
+                        }))
+                .then(Commands.literal("set")
+                        .then(Commands.literal("incubationTimeMultiplier")
+                                .then(Commands.argument("value", FloatArgumentType.floatArg(0.1f, 10f))
+                                        .executes(context ->
+                                                modifyFloatConfig(value -> Meowdemic.getConfig().withIncubationTimeMultiplier(value), "incubationTimeMultiplier", context))))
+                        .then(Commands.literal("recoveryTimeMultiplier")
+                                .then(Commands.argument("value", FloatArgumentType.floatArg(0.1f, 10f))
+                                        .executes(context ->
+                                                modifyFloatConfig(value -> Meowdemic.getConfig().withRecoveryTimeMultiplierMultiplier(value), "recoveryTimeMultiplier", context))))
+                        .then(Commands.literal("immunityTimeMultiplier")
+                                .then(Commands.argument("value", FloatArgumentType.floatArg(0.1f, 10f))
+                                        .executes(context ->
+                                                modifyFloatConfig(value -> Meowdemic.getConfig().withImmunityTimeMultiplier(value), "immunityTimeMultiplier", context))))
+                        .then(Commands.literal("radiusMultiplier")
+                                .then(Commands.argument("value", FloatArgumentType.floatArg(0.1f, 10f))
+                                        .executes(context ->
+                                                modifyFloatConfig(value -> Meowdemic.getConfig().withRadiusMultiplier(value), "radiusMultiplier", context))))
+                        .then(Commands.literal("vaccineMultiplier")
+                                .then(Commands.argument("value", FloatArgumentType.floatArg(0.1f))
+                                        .executes(context ->
+                                                modifyFloatConfig(value -> Meowdemic.getConfig().withVaccineMultiplier(value), "vaccineMultiplier", context))))
+                        .then(Commands.literal("foodSymptomDurationMultiplier")
+                                .then(Commands.argument("value", FloatArgumentType.floatArg(0.1f))
+                                        .executes(context ->
+                                                modifyFloatConfig(value -> Meowdemic.getConfig().withFoodMultiplier(value), "foodSymptomDurationMultiplier", context))))
+                        .then(Commands.literal("minimumSpreadTime")
+                                .then(Commands.argument("value", IntegerArgumentType.integer(0))
+                                        .executes(context -> {
+                                            int value = IntegerArgumentType.getInteger(context, "value");
+                                            Meowdemic.setConfig(Meowdemic.getConfig().withMinimumSpreadTime(value));
+                                            Meowdemic.saveConfig();
+                                            context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.config.set", Component.translatable("commands.meowdemic.meowdemic.config.set.minimumSpreadTime"), value), false);
+                                            return Command.SINGLE_SUCCESS;
+                                        }))));
+    }
+
+    private static int modifyFloatConfig(Float2ObjectFunction<Config> function, String langKey, CommandContext<CommandSourceStack> context) {
+        float value = FloatArgumentType.getFloat(context, "value");
+        Meowdemic.setConfig(function.get(value));
+        Meowdemic.saveConfig();
+        context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.config.set", Component.translatable("commands.meowdemic.meowdemic.config.set." + langKey), value), false);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int infect(Collection<? extends Entity> entities, Strain strain, CommandContext<CommandSourceStack> context) {
+        int infectedCount = 0;
+        for (Entity entity : entities) {
+            if (entity instanceof LivingEntity livingEntity && IncubationAttachment.get(livingEntity).tryIncubate(new TransmissionEvent(Optional.empty(), livingEntity.getUUID(), strain))) {
+                infectedCount++;
+            }
+        }
+        ServerStatsAttachment.get(context.getSource().getLevel()).addCurrentlyInfected(infectedCount);
+        return infectedCount;
+    }
+
+    private static int cure(Collection<? extends Entity> entities) {
+        for (Entity entity : entities) {
+            if (entity instanceof LivingEntity livingEntity) {
+                IncubationAttachment.get(livingEntity).remove();
+                TransmissionAttachment.get(livingEntity).remove();
+                ImmunityAttachment.get(livingEntity).remove();
+            }
+        }
+        return entities.size();
     }
 }

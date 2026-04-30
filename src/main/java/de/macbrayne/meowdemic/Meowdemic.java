@@ -1,9 +1,7 @@
 package de.macbrayne.meowdemic;
 
 import de.macbrayne.meowdemic.commands.CommandRoot;
-import de.macbrayne.meowdemic.data.PullHistoryEvent;
-import de.macbrayne.meowdemic.data.TransmissionEvent;
-import de.macbrayne.meowdemic.data.Upgrades;
+import de.macbrayne.meowdemic.data.*;
 import de.macbrayne.meowdemic.events.MessageEvents;
 import de.macbrayne.meowdemic.network.ClientboundGachaResponsePacket;
 import de.macbrayne.meowdemic.network.ServerboundGachaRequestPacket;
@@ -29,10 +27,12 @@ import java.util.Optional;
 public class Meowdemic implements ModInitializer {
 	public static final String MOD_ID = "meowdemic";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	private static Config config;
 
 	@Override
 	public void onInitialize() {
 		SharedConstants.IS_RUNNING_IN_IDE = true;
+		ConfigHelper.ensureConfigExists();
 		CommandRegistrationCallback.EVENT.register(CommandRoot::register);
 		StyledChatEvents.MESSAGE_CONTENT.register(MessageEvents::register);
 		Attachments.init();
@@ -64,5 +64,27 @@ public class Meowdemic implements ModInitializer {
 
 	public static Identifier id(String path) {
 		return Identifier.fromNamespaceAndPath(MOD_ID, path);
+	}
+
+
+	public static void setConfig(Config config) {
+		Meowdemic.config = config;
+	}
+
+	public static void saveConfig() {
+		if(config != null) {
+			Config.save(config);
+		}
+	}
+
+	public static void reloadConfig() {
+		config = Config.load();
+	}
+
+	public static Config getConfig() {
+		if(config == null) {
+			config = Config.load();
+		}
+		return config;
 	}
 }

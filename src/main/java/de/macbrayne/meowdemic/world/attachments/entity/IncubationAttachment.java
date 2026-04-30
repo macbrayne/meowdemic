@@ -1,5 +1,6 @@
 package de.macbrayne.meowdemic.world.attachments.entity;
 
+import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.world.effects.MeowdemicEffects;
@@ -26,7 +27,7 @@ public class IncubationAttachment {
             if(event.strain().transmissionFactor() < random.nextFloat()) return false;
 
             MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.INCUBATING,
-                    (int)(60 * 20 * event.strain().incubationFactor() * (random.nextGaussian() * 0.5 + 1)),
+                    (int)(60 * 20 * event.strain().incubationFactor() * (random.nextGaussian() * 0.25 + 1) * Meowdemic.getConfig().incubationTimeMultiplier()),
                     0, false, false, false);
             target.setAttached(Attachments.INCUBATION, event);
             target.addEffect(effect);

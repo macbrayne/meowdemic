@@ -1,5 +1,6 @@
 package de.macbrayne.meowdemic.world.attachments.entity;
 
+import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.data.Strain;
 import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.world.effects.MeowdemicEffects;
@@ -20,7 +21,7 @@ public class ImmunityAttachment {
             if(Attachments.isAffected(target)) return false;
 
             MobEffectInstance effect = new MobEffectInstance(MeowdemicEffects.IMMUNE,
-                    (int)(60 * 20 * strain.immunityFactor() * modifier * (random.nextGaussian() * 0.5 + 1)),
+                    (int)(60 * 20 * strain.immunityFactor() * modifier * (random.nextGaussian() * 0.25 + 1) * Meowdemic.getConfig().immunityTimeMultiplier()),
                     0, false, false, false);
             PlayerStatsAttachment.get(target).increaseTimesCured();
             target.setAttached(Attachments.IMMUNITY, strain);
