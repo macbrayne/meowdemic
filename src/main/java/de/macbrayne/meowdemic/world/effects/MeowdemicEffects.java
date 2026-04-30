@@ -17,11 +17,11 @@ public class MeowdemicEffects {
 
     public static void init() {
         ServerMobEffectEvents.ALLOW_EARLY_REMOVE.register((instance, entity, ctx) -> {
-            if (IncubationAttachment.get(entity) != null && instance.getEffect() == INCUBATING)
+            if (IncubationAttachment.get(entity).getOptional().isPresent() && instance.getEffect() == INCUBATING)
                 return false;
-            if (TransmissionAttachment.get(entity) != null && instance.getEffect() == INFECTED)
+            if (TransmissionAttachment.get(entity).getOptional().isPresent() && instance.getEffect() == INFECTED)
                 return false;
-            if (ImmunityAttachment.get(entity) != null && instance.getEffect() == IMMUNE)
+            if (ImmunityAttachment.get(entity).getOptional().isPresent() && instance.getEffect() == IMMUNE)
                 return false;
             return true;
         });

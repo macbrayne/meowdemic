@@ -1,7 +1,7 @@
 {
   "effect.meowdemic.infected": "Meowww :3",
   "effect.meowdemic.immune": "You feel safe... for now.",
-  "effect.meowdemic.incubating": "You feel a bit woozy...?",
+  "effect.meowdemic.incubating": "You feel a bit... off?",
 
   "commands.meowdemic.meowdemic.stats": "Currently infected: %s\nTotal infected: %s\nSpecies barriers crossed: %s\nStrains created: %s",
   "commands.meowdemic.meowdemic.stats.player": "Times infected: %s\nTime cured: %s\nMeowogems: %s",
@@ -11,12 +11,12 @@
 
   "commands.meowdemic.meowdemic.config.get": "Incubation time: %sx, Recovery time %sx, Immunity time %sx, Radius: %sx, Vaccination duration: %sx, Food duration: %sx",
   "commands.meowdemic.meowdemic.config.set": "Set %s to %s",
-  "commands.meowdemic.meowdemic.config.incubationTimeMultiplier": "incubation time multiplier",
-  "commands.meowdemic.meowdemic.config.recoveryTimeMultiplier": "recovery time multiplier",
-  "commands.meowdemic.meowdemic.config.immunityTimeMultiplier": "immunity time multiplier",
-  "commands.meowdemic.meowdemic.config.transmissionRadiusMultiplier": "transmission radius multiplier",
-  "commands.meowdemic.meowdemic.config.vaccinationDurationMultiplier": "vaccination duration multiplier",
-  "commands.meowdemic.meowdemic.config.foodSymptomDurationMultiplier": "food symptom duration multiplier",
+  "commands.meowdemic.meowdemic.config.set.incubationTimeMultiplier": "incubation time multiplier",
+  "commands.meowdemic.meowdemic.config.set.recoveryTimeMultiplier": "recovery time multiplier",
+  "commands.meowdemic.meowdemic.config.set.immunityTimeMultiplier": "immunity time multiplier",
+  "commands.meowdemic.meowdemic.config.set.transmissionRadiusMultiplier": "transmission radius multiplier",
+  "commands.meowdemic.meowdemic.config.set.vaccinationDurationMultiplier": "vaccination duration multiplier",
+  "commands.meowdemic.meowdemic.config.set.foodSymptomDurationMultiplier": "food symptom duration multiplier",
   "commands.meowdemic.meowdemic.config.set.minimumSpreadTime": "minimum spread time",
 
   "item.meowdemic.vaccine": "Vaccine",

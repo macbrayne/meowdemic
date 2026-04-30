@@ -8,6 +8,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
+import java.util.Optional;
+
 public class ImmunityAttachment {
     private static final RandomSource random = RandomSource.create();
 
@@ -16,6 +18,9 @@ public class ImmunityAttachment {
     }
 
     public record ImmunityData(LivingEntity target) {
+        public Optional<Strain> getOptional() {
+            return Optional.ofNullable(target.getAttached(Attachments.IMMUNITY));
+        }
 
         public boolean setIfNone(Strain strain, float modifier) {
             if(Attachments.isAffected(target)) return false;
