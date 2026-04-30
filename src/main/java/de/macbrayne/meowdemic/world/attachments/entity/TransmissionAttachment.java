@@ -49,6 +49,7 @@ public class TransmissionAttachment {
 
         public void remove() {
             target.removeAttached(Attachments.TRANSMISSION);
+            target.removeEffect(MeowdemicEffects.INFECTED);
         }
     }
 }

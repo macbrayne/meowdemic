@@ -36,6 +36,7 @@ public class IncubationAttachment {
 
         public void remove() {
             target.removeAttached(Attachments.INCUBATION);
+            target.removeEffect(MeowdemicEffects.INCUBATING);
         }
     }
 }

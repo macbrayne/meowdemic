@@ -31,6 +31,7 @@ public class ImmunityAttachment {
 
         public void remove() {
             target.removeAttached(Attachments.IMMUNITY);
+            target.removeEffect(MeowdemicEffects.IMMUNE);
         }
     }
 }

@@ -37,10 +37,13 @@ public class SpreadUtil {
     }
 
     public static void spreadProximity(LivingEntity entity, Strain strain) {
-        List<Entity> nearbyEntities = entity.level().getEntities(entity, entity.getBoundingBox().inflate(strain.transmissionFactor() * Meowdemic.getConfig().radiusMultiplier()), e -> e instanceof LivingEntity);
+        List<Entity> nearbyEntities = entity.level().getEntities(entity, entity.getBoundingBox().inflate(strain.transmissionFactor() * Meowdemic.getConfig().radiusMultiplier() / 2), e -> e instanceof LivingEntity);
         int infectedCount = 0;
         Set<EntityType<?>> speciesCount = new HashSet<>();
         for (Entity nearbyEntity : nearbyEntities) {
+            if(!strain.targets().contains(entity.typeHolder().value())) {
+                continue;
+            }   
             if (nearbyEntity instanceof LivingEntity target && IncubationAttachment.get(target).tryIncubate(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
                 infectedCount++;
                 if (!nearbyEntity.getType().equals(entity.getType())) {

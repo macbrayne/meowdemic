@@ -3,28 +3,34 @@ package de.macbrayne.meowdemic.data;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public record Strain(String name, HashSet<Symptoms> symptoms, double incubationFactor, double transmissionFactor, double recoveryFactor,
-                     double immunityFactor) {
+public record Strain(String name, HashSet<Symptoms> symptoms, HashSet<EntityType<?>> targets, double incubationFactor, double transmissionFactor,
+                     double recoveryFactor, double immunityFactor) {
     public static final Codec<Strain> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(Strain::name),
-            Symptoms.CODEC.listOf().fieldOf("symptoms").xmap(HashSet::new, ArrayList::new).forGetter(strain -> strain.symptoms()),
+            Symptoms.CODEC.listOf().fieldOf("symptoms").xmap(HashSet::new, ArrayList::new).forGetter(Strain::symptoms),
+            EntityType.CODEC.listOf().fieldOf("targets").xmap(HashSet::new, ArrayList::new).forGetter(Strain::targets),
             Codec.DOUBLE.fieldOf("incubationFactor").forGetter(Strain::incubationFactor),
             Codec.DOUBLE.fieldOf("transmissionFactor").forGetter(Strain::transmissionFactor),
             Codec.DOUBLE.fieldOf("recoveryFactor").forGetter(Strain::recoveryFactor),
             Codec.DOUBLE.fieldOf("immunityFactor").forGetter(Strain::immunityFactor)
     ).apply(instance, Strain::new));
-    public static final StreamCodec<FriendlyByteBuf, Strain> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, Strain::name, Symptoms.STREAM_CODEC.apply(ByteBufCodecs.list()).map(HashSet::new, ArrayList::new), Strain::symptoms, ByteBufCodecs.DOUBLE, Strain::incubationFactor, ByteBufCodecs.DOUBLE, Strain::transmissionFactor, ByteBufCodecs.DOUBLE, Strain::recoveryFactor, ByteBufCodecs.DOUBLE, Strain::immunityFactor, Strain::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, Strain> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.STRING_UTF8, Strain::name,
+            Symptoms.STREAM_CODEC.apply(ByteBufCodecs.list()).map(HashSet::new, ArrayList::new), Strain::symptoms,
+            EntityType.STREAM_CODEC.apply(ByteBufCodecs.list()).map(HashSet::new, ArrayList::new), Strain::targets,
+            ByteBufCodecs.DOUBLE, Strain::incubationFactor, ByteBufCodecs.DOUBLE, Strain::transmissionFactor,
+            ByteBufCodecs.DOUBLE, Strain::recoveryFactor, ByteBufCodecs.DOUBLE, Strain::immunityFactor, Strain::new);
 
-    public Strain(HashSet<Symptoms> symptoms, double incubationFactor, double transmissionFactor, double recoveryFactor, double immunityFactor) {
-        this(generateName(), symptoms, incubationFactor, transmissionFactor, recoveryFactor, immunityFactor);
+    public Strain(HashSet<Symptoms> symptoms, HashSet<EntityType<?>> targets, double incubationFactor, double transmissionFactor, double recoveryFactor, double immunityFactor) {
+        this(generateName(), symptoms, targets, incubationFactor, transmissionFactor, recoveryFactor, immunityFactor);
     }
 
     public Strain addSymptom(Symptoms newSymptom) {
@@ -33,23 +39,32 @@ public record Strain(String name, HashSet<Symptoms> symptoms, double incubationF
         }
         HashSet<Symptoms> newSymptoms = new HashSet<>(symptoms());
         newSymptoms.add(newSymptom);
-        return new Strain(modifyName(name()), newSymptoms, incubationFactor(), transmissionFactor(), recoveryFactor(), immunityFactor());
+        return new Strain(modifyName(name()), newSymptoms, targets(), incubationFactor(), transmissionFactor(), recoveryFactor(), immunityFactor());
+    }
+
+    public Strain addTarget(EntityType<?> newTarget) {
+        if (targets().contains(newTarget)) {
+            return this;
+        }
+        HashSet<EntityType<?>> newTargets = new HashSet<>(targets());
+        newTargets.add(newTarget);
+        return new Strain(modifyName(name()), symptoms(), newTargets, incubationFactor(), transmissionFactor(), recoveryFactor(), immunityFactor());
     }
 
     public Strain withIncubationFactor(double newIncubationFactor) {
-        return new Strain(modifyName(name()), symptoms(), newIncubationFactor, transmissionFactor(), recoveryFactor(), immunityFactor());
+        return new Strain(modifyName(name()), symptoms(), targets(), newIncubationFactor, transmissionFactor(), recoveryFactor(), immunityFactor());
     }
 
     public Strain withTransmissionFactor(double newTransmissionFactor) {
-        return new Strain(modifyName(name()), symptoms(), incubationFactor(), newTransmissionFactor, recoveryFactor(), immunityFactor());
+        return new Strain(modifyName(name()), symptoms(), targets(), incubationFactor(), newTransmissionFactor, recoveryFactor(), immunityFactor());
     }
 
     public Strain withRecoveryFactor(double newRecoveryFactor) {
-        return new Strain(modifyName(name()), symptoms(), incubationFactor(), transmissionFactor(), newRecoveryFactor, immunityFactor());
+        return new Strain(modifyName(name()), symptoms(), targets(), incubationFactor(), transmissionFactor(), newRecoveryFactor, immunityFactor());
     }
 
     public Strain withImmunityFactor(double newImmunityFactor) {
-        return new Strain(modifyName(name()), symptoms(), incubationFactor(), transmissionFactor(), recoveryFactor(), newImmunityFactor);
+        return new Strain(modifyName(name()), symptoms(), targets(), incubationFactor(), transmissionFactor(), recoveryFactor(), newImmunityFactor);
     }
 
     private static String modifyName(String previousName) {

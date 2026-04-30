@@ -25,10 +25,12 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 public class CommandRoot {
@@ -59,12 +61,12 @@ public class CommandRoot {
                                                                                     return 0; // Return 0 to indicate failure
                                                                                 }
                                                                             }
-                                                                            Strain strain = new Strain(symptomsList, incubationFactor, transmissionFactor, recoveryFactor, immunityFactor);
+                                                                            Strain strain = new Strain(symptomsList, new HashSet<>(List.of(EntityType.PLAYER, EntityType.CAT)), incubationFactor, transmissionFactor, recoveryFactor, immunityFactor);
                                                                             return infect(entities, strain, context);
                                                                         }))))))
                                 .executes(context -> {
                                     Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
-                                    Strain strain = new Strain(Symptoms.all(), 1, 1, 1, 1);
+                                    Strain strain = new Strain(Symptoms.all(), new HashSet<>(List.of(EntityType.PLAYER, EntityType.CAT)), 1, 1, 1, 1);
                                     return infect(entities, strain, context); // Return a success code
                                 })))
                 .then(Commands.literal("stats")
@@ -185,13 +187,15 @@ public class CommandRoot {
     }
 
     private static int cure(Collection<? extends Entity> entities) {
+        int curedCount = 0;
         for (Entity entity : entities) {
             if (entity instanceof LivingEntity livingEntity) {
                 IncubationAttachment.get(livingEntity).remove();
                 TransmissionAttachment.get(livingEntity).remove();
                 ImmunityAttachment.get(livingEntity).remove();
+                curedCount++;
             }
         }
-        return entities.size();
+        return curedCount;
     }
 }

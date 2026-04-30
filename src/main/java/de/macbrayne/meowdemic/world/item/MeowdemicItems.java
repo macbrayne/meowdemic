@@ -18,6 +18,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +26,8 @@ import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.function.Function;
 
 public class MeowdemicItems {
@@ -70,7 +73,7 @@ public class MeowdemicItems {
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS)
                 .register((creativeTab) -> {
                     ItemStack defaultVaccine = VACCINE.getDefaultInstance();
-                    Consumable consumable = modifyConsumableEffect(VACCINE_CONSUMABLE, AffectionConsumeEffect.vaccinate(new Strain(Symptoms.all(), 1, 1, 1, 1)));
+                    Consumable consumable = modifyConsumableEffect(VACCINE_CONSUMABLE, AffectionConsumeEffect.vaccinate(new Strain(Symptoms.all(), new HashSet<>(List.of(EntityType.PLAYER, EntityType.CAT)), 1, 1, 1, 1)));
                     defaultVaccine.set(DataComponents.CONSUMABLE, consumable);
                     defaultVaccine.set(MeowdemicItems.STRAIN_TOOLTIP, new StrainTooltipComponent());
                     creativeTab.accept(defaultVaccine);
