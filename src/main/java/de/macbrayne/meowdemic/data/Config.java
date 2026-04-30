@@ -20,7 +20,7 @@ public record Config(float incubationTimeMultiplier, float recoveryTimeMultiplie
         return new Config(newIncubationTimeMultiplier, recoveryTimeMultiplier(), immunityTimeMultiplier(), radiusMultiplier(), vaccineMultiplier(), foodMultiplier(), minimumSpreadTime());
     }
 
-    public Config withRecoveryTimeMultiplierMultiplier(float newRecoveryTimeMultiplier) {
+    public Config withRecoveryTimeMultiplier(float newRecoveryTimeMultiplier) {
         return new Config(incubationTimeMultiplier(), newRecoveryTimeMultiplier, immunityTimeMultiplier(), radiusMultiplier(), vaccineMultiplier(), foodMultiplier(), minimumSpreadTime());
     }
 

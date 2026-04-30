@@ -137,7 +137,7 @@ public class CommandRoot {
                         .then(Commands.literal("recoveryTimeMultiplier")
                                 .then(Commands.argument("value", FloatArgumentType.floatArg(0.1f, 10f))
                                         .executes(context ->
-                                                modifyFloatConfig(value -> Meowdemic.getConfig().withRecoveryTimeMultiplierMultiplier(value), "recoveryTimeMultiplier", context))))
+                                                modifyFloatConfig(value -> Meowdemic.getConfig().withRecoveryTimeMultiplier(value), "recoveryTimeMultiplier", context))))
                         .then(Commands.literal("immunityTimeMultiplier")
                                 .then(Commands.argument("value", FloatArgumentType.floatArg(0.1f, 10f))
                                         .executes(context ->
