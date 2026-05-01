@@ -16,24 +16,29 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class SpreadUtil {
     public static void spreadEyeSight(LivingEntity entity, Strain strain) {
-        HitResult hitResult = getHitResult(entity.getEyePosition(), entity.getEyePosition().add(entity.getViewVector(1.0F).scale(strain.transmissionFactor() * Meowdemic.getConfig().radiusMultiplier())), entity, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
-        if (hitResult.getType() == HitResult.Type.ENTITY) {
-            EntityHitResult entityHitResult = (EntityHitResult) hitResult;
-            if (entityHitResult.getEntity() instanceof LivingEntity target && IncubationAttachment.get(target).tryIncubate(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
-                ServerStatsAttachment.get((ServerLevel) target.level()).addCurrentlyInfected(1);
-                PlayerStatsAttachment.get(entity).addEntitiesInfected(1);
-                if (!target.getType().equals(entity.getType())) {
-                    ServerStatsAttachment.get((ServerLevel) target.level()).addSpeciesBarriersCrossed(1);
+        Collection<EntityHitResult> hitResults = getHitResult(entity.getEyePosition(), entity.getEyePosition().add(entity.getViewVector(1.0F).scale(strain.transmissionFactor() * Meowdemic.getConfig().radiusMultiplier())), entity, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
+        if (hitResults == null) {
+            return;
+        }
+        int infectedCount = 0;
+        Set<EntityType<?>> speciesCount = new HashSet<>();
+        for (EntityHitResult entityHitResult : hitResults) {
+            if (entityHitResult.getType() == HitResult.Type.ENTITY) {
+                if (entityHitResult.getEntity() instanceof LivingEntity target && IncubationAttachment.get(target).tryIncubate(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
+                    infectedCount++;
+                    if (!target.getType().equals(entity.getType())) {
+                        speciesCount.add(target.getType());
+                    }
                 }
             }
         }
+        ServerStatsAttachment.get((ServerLevel) entity.level()).addCurrentlyInfected(infectedCount);
+        PlayerStatsAttachment.get(entity).addEntitiesInfected(infectedCount);
+        ServerStatsAttachment.get((ServerLevel) entity.level()).addSpeciesBarriersCrossed(speciesCount.size());
     }
 
     public static void spreadProximity(LivingEntity entity, Strain strain) {
@@ -41,9 +46,9 @@ public class SpreadUtil {
         int infectedCount = 0;
         Set<EntityType<?>> speciesCount = new HashSet<>();
         for (Entity nearbyEntity : nearbyEntities) {
-            if(!strain.targets().contains(entity.typeHolder().value())) {
+            if (!strain.targets().contains(entity.typeHolder().value())) {
                 continue;
-            }   
+            }
             if (nearbyEntity instanceof LivingEntity target && IncubationAttachment.get(target).tryIncubate(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
                 infectedCount++;
                 if (!nearbyEntity.getType().equals(entity.getType())) {
@@ -56,15 +61,11 @@ public class SpreadUtil {
         PlayerStatsAttachment.get(entity).addEntitiesInfected(infectedCount);
     }
 
-    private static HitResult getHitResult(Vec3 from, Vec3 to, Entity entity, ClipContext.Block blockContext, ClipContext.Fluid fluidContext) {
+    private static Collection<EntityHitResult> getHitResult(Vec3 from, Vec3 to, Entity entity, ClipContext.Block blockContext, ClipContext.Fluid fluidContext) {
         HitResult hitResult = entity.level().clip(new ClipContext(from, to, blockContext, fluidContext, entity));
         if (hitResult.getType() != HitResult.Type.MISS) {
             to = hitResult.getLocation();
         }
-        HitResult entityHitResult = ProjectileUtil.getEntityHitResult(entity.level(), entity, from, to, entity.getBoundingBox().expandTowards(entity.getDeltaMovement()).inflate(1), e -> !e.isSpectator(), 1f);
-        if (entityHitResult != null) {
-            hitResult = entityHitResult;
-        }
-        return hitResult;
+        return ProjectileUtil.getManyEntityHitResult(entity.level(), entity, from, to, entity.getBoundingBox().expandTowards(entity.getDeltaMovement()).inflate(1), e -> !e.isSpectator(), false);
     }
 }
