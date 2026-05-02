@@ -5,7 +5,6 @@ import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.data.Upgrades;
 import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
-import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import dev.chailotl.bento_gui.client.FlowAxis;
 import dev.chailotl.bento_gui.client.elements.*;
 import net.minecraft.client.gui.components.Tooltip;
@@ -14,15 +13,17 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
 public class GachaRatesScreen extends Screen {
-    public GachaRatesScreen() {
+    private final TransmissionEvent attachment;
+    private final PlayerStatsAttachment.PlayerStatsData playerStats;
+
+    public GachaRatesScreen(TransmissionEvent attachment, PlayerStatsAttachment.PlayerStatsData playerStats) {
         super(Component.literal("Details"));
+        this.attachment = attachment;
+        this.playerStats = playerStats;
     }
 
     @Override
     protected void init() {
-        TransmissionEvent attachment = TransmissionAttachment.get(minecraft.player).getOptional().get();
-        PlayerStatsAttachment.PlayerStatsData playerStats = PlayerStatsAttachment.get(minecraft.player);
-
         Window window = minecraft.getWindow();
         int width = window.getGuiScaledWidth();
         int height = window.getGuiScaledHeight();
@@ -49,7 +50,7 @@ public class GachaRatesScreen extends Screen {
                 .flowAxis(FlowAxis.HORIZONTAL)
                 .build();
 
-        root.addChild(CommonGui.addHeader(this, minecraft.player, Component.translatable("gui.meowdemic.rates.title")));
+        root.addChild(CommonGui.addFullHeader(this, playerStats, Component.translatable("gui.meowdemic.rates.title")));
         root.addChild(body);
         root.addChild(footer);
 
@@ -105,13 +106,13 @@ public class GachaRatesScreen extends Screen {
 
 
         // Add elements to footer
-        Button gachaButton = Button.builder()
+        Button returnButton = Button.builder()
                 .text(CommonComponents.GUI_DONE)
                 .width(200)
                 .onPress(_ -> minecraft.setScreen(new UpgradeGachaScreen()))
                 .build();
 
-        footer.addChild(gachaButton);
+        footer.addChild(returnButton);
 
         // Add root as drawable child
         addRenderableWidget(root);

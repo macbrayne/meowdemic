@@ -164,7 +164,10 @@ public class CommandRoot {
                                             Meowdemic.saveConfig();
                                             context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.config.set", Component.translatable("commands.meowdemic.meowdemic.config.set.minimumSpreadTime"), value), false);
                                             return Command.SINGLE_SUCCESS;
-                                        }))));
+                                        })))
+                        .then(Commands.literal("spreadTimeModifier")
+                                .then(Commands.argument("value", FloatArgumentType.floatArg(0.1f))
+                                        .executes(context -> modifyFloatConfig(value -> Meowdemic.getConfig().withSpreadTimeModifier(value), "spreadTimeModifier", context)))));
     }
 
     private static int modifyFloatConfig(Float2ObjectFunction<Config> function, String langKey, CommandContext<CommandSourceStack> context) {

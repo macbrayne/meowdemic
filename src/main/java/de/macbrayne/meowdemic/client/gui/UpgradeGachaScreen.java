@@ -16,6 +16,8 @@ import net.minecraft.util.RandomSource;
 
 public class UpgradeGachaScreen extends Screen {
     private RandomSource random;
+    private TransmissionEvent attachment;
+    private PlayerStatsAttachment.PlayerStatsData playerStats;
 
     public UpgradeGachaScreen() {
         super(Component.literal("Upgrades"));
@@ -23,8 +25,8 @@ public class UpgradeGachaScreen extends Screen {
 
     @Override
     protected void init() {
-        TransmissionEvent attachment = TransmissionAttachment.get(minecraft.player).getOptional().get();
-        PlayerStatsAttachment.PlayerStatsData playerStats = PlayerStatsAttachment.get(minecraft.player);
+        attachment = TransmissionAttachment.get(minecraft.player).getOptional().get();
+        playerStats = PlayerStatsAttachment.get(minecraft.player);
 
         Window window = minecraft.getWindow();
         int width = window.getGuiScaledWidth();
@@ -52,7 +54,7 @@ public class UpgradeGachaScreen extends Screen {
                 .flowAxis(FlowAxis.HORIZONTAL)
                 .build();
 
-        root.addChild(CommonGui.addHeader(this, minecraft.player, Component.translatable("gui.meowdemic.upgrade_gui.title")));
+        root.addChild(CommonGui.addFullHeader(this, playerStats, Component.translatable("gui.meowdemic.upgrade_gui.title")));
         root.addChild(body);
         root.addChild(footer);
 
@@ -83,12 +85,12 @@ public class UpgradeGachaScreen extends Screen {
         Button ratesButton = Button.builder()
                 .text(Component.translatable("gui.meowdemic.upgrade_gui.details"))
                 .width(60)
-                .onPress(self -> minecraft.setScreen(new GachaRatesScreen()))
+                .onPress(self -> minecraft.setScreen(new GachaRatesScreen(attachment, playerStats)))
                 .build();
         Button historyButton = Button.builder()
                 .text(Component.translatable("gui.meowdemic.upgrade_gui.history"))
                 .width(60)
-                .onPress(self -> minecraft.setScreen(new GachaHistoryScreen()))
+                .onPress(self -> minecraft.setScreen(new GachaHistoryScreen(attachment, playerStats)))
                 .build();
         Panel emptyTwo = Panel.builder()
                 .dimensions(true, 32)
@@ -115,5 +117,13 @@ public class UpgradeGachaScreen extends Screen {
 
         // Add root as drawable child
         addRenderableWidget(root);
+    }
+
+    public TransmissionEvent getTransmissionEvent() {
+        return attachment;
+    }
+
+    public PlayerStatsAttachment.PlayerStatsData getPlayerStats() {
+        return playerStats;
     }
 }

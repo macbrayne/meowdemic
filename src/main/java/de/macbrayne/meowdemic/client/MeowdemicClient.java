@@ -21,7 +21,9 @@ public class MeowdemicClient implements ClientModInitializer {
         ModelLayers.registerModelLayers();
 
         ClientPlayNetworking.registerGlobalReceiver(ClientboundGachaResponsePacket.TYPE, (payload, context) -> {
-            context.client().setScreen(new GachaPullScreen(payload.upgrade()));
+            if(context.client().screen instanceof UpgradeGachaScreen gacha) {
+                context.client().setScreen(new GachaPullScreen(payload.upgrade()));
+            }
         });
 
         KeyMapping.Category CATEGORY = KeyMapping.Category.register(

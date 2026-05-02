@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.Window;
 import de.macbrayne.meowdemic.data.PullHistoryEvent;
 import de.macbrayne.meowdemic.data.TransmissionEvent;
 import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
-import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import dev.chailotl.bento_gui.client.FlowAxis;
 import dev.chailotl.bento_gui.client.elements.Button;
 import dev.chailotl.bento_gui.client.elements.Label;
@@ -20,15 +19,17 @@ import java.time.format.DateTimeFormatter;
 public class GachaHistoryScreen extends Screen {
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
             .withZone(ZoneId.systemDefault());
-    protected GachaHistoryScreen() {
+    private final TransmissionEvent attachment;
+    private final PlayerStatsAttachment.PlayerStatsData playerStats;
+
+    protected GachaHistoryScreen(TransmissionEvent attachment, PlayerStatsAttachment.PlayerStatsData playerStats) {
         super(Component.literal("Gacha History"));
+        this.attachment = attachment;
+        this.playerStats = playerStats;
     }
 
     @Override
     protected void init() {
-        TransmissionEvent attachment = TransmissionAttachment.get(minecraft.player).getOptional().get();
-        PlayerStatsAttachment.PlayerStatsData playerStats = PlayerStatsAttachment.get(minecraft.player);
-
         Window window = minecraft.getWindow();
         int width = window.getGuiScaledWidth();
         int height = window.getGuiScaledHeight();
@@ -55,7 +56,7 @@ public class GachaHistoryScreen extends Screen {
                 .flowAxis(FlowAxis.HORIZONTAL)
                 .build();
 
-        root.addChild(CommonGui.addHeader(this, minecraft.player, Component.translatable("gui.meowdemic.gacha_history.title")));
+        root.addChild(CommonGui.addFullHeader(this, playerStats, Component.translatable("gui.meowdemic.gacha_history.title")));
         root.addChild(body);
         root.addChild(footer);
 
@@ -74,7 +75,7 @@ public class GachaHistoryScreen extends Screen {
 
         for(PullHistoryEvent upgrade : playerStats.getPullHistory()) {
             Label upgradeEntry = Label.builder()
-                    .text(Component.translatable("gui.meowdemic.gacha_history.entries.entry", upgrade.upgrade().getSerializedName(), dateTimeFormatter.format(upgrade.timeReceived())))
+                    .text(Component.translatable("gui.meowdemic.gacha_history.entries.entry", Component.translatable("gui.meowdemic.upgrades." + upgrade.upgrade().getSerializedName()), dateTimeFormatter.format(upgrade.timeReceived())))
                     .width(true)
                     .build();
             body.addChild(upgradeEntry);

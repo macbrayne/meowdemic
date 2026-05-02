@@ -18,6 +18,7 @@
   "commands.meowdemic.meowdemic.config.set.vaccinationDurationMultiplier": "vaccination duration multiplier",
   "commands.meowdemic.meowdemic.config.set.foodSymptomDurationMultiplier": "food symptom duration multiplier",
   "commands.meowdemic.meowdemic.config.set.minimumSpreadTime": "minimum spread time",
+  "commands.meowdemic.meowdemic.config.set.spreadTimeModifier": "spread time modifier",
 
   "item.meowdemic.vaccine": "Vaccine",
   "item.meowdemic.swab": "Swab",
@@ -50,10 +51,19 @@
   "gui.meowdemic.upgrade_gui.gacha.tooltip.cant_afford": "Can't afford!",
 
   "gui.meowdemic.upgrades.incubation_rate": "Incubation",
+  "gui.meowdemic.upgrades.incubation_rate.description": "Reduces the incubation time of the strain by 10%",
   "gui.meowdemic.upgrades.transmission_rate": "Transmission",
+  "gui.meowdemic.upgrades.transmission_rate.description": "Increases the transmission chance of the strain by 10%.",
   "gui.meowdemic.upgrades.recovery_rate": "Recovery",
+  "gui.meowdemic.upgrades.recovery_rate.description": "Reduces the time to recover from your strain by 10%.",
   "gui.meowdemic.upgrades.immunity_rate": "Immunity",
+  "gui.meowdemic.upgrades.immunity_rate.description": "Reduces the immunity time of the strain by 10%.",
   "gui.meowdemic.upgrades.symptom_food": "Symptom: Food",
+  "gui.meowdemic.upgrades.symptom_food.description": "Allows you to spread your strain to the food you're holding.",
   "gui.meowdemic.upgrades.symptom_chat": "Symptom: Chat",
-  "gui.meowdemic.upgrades.symptom_cat_ears": "Symptom: Cat Ears"
+  "gui.meowdemic.upgrades.symptom_chat.description": "Allows you to spread your strain to people you are chatting with.",
+  "gui.meowdemic.upgrades.symptom_cat_ears": "Symptom: Cat Ears",
+  "gui.meowdemic.upgrades.symptom_cat_ears.description": "Grants you the power of cat ears! :3",
+  "gui.meowdemic.gacha_result.title": "Result",
+  "gui.meowdemic.gacha_result.congrats": "Congratulations! You spent Meowogems and got the following incredible breathtaking upgrade:"
 }

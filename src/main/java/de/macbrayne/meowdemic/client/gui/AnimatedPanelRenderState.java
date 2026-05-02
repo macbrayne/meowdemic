@@ -1,5 +1,6 @@
 package de.macbrayne.meowdemic.client.gui;
 
+import de.macbrayne.meowdemic.data.Upgrades;
 import dev.chailotl.bento_gui.client.RenderInfo;
 import dev.chailotl.bento_gui.client.elements.BentoElement;
 import dev.chailotl.bento_gui.client.elements.Panel;
@@ -11,6 +12,7 @@ public class AnimatedPanelRenderState {
     private static final int ANIMATION_DURATION = 100; // Duration of the animation in ticks
 
     private final Minecraft client;
+    private final Upgrades upgrade;
     private final boolean reversed;
     private final int width, height;
     private final int chosenItem;
@@ -18,8 +20,9 @@ public class AnimatedPanelRenderState {
     private float soundTick = 0;
     private boolean animationFinished = false, blastPlayed = false;
 
-    public AnimatedPanelRenderState(Minecraft client, int width, int height, boolean reversed, int chosenItem) {
+    public AnimatedPanelRenderState(Minecraft client, Upgrades upgrade, int width, int height, boolean reversed, int chosenItem) {
         this.client = client;
+        this.upgrade = upgrade;
         this.width = width;
         this.height = height;
         this.reversed = reversed;
@@ -70,9 +73,8 @@ public class AnimatedPanelRenderState {
                     client.player.playSound(SoundEvents.FIREWORK_ROCKET_BLAST);
                     client.player.playSound(SoundEvents.FIREWORK_ROCKET_TWINKLE);
                     soundTick = 0;
-                }
-                if (soundTick >= 20 && blastPlayed) {
-                    soundTick = 0;
+                } else if (soundTick >= 40) {
+                    client.setScreen(new GachaResultScreen(upgrade));
                 }
             }
         }

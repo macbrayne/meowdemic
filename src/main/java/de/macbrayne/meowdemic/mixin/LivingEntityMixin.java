@@ -57,7 +57,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
 
         Strain strain = event.get().strain();
         HashSet<Symptoms> symptoms = strain.symptoms();
-        float modifier = Mth.sqrt(symptoms.size());
+        float modifier = Mth.sqrt(symptoms.size()) * Meowdemic.getConfig().spreadTimeModifier();
 
         this.meowdemic$spreadTime++;
         if (symptoms.contains(Symptoms.MEOW_AND_PURR) && this.random.nextInt((int) (500 * modifier)) <= this.meowdemic$spreadTime) {
