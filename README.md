@@ -1,9 +1,12 @@
 # Meowdemic
 
-## Setup
+Meow? Meow! There's a disease going around which makes you meow like a cat...
 
-For setup instructions, please see the [Fabric Documentation page](https://docs.fabricmc.net/develop/getting-started/creating-a-project#setting-up) related to the IDE that you are using.
+## Features
 
-## License
+- Infect your fellow ~~felines~~ humans
+- Cat ears
+- Meow like a cat
+- Create a cure by crafting a cotton swab and using it on a dog, then craft it with some affected food items
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+:3

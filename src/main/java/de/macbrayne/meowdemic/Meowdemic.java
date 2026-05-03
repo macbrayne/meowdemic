@@ -3,6 +3,7 @@ package de.macbrayne.meowdemic;
 import de.macbrayne.meowdemic.commands.CommandRoot;
 import de.macbrayne.meowdemic.data.*;
 import de.macbrayne.meowdemic.events.MessageEvents;
+import de.macbrayne.meowdemic.network.ClientBoundToastRequestPacket;
 import de.macbrayne.meowdemic.network.ClientboundGachaResponsePacket;
 import de.macbrayne.meowdemic.network.ServerboundGachaRequestPacket;
 import de.macbrayne.meowdemic.world.attachments.Attachments;
@@ -40,6 +41,7 @@ public class Meowdemic implements ModInitializer {
 		MeowdemicItems.init();
 		PayloadTypeRegistry.clientboundPlay().register(ClientboundGachaResponsePacket.TYPE, ClientboundGachaResponsePacket.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(ServerboundGachaRequestPacket.TYPE, ServerboundGachaRequestPacket.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(ClientBoundToastRequestPacket.TYPE, ClientBoundToastRequestPacket.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(ServerboundGachaRequestPacket.TYPE, (payload, context) -> {
 			RandomSource random = context.player().getRandom();
