@@ -27,6 +27,9 @@
   "tooltip.meowdemic.strain": ":3",
   "tooltip.meowdemic.vaccine_strain": "Vaccinates against:",
 
+  "toast.meowdemic.new_pulls": "You have %s pulls available!",
+  "toast.meowdemic.new_pulls.description": "Press <%s> to open the upgrade menu.",
+
   "gui.meowdemic.upgrade_gui.title": "Upgrades",
   "gui.meowdemic.upgrade_gui.points": "%s Meowogems",
   "gui.meowdemic.upgrade_gui.current.list": "%s, %s, %s, %s",

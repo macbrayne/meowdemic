@@ -34,8 +34,8 @@ public class PlayerStatsAttachment {
             return (getEntitiesInfected() - target.getAttachedOrCreate(Attachments.PlayerStats.POINTS_DELTA) * 5) * 32;
         }
 
-        public boolean canAffordPull() {
-            return getPoints() >= 160;
+        public int numberOfPullsAffordable() {
+            return getPoints() / 160;
         }
 
         public void removePoints(int amount) {

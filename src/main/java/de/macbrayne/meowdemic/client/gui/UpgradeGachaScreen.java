@@ -99,13 +99,13 @@ public class UpgradeGachaScreen extends Screen {
                 .text(Component.translatable("gui.meowdemic.upgrade_gui.gacha"))
                 .width(200)
                 .onPress(self -> {
-                    if(playerStats.canAffordPull()) {
+                    if(playerStats.numberOfPullsAffordable() > 0) {
                         ServerboundGachaRequestPacket packet = new ServerboundGachaRequestPacket();
                         ClientPlayNetworking.send(packet);
                     }
                 })
                 .build();
-        if(!playerStats.canAffordPull()) {
+        if(playerStats.numberOfPullsAffordable() == 0) {
             gachaButton.setEnabled(false);
             gachaButton.setTooltip(Tooltip.create(Component.translatable("gui.meowdemic.upgrade_gui.gacha.tooltip.cant_afford").withStyle(ChatFormatting.RED)));
         }

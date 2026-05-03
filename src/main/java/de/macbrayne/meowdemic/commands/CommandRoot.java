@@ -24,13 +24,12 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 
 public class CommandRoot {
@@ -61,12 +60,13 @@ public class CommandRoot {
                                                                                     return 0; // Return 0 to indicate failure
                                                                                 }
                                                                             }
-                                                                            Strain strain = new Strain(symptomsList, new HashSet<>(List.of(EntityType.PLAYER, EntityType.CAT)), incubationFactor, transmissionFactor, recoveryFactor, immunityFactor);
+                                                                            Strain strain = new Strain(symptomsList, Strain.defaultEntitySet(), incubationFactor, transmissionFactor, recoveryFactor, immunityFactor);
                                                                             return infect(entities, strain, context);
                                                                         }))))))
                                 .executes(context -> {
+                                    RandomSource randomSource = RandomSource.create();
                                     Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
-                                    Strain strain = new Strain(Symptoms.all(), new HashSet<>(List.of(EntityType.PLAYER, EntityType.CAT)), 1, 1, 1, 1);
+                                    Strain strain = Strain.random(randomSource);
                                     return infect(entities, strain, context); // Return a success code
                                 })))
                 .then(Commands.literal("stats")

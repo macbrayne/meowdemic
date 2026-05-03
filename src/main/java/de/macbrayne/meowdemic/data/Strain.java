@@ -11,6 +11,7 @@ import net.minecraft.world.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public record Strain(String name, HashSet<Symptoms> symptoms, HashSet<EntityType<?>> targets, double incubationFactor, double transmissionFactor,
                      double recoveryFactor, double immunityFactor) {
@@ -31,6 +32,17 @@ public record Strain(String name, HashSet<Symptoms> symptoms, HashSet<EntityType
 
     public Strain(HashSet<Symptoms> symptoms, HashSet<EntityType<?>> targets, double incubationFactor, double transmissionFactor, double recoveryFactor, double immunityFactor) {
         this(generateName(), symptoms, targets, incubationFactor, transmissionFactor, recoveryFactor, immunityFactor);
+    }
+
+    public static Strain random(RandomSource randomSource) {
+        return new Strain(generateName(), new HashSet<>(List.of(Symptoms.MEOW_AND_PURR)), defaultEntitySet(), randomSource.nextGaussian() * 0.25 + 1,
+                randomSource.nextGaussian() * 0.25 + 0.5, randomSource.nextGaussian() * 0.25 + 1,
+                randomSource.nextGaussian() * 0.25 + 1);
+    }
+
+    public static HashSet<EntityType<?>> defaultEntitySet() {
+        return new HashSet<>(List.of(EntityType.CAT, EntityType.PLAYER,
+                EntityType.ZOMBIE, EntityType.DROWNED));
     }
 
     public Strain addSymptom(Symptoms newSymptom) {

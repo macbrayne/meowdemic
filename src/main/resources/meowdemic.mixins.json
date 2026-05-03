@@ -3,6 +3,7 @@
   "package": "de.macbrayne.meowdemic.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
+    "CatMixin",
     "LivingEntityMixin",
     "MsgMixin",
     "ShapedRecipeMixin",
