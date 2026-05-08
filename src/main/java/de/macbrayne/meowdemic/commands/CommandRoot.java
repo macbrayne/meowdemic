@@ -86,8 +86,29 @@ public class CommandRoot {
                                     return Command.SINGLE_SUCCESS;
                                 })
                         ))
-                        .then(Commands.literal("global").requires(Permissions.require("meowdemic.meowdemic.stats.global", PermissionLevel.GAMEMASTERS)).then(
-                                Commands.literal("reset").requires(Permissions.require("meowdemic.meowdemic.stats.reset", PermissionLevel.ADMINS)).executes(context -> {
+                        .then(Commands.literal("global").requires(Permissions.require("meowdemic.meowdemic.stats.global", PermissionLevel.GAMEMASTERS))
+                                .then(Commands.literal("get").requires(Permissions.require("meowdemic.meowdemic.stats.global.get", PermissionLevel.GAMEMASTERS))
+                                        .then(Commands.literal("currentlyInfected").requires(Permissions.require("meowdemic.meowdemic.stats.global.get.currentlyInfected", PermissionLevel.GAMEMASTERS)).executes(context -> {
+                                            int currentlyInfected = ServerStatsAttachment.get(context.getSource().getLevel()).getCurrentlyInfected();
+                                            context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats.global.currently_infected", currentlyInfected), false);
+                                            return currentlyInfected;
+                                        }))
+                                        .then(Commands.literal("totalInfected").requires(Permissions.require("meowdemic.meowdemic.stats.global.get.totalInfected", PermissionLevel.GAMEMASTERS)).executes(context -> {
+                                            int totalInfected = ServerStatsAttachment.get(context.getSource().getLevel()).getTotalInfected();
+                                            context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats.global.totalInfected", totalInfected), false);
+                                            return totalInfected;
+                                        }))
+                                        .then(Commands.literal("speciesBarriersCrossed").requires(Permissions.require("meowdemic.meowdemic.stats.global.get.speciesBarriersCrossed", PermissionLevel.GAMEMASTERS)).executes(context -> {
+                                            int speciesBarriersCrossed = ServerStatsAttachment.get(context.getSource().getLevel()).getSpeciesBarriersCrossed();
+                                            context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats.global.species_barriers_crossed", speciesBarriersCrossed), false);
+                                            return speciesBarriersCrossed;
+                                        }))
+                                        .then(Commands.literal("strainsCreated").requires(Permissions.require("meowdemic.meowdemic.stats.global.get.strainsCreated", PermissionLevel.GAMEMASTERS)).executes(context -> {
+                                            int strainsCreated = ServerStatsAttachment.get(context.getSource().getLevel()).getStrainsCreated();
+                                            context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats.global.strains_created", strainsCreated), false);
+                                            return strainsCreated;
+                                        })))
+                                .then(Commands.literal("reset").requires(Permissions.require("meowdemic.meowdemic.stats.reset", PermissionLevel.ADMINS)).executes(context -> {
                                             boolean reset = ServerStatsAttachment.get(context.getSource().getLevel()).reset();
                                             if (!reset) {
                                                 context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats.reset.confirm"), false);

@@ -63,11 +63,17 @@ public class UpgradeGachaScreen extends Screen {
                 .text(Component.translatable("gui.meowdemic.upgrade_gui.current.title", attachment.strain().name()))
                 .padding(0, 0, 4, 0)
                 .build();
+
+        String incubationFactor = String.format("%.2f", attachment.strain().incubationFactor());
+        String recoveryFactor = String.format("%.2f", attachment.strain().recoveryFactor());
+        String immunityFactor = String.format("%.2f", attachment.strain().immunityFactor());
+        String transmissionFactor = String.format("%.2f", attachment.strain().transmissionFactor());
+
         Paragraph description = Paragraph.builder()
-                .text(Component.translatable("gui.meowdemic.upgrade_gui.current.list", Component.translatable("gui.meowdemic.upgrade_gui.incubation", attachment.strain().incubationFactor()),
-                        Component.translatable("gui.meowdemic.upgrade_gui.immunity", attachment.strain().immunityFactor()),
-                        Component.translatable("gui.meowdemic.upgrade_gui.recovery", attachment.strain().recoveryFactor()),
-                        Component.translatable("gui.meowdemic.upgrade_gui.transmission", attachment.strain().transmissionFactor())))
+                .text(Component.translatable("gui.meowdemic.upgrade_gui.current.list", Component.translatable("gui.meowdemic.upgrade_gui.incubation", incubationFactor),
+                        Component.translatable("gui.meowdemic.upgrade_gui.immunity", immunityFactor),
+                        Component.translatable("gui.meowdemic.upgrade_gui.recovery", recoveryFactor),
+                        Component.translatable("gui.meowdemic.upgrade_gui.transmission", transmissionFactor)))
                 .width(true)
                 .height(true)
                 .build();
