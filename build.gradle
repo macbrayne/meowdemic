@@ -45,6 +45,7 @@ dependencies {
 	implementation "maven.modrinth:styled-chat:2.12.0-pre.1+26.1"
 	implementation include("eu.pb4:placeholder-api:3.0.0-beta.2+26.1")
 	implementation include("dev.chailotl:bento-gui:${project.bento_gui_version}")
+	implementation include('me.lucko:fabric-permissions-api:0.7.0')
 }
 
 fabricApi {

@@ -14,6 +14,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
@@ -26,23 +27,6 @@ public class MeowdemicClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ModelLayers.registerModelLayers();
-
-        ClientPlayNetworking.registerGlobalReceiver(ClientboundGachaResponsePacket.TYPE, (payload, context) -> {
-            if(context.client().screen instanceof UpgradeGachaScreen gacha) {
-                context.client().setScreen(new GachaPullScreen(payload.upgrade()));
-            }
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(ClientBoundToastRequestPacket.TYPE, (payload, context) -> {
-            Optional<TransmissionEvent> event = TransmissionAttachment.get(context.player()).getOptional();
-            PlayerStatsAttachment.PlayerStatsData playerStats = PlayerStatsAttachment.get(context.player());
-            if (event.isPresent()) {
-                int nrOfPulls = playerStats.numberOfPullsAffordable();
-                context.client().getToastManager().addToast(
-                        SystemToast.multiline(context.client(), new SystemToast.SystemToastId(), Component.translatable("gui.meowdemic.upgrades.immunity_rate", nrOfPulls), Component.translatable("gui.meowdemic.upgrades.immunity_rate.description"))
-                );
-            }
-        });
 
         KeyMapping.Category CATEGORY = KeyMapping.Category.register(
                 Identifier.fromNamespaceAndPath(Meowdemic.MOD_ID, "gacha")
@@ -61,6 +45,23 @@ public class MeowdemicClient implements ClientModInitializer {
                 if (client.player != null && TransmissionAttachment.get(client.player).getOptional().isPresent()) {
                     client.setScreen(new UpgradeGachaScreen());
                 }
+            }
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(ClientboundGachaResponsePacket.TYPE, (payload, context) -> {
+            if(context.client().screen instanceof UpgradeGachaScreen gacha) {
+                context.client().setScreen(new GachaPullScreen(payload.upgrade()));
+            }
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(ClientBoundToastRequestPacket.TYPE, (payload, context) -> {
+            Optional<TransmissionEvent> event = TransmissionAttachment.get(context.player()).getOptional();
+            PlayerStatsAttachment.PlayerStatsData playerStats = PlayerStatsAttachment.get(context.player());
+            if (event.isPresent()) {
+                int nrOfPulls = playerStats.numberOfPullsAffordable();
+                context.client().getToastManager().addToast(
+                        SystemToast.multiline(context.client(), new SystemToast.SystemToastId(), Component.translatable("toast.meowdemic.new_pulls", nrOfPulls), Component.translatable("toast.meowdemic.new_pulls.description", Component.keybind("key.meowdemic.open_gacha").withStyle(ChatFormatting.BOLD)))
+                );
             }
         });
     }

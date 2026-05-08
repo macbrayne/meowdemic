@@ -6,6 +6,7 @@ import de.macbrayne.meowdemic.events.MessageEvents;
 import de.macbrayne.meowdemic.network.ClientBoundToastRequestPacket;
 import de.macbrayne.meowdemic.network.ClientboundGachaResponsePacket;
 import de.macbrayne.meowdemic.network.ServerboundGachaRequestPacket;
+import de.macbrayne.meowdemic.world.Statistics;
 import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
@@ -16,7 +17,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.SharedConstants;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import org.slf4j.Logger;
@@ -32,18 +32,18 @@ public class Meowdemic implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		SharedConstants.IS_RUNNING_IN_IDE = true;
 		ConfigHelper.ensureConfigExists();
 		CommandRegistrationCallback.EVENT.register(CommandRoot::register);
 		StyledChatEvents.MESSAGE_CONTENT.register(MessageEvents::register);
 		Attachments.init();
 		MeowdemicEffects.init();
 		MeowdemicItems.init();
+		Statistics.init();
 		PayloadTypeRegistry.clientboundPlay().register(ClientboundGachaResponsePacket.TYPE, ClientboundGachaResponsePacket.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(ServerboundGachaRequestPacket.TYPE, ServerboundGachaRequestPacket.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(ClientBoundToastRequestPacket.TYPE, ClientBoundToastRequestPacket.CODEC);
 
-		ServerPlayNetworking.registerGlobalReceiver(ServerboundGachaRequestPacket.TYPE, (payload, context) -> {
+		ServerPlayNetworking.registerGlobalReceiver(ServerboundGachaRequestPacket.TYPE, (_, context) -> {
 			RandomSource random = context.player().getRandom();
             Optional<TransmissionEvent> event = TransmissionAttachment.get(context.player()).getOptional();
             PlayerStatsAttachment.PlayerStatsData stats = PlayerStatsAttachment.get(context.player());

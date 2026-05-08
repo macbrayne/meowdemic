@@ -49,9 +49,10 @@ public class GachaResultScreen extends Screen {
         root.addChild(body);
         root.addChild(footer);
 
-        body.addChild(Label.builder()
+        body.addChild(Paragraph.builder()
                 .text(Component.translatable("gui.meowdemic.gacha_result.congrats"))
                 .width(true)
+                .height(true)
                 .build());
         body.addChild(Image.builder()
                 .image(Meowdemic.id("textures/gui/upgrades/" + upgrade.getSerializedName() + ".png"))

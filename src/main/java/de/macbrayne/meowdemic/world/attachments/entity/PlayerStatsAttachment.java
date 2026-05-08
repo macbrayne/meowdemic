@@ -1,7 +1,10 @@
 package de.macbrayne.meowdemic.world.attachments.entity;
 
 import de.macbrayne.meowdemic.data.PullHistoryEvent;
+import de.macbrayne.meowdemic.network.ClientBoundToastRequestPacket;
 import de.macbrayne.meowdemic.world.attachments.Attachments;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayDeque;
@@ -19,6 +22,10 @@ public class PlayerStatsAttachment {
         public void addEntitiesInfected(int amount) {
             target.getAttachedOrCreate(Attachments.PlayerStats.ENTITIES_INFECTED);
             target.modifyAttached(Attachments.PlayerStats.ENTITIES_INFECTED, integer -> integer + amount);
+            if ((getPoints() % 160 == 0 || amount > 5) && target instanceof ServerPlayer serverPlayer) {
+                ClientBoundToastRequestPacket payload = new ClientBoundToastRequestPacket();
+                ServerPlayNetworking.send(serverPlayer, payload);
+            }
         }
 
         public int getTimesCured() {

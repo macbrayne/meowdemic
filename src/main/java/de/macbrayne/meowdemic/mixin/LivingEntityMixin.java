@@ -22,6 +22,7 @@ import net.minecraft.world.entity.animal.feline.CatSoundVariants;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.waypoints.WaypointTransmitter;
+import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -34,6 +35,8 @@ import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements Attackable, WaypointTransmitter {
+    @Unique
+    private static final Logger LOGGER = Meowdemic.LOGGER;
     @Shadow
     public abstract boolean isAlive();
 
@@ -63,7 +66,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
         if (symptoms.contains(Symptoms.MEOW_AND_PURR) && this.random.nextInt((int) (500 * modifier)) <= this.meowdemic$spreadTime) {
             meowdemic$resetSpreadTime();
             // Spread to nearby entities
-            System.out.println("Attempting to spread from " + entity.getName().getString());
+            LOGGER.debug("Attempting to spread from {}", entity.getName().getString());
             if (!entity.level().isClientSide()) {
                 SpreadUtil.spreadEyeSight(entity, strain);
             }
@@ -73,7 +76,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
         if (symptoms.contains(Symptoms.MEOW_AND_PURR) && this.random.nextInt((int) (500 * modifier)) <= this.meowdemic$spreadTime) {
             meowdemic$resetSpreadTime();
 
-            System.out.println("Attempting to spread radius from " + entity.getName().getString());
+            LOGGER.debug("Attempting to spread radius from {}", entity.getName().getString());
             if (!entity.level().isClientSide()) {
                 SpreadUtil.spreadProximity(entity, strain);
             }
@@ -81,7 +84,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
         }
 
         if (symptoms.contains(Symptoms.FOOD) && this.random.nextInt((int) (500 * modifier)) <= this.meowdemic$spreadTime) {
-            System.out.println("Attempting to infect food from " + entity.getName().getString());
+            LOGGER.debug("Attempting to infect food from {}", entity.getName().getString());
             if(!level().isClientSide() && entity.getMainHandItem().has(DataComponents.CONSUMABLE)) {
                 Consumable oldConsumable = entity.getMainHandItem().get(DataComponents.CONSUMABLE);
                 Consumable consumable = MeowdemicItems.modifyConsumableEffect(oldConsumable, AffectionConsumeEffect.infect(Optional.of(this.getUUID()), strain));

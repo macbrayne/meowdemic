@@ -28,7 +28,7 @@
   "tooltip.meowdemic.vaccine_strain": "Vaccinates against:",
 
   "toast.meowdemic.new_pulls": "You have %s pulls available!",
-  "toast.meowdemic.new_pulls.description": "Press <%s> to open the upgrade menu.",
+  "toast.meowdemic.new_pulls.description": "Press %s to open the upgrade menu.",
 
   "gui.meowdemic.upgrade_gui.title": "Upgrades",
   "gui.meowdemic.upgrade_gui.points": "%s Meowogems",
@@ -67,6 +67,9 @@
   "gui.meowdemic.upgrades.symptom_chat.description": "Allows you to spread your strain to people you are chatting with.",
   "gui.meowdemic.upgrades.symptom_cat_ears": "Symptom: Cat Ears",
   "gui.meowdemic.upgrades.symptom_cat_ears.description": "Grants you the power of cat ears! :3",
+  "gui.meowdemic.gacha_pull.title": "Pulling...",
   "gui.meowdemic.gacha_result.title": "Result",
-  "gui.meowdemic.gacha_result.congrats": "Congratulations! You spent Meowogems and got the following incredible breathtaking upgrade:"
+  "gui.meowdemic.gacha_result.congrats": "Congratulations! You spent Meowogems and got the following incredible breathtaking upgrade:",
+  "gui.meowdemic.upgrade_gui.player_stats.title": "Your Stats",
+  "gui.meowdemic.upgrade_gui.player_stats.description": "You've infected %s creatures\nYou've had the illness %s times"
 }

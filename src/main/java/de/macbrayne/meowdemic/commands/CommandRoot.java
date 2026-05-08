@@ -18,12 +18,14 @@ import de.macbrayne.meowdemic.world.attachments.entity.IncubationAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import it.unimi.dsi.fastutil.floats.Float2ObjectFunction;
+import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,7 +37,9 @@ import java.util.Optional;
 public class CommandRoot {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment) {
         dispatcher.register(Commands.literal("meowdemic")
+                .requires(Permissions.require("meowdemic.meowdemic", PermissionLevel.GAMEMASTERS))
                 .then(Commands.literal("infect")
+                        .requires(Permissions.require("meowdemic.meowdemic.infect", PermissionLevel.GAMEMASTERS))
                         .then(Commands.argument("entities", EntityArgument.entities())
                                 .then(Commands.argument("incubationFactor", FloatArgumentType.floatArg(0.1f, 10f))
                                         .then(Commands.argument("transmissionFactor", FloatArgumentType.floatArg(0.1f, 10f))
@@ -70,7 +74,9 @@ public class CommandRoot {
                                     return infect(entities, strain, context); // Return a success code
                                 })))
                 .then(Commands.literal("stats")
-                        .then(Commands.literal("player").then(
+                        .requires(Permissions.require("meowdemic.meowdemic.stats", PermissionLevel.GAMEMASTERS))
+                        .then(Commands.literal("player").requires(Permissions.require("meowdemic.meowdemic.stats.player", PermissionLevel.GAMEMASTERS))
+                                .then(
                                 Commands.argument("player", EntityArgument.player()).executes(context -> {
                                     ServerPlayer target = EntityArgument.getPlayer(context, "player");
                                     int timesInfected = PlayerStatsAttachment.get(target).getEntitiesInfected();
@@ -80,8 +86,8 @@ public class CommandRoot {
                                     return Command.SINGLE_SUCCESS;
                                 })
                         ))
-                        .then(Commands.literal("global").then(
-                                Commands.literal("reset").executes(context -> {
+                        .then(Commands.literal("global").requires(Permissions.require("meowdemic.meowdemic.stats.global", PermissionLevel.GAMEMASTERS)).then(
+                                Commands.literal("reset").requires(Permissions.require("meowdemic.meowdemic.stats.reset", PermissionLevel.ADMINS)).executes(context -> {
                                             boolean reset = ServerStatsAttachment.get(context.getSource().getLevel()).reset();
                                             if (!reset) {
                                                 context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats.reset.confirm"), false);
@@ -103,21 +109,25 @@ public class CommandRoot {
                             return Command.SINGLE_SUCCESS;
                         })))
                 .then(Commands.literal("cure")
+                        .requires(Permissions.require("meowdemic.meowdemic.cure", PermissionLevel.GAMEMASTERS))
                         .then(Commands.argument("entities", EntityArgument.entities())
                                 .executes(context -> {
                                     return cure(EntityArgument.getEntities(context, "entities"));
                                 })))
-                .then(Commands.literal("reload")
-                        .executes(context -> {
-                            Meowdemic.reloadConfig();
-                            return Command.SINGLE_SUCCESS;
-                        }))
                 .then(getConfig()));
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> getConfig() {
         return Commands.literal("config")
+                .requires(Permissions.require("meowdemic.meowdemic.config", PermissionLevel.ADMINS))
+                .then(Commands.literal("reload")
+                        .requires(Permissions.require("meowdemic.meowdemic.reload", PermissionLevel.ADMINS))
+                        .executes(context -> {
+                            Meowdemic.reloadConfig();
+                            return Command.SINGLE_SUCCESS;
+                        }))
                 .then(Commands.literal("get")
+                        .requires(Permissions.require("meowdemic.meowdemic.config.get", PermissionLevel.ADMINS))
                         .executes(context -> {
                             Config config = Meowdemic.getConfig();
                             String incubationTimeMultiplier = String.format("%.2f", config.incubationTimeMultiplier());
@@ -132,6 +142,7 @@ public class CommandRoot {
                             return Command.SINGLE_SUCCESS;
                         }))
                 .then(Commands.literal("set")
+                        .requires(Permissions.require("meowdemic.meowdemic.config.set", PermissionLevel.ADMINS))
                         .then(Commands.literal("incubationTimeMultiplier")
                                 .then(Commands.argument("value", FloatArgumentType.floatArg(0.1f, 10f))
                                         .executes(context ->

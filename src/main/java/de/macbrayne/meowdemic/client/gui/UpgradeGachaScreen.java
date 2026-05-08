@@ -59,11 +59,6 @@ public class UpgradeGachaScreen extends Screen {
         root.addChild(footer);
 
         // Add elements to body
-        /*Image image = Image.builder()
-                .image(Meowdemic.id("textures/gui/upgrades/cat_ears.png"))
-                .dimensions(16, 16)
-                .build();*/
-
         Label upgradeTitle = Label.builder()
                 .text(Component.translatable("gui.meowdemic.upgrade_gui.current.title", attachment.strain().name()))
                 .padding(0, 0, 4, 0)
@@ -77,9 +72,21 @@ public class UpgradeGachaScreen extends Screen {
                 .height(true)
                 .build();
 
-        //body.addChild(image);
+        Label playerStatsLabel = Label.builder()
+                .text(Component.translatable("gui.meowdemic.upgrade_gui.player_stats.title"))
+                .padding(0, 0, 4, 0)
+                .build();
+
+        Paragraph playerStatsDescription = Paragraph.builder()
+                .text(Component.translatable("gui.meowdemic.upgrade_gui.player_stats.description", playerStats.getEntitiesInfected(), playerStats.getTimesCured() + 1, playerStats.getPoints()))
+                .width(true)
+                .height(true)
+                .build();
+
         body.addChild(upgradeTitle);
         body.addChild(description);
+        body.addChild(playerStatsLabel);
+        body.addChild(playerStatsDescription);
 
         // Add elements to footer
         Button ratesButton = Button.builder()

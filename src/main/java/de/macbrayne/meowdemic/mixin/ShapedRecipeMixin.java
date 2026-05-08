@@ -3,6 +3,7 @@ package de.macbrayne.meowdemic.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.world.item.MeowdemicItems;
 import de.macbrayne.meowdemic.world.item.components.AffectionConsumeEffect;
 import de.macbrayne.meowdemic.world.item.components.StrainTooltipComponent;
@@ -13,11 +14,16 @@ import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ShapedRecipe.class)
 public class ShapedRecipeMixin {
+    @Unique
+    private static final Logger LOGGER = Meowdemic.LOGGER;
+
     @WrapOperation(method = "assemble(Lnet/minecraft/world/item/crafting/CraftingInput;)Lnet/minecraft/world/item/ItemStack;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStackTemplate;create()Lnet/minecraft/world/item/ItemStack;"))
     ItemStack injectVaccineRecipe(ItemStackTemplate instance, Operation<ItemStack> original, @Local(argsOnly = true) final CraftingInput input) {
         ItemStack result = original.call(instance);
@@ -28,7 +34,7 @@ public class ShapedRecipeMixin {
                 for(ConsumeEffect effect : item.get(DataComponents.CONSUMABLE).onConsumeEffects()) {
                     if(effect.getType() == MeowdemicItems.AFFECT) {
                         affected = (AffectionConsumeEffect) effect;
-                        System.out.println("Found affection effect in crafting input: " + affected);
+                        LOGGER.debug("Found affection effect in crafting input: {}", affected);
                         break;
                     }
                 }
@@ -41,7 +47,7 @@ public class ShapedRecipeMixin {
             affected = AffectionConsumeEffect.vaccinate(affected.strain());
         }
 
-        System.out.println("Post modify affect: " + affected);
+        LOGGER.debug("Post modify affect: {}", affected);
         if (result.has(DataComponents.CONSUMABLE)) {
             Consumable old = result.get(DataComponents.CONSUMABLE);
             Consumable newConsumable = MeowdemicItems.modifyConsumableEffect(old, affected);
@@ -52,7 +58,7 @@ public class ShapedRecipeMixin {
             result.set(MeowdemicItems.STRAIN_TOOLTIP, new StrainTooltipComponent());
         }
 
-        System.out.println("Result: " + result.getComponents());
+        LOGGER.debug("Result: {}", result.getComponents());
         return result;
     }
 }
