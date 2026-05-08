@@ -6,7 +6,6 @@ import de.macbrayne.meowdemic.events.MessageEvents;
 import de.macbrayne.meowdemic.network.ClientBoundToastRequestPacket;
 import de.macbrayne.meowdemic.network.ClientboundGachaResponsePacket;
 import de.macbrayne.meowdemic.network.ServerboundGachaRequestPacket;
-import de.macbrayne.meowdemic.world.Statistics;
 import de.macbrayne.meowdemic.world.attachments.Attachments;
 import de.macbrayne.meowdemic.world.attachments.entity.PlayerStatsAttachment;
 import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
@@ -38,7 +37,6 @@ public class Meowdemic implements ModInitializer {
 		Attachments.init();
 		MeowdemicEffects.init();
 		MeowdemicItems.init();
-		Statistics.init();
 		PayloadTypeRegistry.clientboundPlay().register(ClientboundGachaResponsePacket.TYPE, ClientboundGachaResponsePacket.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(ServerboundGachaRequestPacket.TYPE, ServerboundGachaRequestPacket.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(ClientBoundToastRequestPacket.TYPE, ClientBoundToastRequestPacket.CODEC);
