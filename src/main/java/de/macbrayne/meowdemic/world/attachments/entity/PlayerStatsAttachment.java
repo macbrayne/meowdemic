@@ -71,7 +71,7 @@ public class PlayerStatsAttachment {
             target.getAttachedOrCreate(Attachments.PlayerStats.PULL_HISTORY);
             target.modifyAttached(Attachments.PlayerStats.PULL_HISTORY, list -> {
                 ArrayDeque<PullHistoryEvent> result = new ArrayDeque<>(list);
-                if(result.size() >= 10) result.removeFirst();
+                if (result.size() >= 10) result.removeFirst();
                 result.add(event);
                 return result;
             });

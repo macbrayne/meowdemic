@@ -7,7 +7,8 @@ public class MeowdemicDatagen implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-        pack.addProvider(MeowdemicTagProvider::new);
+        pack.addProvider(MeowdemicItemTagProvider::new);
+        pack.addProvider(MeowdemicEntityTypeTagProvider::new);
         pack.addProvider(MeowdemicRecipeProvider::new);
     }
 }

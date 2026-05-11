@@ -26,7 +26,7 @@ public class MeowdemicRecipeProvider extends FabricRecipeProvider {
             @Override
             public void buildRecipes() {
                 HolderLookup.RegistryLookup<Item> itemLookup = registries.lookupOrThrow(Registries.ITEM);
-                Ingredient foodAndDrinks = Ingredient.of(itemLookup.getOrThrow(MeowdemicTagProvider.INFECTABLE));
+                Ingredient foodAndDrinks = Ingredient.of(itemLookup.getOrThrow(MeowdemicItemTagProvider.INFECTABLE));
 
                 shaped(RecipeCategory.MISC, MeowdemicItems.SWAB, 16)
                         .pattern("  w")

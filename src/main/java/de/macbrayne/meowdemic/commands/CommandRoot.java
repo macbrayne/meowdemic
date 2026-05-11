@@ -213,7 +213,7 @@ public class CommandRoot {
     private static int infect(Collection<? extends Entity> entities, Strain strain, CommandContext<CommandSourceStack> context) {
         int infectedCount = 0;
         for (Entity entity : entities) {
-            if (entity instanceof LivingEntity livingEntity && IncubationAttachment.get(livingEntity).tryIncubate(new TransmissionEvent(Optional.empty(), livingEntity.getUUID(), strain))) {
+            if (entity instanceof LivingEntity livingEntity && IncubationAttachment.get(livingEntity).forceIncubate(new TransmissionEvent(Optional.empty(), livingEntity.getUUID(), strain))) {
                 infectedCount++;
             }
         }

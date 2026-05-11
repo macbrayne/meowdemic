@@ -11,10 +11,10 @@ import net.minecraft.world.item.Item;
 
 import java.util.concurrent.CompletableFuture;
 
-public class MeowdemicTagProvider extends FabricTagsProvider.ItemTagsProvider {
+public class MeowdemicItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
     public static final TagKey<Item> INFECTABLE = TagKey.create(Registries.ITEM, Meowdemic.id("infectable"));
 
-    public MeowdemicTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registryLookupFuture) {
+    public MeowdemicItemTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registryLookupFuture) {
         super(output, registryLookupFuture);
     }
 

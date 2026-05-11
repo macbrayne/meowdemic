@@ -2,6 +2,8 @@ package de.macbrayne.meowdemic.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.macbrayne.meowdemic.datagen.MeowdemicEntityTypeTagProvider;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -12,6 +14,7 @@ import net.minecraft.world.entity.EntityType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record Strain(String name, HashSet<Symptoms> symptoms, HashSet<EntityType<?>> targets, double incubationFactor, double transmissionFactor,
                      double recoveryFactor, double immunityFactor) {
@@ -41,8 +44,8 @@ public record Strain(String name, HashSet<Symptoms> symptoms, HashSet<EntityType
     }
 
     public static HashSet<EntityType<?>> defaultEntitySet() {
-        return new HashSet<>(List.of(EntityType.CAT, EntityType.PLAYER,
-                EntityType.ZOMBIE, EntityType.DROWNED));
+        return BuiltInRegistries.ENTITY_TYPE.get(MeowdemicEntityTypeTagProvider.DISEASE_SPREADS_TO)
+                    .stream().flatMap(holders -> holders.stream().map(Holder::value)).collect(Collectors.toCollection(HashSet::new));
     }
 
     public Strain addSymptom(Symptoms newSymptom) {

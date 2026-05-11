@@ -36,6 +36,7 @@ public class SpreadUtil {
                 }
             }
         }
+        if (infectedCount == 0) return;
         ServerStatsAttachment.get((ServerLevel) entity.level()).addCurrentlyInfected(infectedCount);
         PlayerStatsAttachment.get(entity).addEntitiesInfected(infectedCount);
         ServerStatsAttachment.get((ServerLevel) entity.level()).addSpeciesBarriersCrossed(speciesCount.size());
@@ -56,6 +57,7 @@ public class SpreadUtil {
                 }
             }
         }
+        if (infectedCount == 0) return;
         ServerStatsAttachment.get((ServerLevel) entity.level()).addCurrentlyInfected(infectedCount);
         ServerStatsAttachment.get((ServerLevel) entity.level()).addSpeciesBarriersCrossed(speciesCount.size());
         PlayerStatsAttachment.get(entity).addEntitiesInfected(infectedCount);
