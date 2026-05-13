@@ -93,6 +93,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
                 entity.getMainHandItem().set(MeowdemicItems.STRAIN_TOOLTIP, new StrainTooltipComponent());
                 meowdemic$resetSpreadTime();
             }
+            this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().begForFoodSound().value());
         }
     }
 
