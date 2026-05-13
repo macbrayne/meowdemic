@@ -139,7 +139,7 @@ public class CommandRoot {
                         .requires(Permissions.require("meowdemic.meowdemic.cure", PermissionLevel.GAMEMASTERS))
                         .then(Commands.argument("entities", EntityArgument.entities())
                                 .executes(context -> {
-                                    return cure(EntityArgument.getEntities(context, "entities"));
+                                    return cure(EntityArgument.getEntities(context, "entities"), context);
                                 })))
                 .then(getConfig()));
     }
@@ -227,16 +227,19 @@ public class CommandRoot {
         return infectedCount;
     }
 
-    private static int cure(Collection<? extends Entity> entities) {
+    private static int cure(Collection<? extends Entity> entities, CommandContext<CommandSourceStack> context) {
         int curedCount = 0;
         for (Entity entity : entities) {
             if (entity instanceof LivingEntity livingEntity) {
+                if(IncubationAttachment.get(livingEntity).getOptional().isPresent() || TransmissionAttachment.get(livingEntity).getOptional().isPresent()) {
+                    curedCount++;
+                }
                 IncubationAttachment.get(livingEntity).remove();
                 TransmissionAttachment.get(livingEntity).remove();
                 ImmunityAttachment.get(livingEntity).remove();
-                curedCount++;
             }
         }
+        ServerStatsAttachment.get(context.getSource().getLevel()).removeCurrentlyInfected(curedCount);
         return curedCount;
     }
 
