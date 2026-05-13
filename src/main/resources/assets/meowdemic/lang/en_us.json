@@ -8,6 +8,7 @@
   "commands.meowdemic.meowdemic.stats.reset.confirm": "Reset server stats? This cannot be undone! Rerun /meowdemic stats reset to confirm.",
   "commands.meowdemic.meowdemic.stats.reset": "Reset server stats.",
   "commands.meowdemic.meowdemic.infect.invalid_symptom": "Symptoms have to be comma separated (sorry for the incomplete brigadier support)",
+  "commands.meowdemic.meowdemic.infect.invalid_entity_type": "EntityTypes have to be comma separated (sorry for the incomplete brigadier support)",
 
   "commands.meowdemic.meowdemic.config.get": "Incubation time: %sx, Recovery time %sx, Immunity time %sx, Radius: %sx, Vaccination duration: %sx, Food duration: %sx",
   "commands.meowdemic.meowdemic.config.set": "Set %s to %s",

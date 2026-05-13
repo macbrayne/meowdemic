@@ -7,6 +7,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.macbrayne.meowdemic.Meowdemic;
 import de.macbrayne.meowdemic.data.Config;
 import de.macbrayne.meowdemic.data.Strain;
@@ -22,12 +23,16 @@ import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Collection;
@@ -45,27 +50,28 @@ public class CommandRoot {
                                         .then(Commands.argument("transmissionFactor", FloatArgumentType.floatArg(0.1f, 10f))
                                                 .then(Commands.argument("recoveryFactor", FloatArgumentType.floatArg(0.1f, 10f))
                                                         .then(Commands.argument("immunityFactor", FloatArgumentType.floatArg(0.1f, 10f))
-                                                                .then(Commands.argument("symptoms", StringArgumentType.greedyString())
+                                                                .then(Commands.argument("symptoms", StringArgumentType.string())
+                                                                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(Symptoms.IDS, builder))
+                                                                        .then(Commands.argument("targets", StringArgumentType.string())
+                                                                                .executes(context -> {
+                                                                                    String symptomsInput = StringArgumentType.getString(context, "targets");
+                                                                                    if(symptomsInput.isEmpty()) {
+                                                                                        return infect(context, new HashSet<>());
+                                                                                    }
+                                                                                    String[] targetsArray = symptomsInput.split(",");
+                                                                                    HashSet<EntityType<?>> entityTypes = new HashSet<>();
+                                                                                    for (String entityType : targetsArray) {
+                                                                                        try {
+                                                                                            entityTypes.add(BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(entityType)));
+                                                                                        } catch (IllegalArgumentException e) {
+                                                                                            context.getSource().sendFailure(Component.translatable("commands.meowdemic.meowdemic.infect.invalid_symptom", entityType));
+                                                                                            return 0; // Return 0 to indicate failure
+                                                                                        }
+                                                                                    }
+                                                                                    return infect(context, entityTypes);
+                                                                                }))
                                                                         .executes(context -> {
-                                                                            Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
-                                                                            float incubationFactor = FloatArgumentType.getFloat(context, "incubationFactor");
-                                                                            float transmissionFactor = FloatArgumentType.getFloat(context, "transmissionFactor");
-                                                                            float recoveryFactor = FloatArgumentType.getFloat(context, "recoveryFactor");
-                                                                            float immunityFactor = FloatArgumentType.getFloat(context, "immunityFactor");
-                                                                            String symptomsInput = StringArgumentType.getString(context, "symptoms");
-                                                                            String[] symptomsArray = symptomsInput.split(",");
-                                                                            HashSet<Symptoms> symptomsList = new HashSet<>();
-                                                                            for (String symptomName : symptomsArray) {
-                                                                                try {
-                                                                                    Symptoms symptom = Symptoms.valueOf(symptomName.trim().toUpperCase());
-                                                                                    symptomsList.add(symptom);
-                                                                                } catch (IllegalArgumentException e) {
-                                                                                    context.getSource().sendFailure(Component.translatable("commands.meowdemic.meowdemic.infect.invalid_symptom", symptomName));
-                                                                                    return 0; // Return 0 to indicate failure
-                                                                                }
-                                                                            }
-                                                                            Strain strain = new Strain(symptomsList, Strain.defaultEntitySet(), incubationFactor, transmissionFactor, recoveryFactor, immunityFactor);
-                                                                            return infect(entities, strain, context);
+                                                                            return infect(context, Strain.defaultEntitySet());
                                                                         }))))))
                                 .executes(context -> {
                                     RandomSource randomSource = RandomSource.create();
@@ -232,5 +238,27 @@ public class CommandRoot {
             }
         }
         return curedCount;
+    }
+
+    private static int infect(CommandContext<CommandSourceStack> context, HashSet<EntityType<?>> entityTypes) throws CommandSyntaxException {
+        Collection<? extends Entity> entities = EntityArgument.getEntities(context, "entities");
+        float incubationFactor = FloatArgumentType.getFloat(context, "incubationFactor");
+        float transmissionFactor = FloatArgumentType.getFloat(context, "transmissionFactor");
+        float recoveryFactor = FloatArgumentType.getFloat(context, "recoveryFactor");
+        float immunityFactor = FloatArgumentType.getFloat(context, "immunityFactor");
+        String symptomsInput = StringArgumentType.getString(context, "symptoms");
+        String[] symptomsArray = symptomsInput.split(",");
+        HashSet<Symptoms> symptomsList = new HashSet<>();
+        for (String symptomName : symptomsArray) {
+            try {
+                Symptoms symptom = Symptoms.valueOf(symptomName.trim().toUpperCase());
+                symptomsList.add(symptom);
+            } catch (IllegalArgumentException e) {
+                context.getSource().sendFailure(Component.translatable("commands.meowdemic.meowdemic.infect.invalid_symptom", symptomName));
+                return 0; // Return 0 to indicate failure
+            }
+        }
+        Strain strain = new Strain(symptomsList, entityTypes, incubationFactor, transmissionFactor, recoveryFactor, immunityFactor);
+        return infect(entities, strain, context);
     }
 }

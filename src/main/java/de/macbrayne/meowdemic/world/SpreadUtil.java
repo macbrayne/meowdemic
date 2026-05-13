@@ -27,6 +27,9 @@ public class SpreadUtil {
         int infectedCount = 0;
         Set<EntityType<?>> speciesCount = new HashSet<>();
         for (EntityHitResult entityHitResult : hitResults) {
+            if (!strain.targets().isEmpty() && !strain.targets().contains(entity.typeHolder().value())) {
+                continue;
+            }
             if (entityHitResult.getType() == HitResult.Type.ENTITY) {
                 if (entityHitResult.getEntity() instanceof LivingEntity target && IncubationAttachment.get(target).tryIncubate(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
                     infectedCount++;
@@ -47,7 +50,7 @@ public class SpreadUtil {
         int infectedCount = 0;
         Set<EntityType<?>> speciesCount = new HashSet<>();
         for (Entity nearbyEntity : nearbyEntities) {
-            if (!strain.targets().contains(entity.typeHolder().value())) {
+            if (!strain.targets().isEmpty() && !strain.targets().contains(entity.typeHolder().value())) {
                 continue;
             }
             if (nearbyEntity instanceof LivingEntity target && IncubationAttachment.get(target).tryIncubate(new TransmissionEvent(Optional.of(entity.getUUID()), target.getUUID(), strain))) {
