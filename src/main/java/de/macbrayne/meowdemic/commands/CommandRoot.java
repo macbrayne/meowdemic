@@ -179,11 +179,11 @@ public class CommandRoot {
                         .then(Commands.literal("radiusMultiplier")
                                 .then(Commands.argument("value", FloatArgumentType.floatArg(0.1f, 10f))
                                         .executes(context ->
-                                                modifyFloatConfig(value -> Meowdemic.getConfig().withRadiusMultiplier(value), "radiusMultiplier", context))))
+                                                modifyFloatConfig(value -> Meowdemic.getConfig().withRadiusMultiplier(value), "transmissionRadiusMultiplier", context))))
                         .then(Commands.literal("vaccineMultiplier")
                                 .then(Commands.argument("value", FloatArgumentType.floatArg(0.1f))
                                         .executes(context ->
-                                                modifyFloatConfig(value -> Meowdemic.getConfig().withVaccineMultiplier(value), "vaccineMultiplier", context))))
+                                                modifyFloatConfig(value -> Meowdemic.getConfig().withVaccineMultiplier(value), "vaccineDurationMultiplier", context))))
                         .then(Commands.literal("foodSymptomDurationMultiplier")
                                 .then(Commands.argument("value", FloatArgumentType.floatArg(0.1f))
                                         .executes(context ->

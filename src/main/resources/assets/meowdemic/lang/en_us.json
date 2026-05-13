@@ -25,7 +25,7 @@
   "item.meowdemic.swab_sample": "Swab Sample",
 
   "tooltip.meowdemic.strain": ":3",
-  "tooltip.meowdemic.vaccine_strain": "Vaccinates against:",
+  "tooltip.meowdemic.vaccine_strain": "Vaccinates against: %s",
 
   "toast.meowdemic.new_pulls": "You have %s pulls available!",
   "toast.meowdemic.new_pulls.description": "Press %s to open the upgrade menu.",
