@@ -101,7 +101,7 @@ public class CommandRoot {
                                         }))
                                         .then(Commands.literal("totalInfected").requires(Permissions.require("meowdemic.meowdemic.stats.global.get.totalInfected", PermissionLevel.GAMEMASTERS)).executes(context -> {
                                             int totalInfected = ServerStatsAttachment.get(context.getSource().getLevel()).getTotalInfected();
-                                            context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats.global.totalInfected", totalInfected), false);
+                                            context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.stats.global.total_infected", totalInfected), false);
                                             return totalInfected;
                                         }))
                                         .then(Commands.literal("speciesBarriersCrossed").requires(Permissions.require("meowdemic.meowdemic.stats.global.get.speciesBarriersCrossed", PermissionLevel.GAMEMASTERS)).executes(context -> {

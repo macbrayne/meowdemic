@@ -10,6 +10,11 @@
   "commands.meowdemic.meowdemic.infect.invalid_symptom": "Symptoms have to be comma separated (sorry for the incomplete brigadier support)",
   "commands.meowdemic.meowdemic.infect.invalid_entity_type": "EntityTypes have to be comma separated (sorry for the incomplete brigadier support)",
 
+  "commands.meowdemic.meowdemic.stats.global.currently_infected": "Currently infected: %s",
+  "commands.meowdemic.meowdemic.stats.global.total_infected": "Total infected: %s",
+  "commands.meowdemic.meowdemic.stats.global.species_barriers_crossed": "Species barriers crossed: %s",
+  "commands.meowdemic.meowdemic.stats.global.strains_created": "Strains created: %s",
+
   "commands.meowdemic.meowdemic.config.get": "Incubation time: %sx, Recovery time %sx, Immunity time %sx, Radius: %sx, Vaccination duration: %sx, Food duration: %sx",
   "commands.meowdemic.meowdemic.config.set": "Set %s to %s",
   "commands.meowdemic.meowdemic.config.set.incubationTimeMultiplier": "incubation time multiplier",

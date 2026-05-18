@@ -1,8 +1,8 @@
 package de.macbrayne.meowdemic.events;
 
 
-import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import de.macbrayne.meowdemic.data.Symptoms;
+import de.macbrayne.meowdemic.world.attachments.entity.TransmissionAttachment;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.node.TextNode;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,12 +18,14 @@ public class MessageEvents {
     }
 
     private static String getVariant(LivingEntity entity) {
-        int random = entity.getRandom().nextInt(4);
+        int random = entity.getRandom().nextInt(5);
         String append = switch (random) {
-            case 1 -> "mew";
-            case 2 -> "nya";
-            case 3 -> "meowww";
-            default -> "meow";
+            case 1 -> " mew";
+            case 2 -> " nya";
+            case 3 -> " meowww";
+            case 4 -> " meoww!";
+            case 5 -> " nyaaa!";
+            default -> " meow";
         };
         if (entity.getRandom().nextBoolean()) {
             append += " :3";
