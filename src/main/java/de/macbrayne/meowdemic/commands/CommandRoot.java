@@ -224,6 +224,8 @@ public class CommandRoot {
             }
         }
         ServerStatsAttachment.get(context.getSource().getLevel()).addCurrentlyInfected(infectedCount);
+        int finalInfectedCount = infectedCount;
+        context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.infect.success", finalInfectedCount), false);
         return infectedCount;
     }
 
@@ -239,7 +241,8 @@ public class CommandRoot {
                 ImmunityAttachment.get(livingEntity).remove();
             }
         }
-        ServerStatsAttachment.get(context.getSource().getLevel()).removeCurrentlyInfected(curedCount);
+        int finalCuredCount = curedCount;
+        context.getSource().sendSuccess(() -> Component.translatable("commands.meowdemic.meowdemic.cure.success", finalCuredCount), false);
         return curedCount;
     }
 

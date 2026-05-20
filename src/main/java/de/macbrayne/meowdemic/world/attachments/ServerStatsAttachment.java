@@ -13,9 +13,9 @@ public class ServerStatsAttachment {
             return target.getAttachedOrCreate(Attachments.ServerStats.CURRENTLY_INFECTED);
         }
 
-        public void removeCurrentlyInfected(int amount) {
+        public void removeCurrentlyInfected() {
             target.getAttachedOrCreate(Attachments.ServerStats.CURRENTLY_INFECTED);
-            target.modifyAttached(Attachments.ServerStats.CURRENTLY_INFECTED, integer -> integer - amount);
+            target.modifyAttached(Attachments.ServerStats.CURRENTLY_INFECTED, integer -> integer - 1);
         }
 
         public void addCurrentlyInfected(int amount) {

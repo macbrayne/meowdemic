@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 public class MessageEvents {
     public static TextNode register(TextNode textNode, PlaceholderContext placeholderContext) {
         if (placeholderContext.entity() instanceof LivingEntity entity) {
-            if (TransmissionAttachment.get(entity).hasSymptom(Symptoms.CHAT)) {
+            if (TransmissionAttachment.get(entity).hasSymptom(Symptoms.CHAT) && entity.getRandom().nextFloat() < TransmissionAttachment.get(entity).getOptional().get().strain().transmissionFactor()) {
                 return TextNode.asSingle(textNode, TextNode.of(getVariant(entity)));
             }
         }
