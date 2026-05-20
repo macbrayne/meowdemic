@@ -83,7 +83,9 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
             this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().purrSound().value());
         }
 
-        if (symptoms.contains(Symptoms.FOOD) && this.random.nextInt((int) (500 * modifier)) <= this.meowdemic$spreadTime) {
+        if (symptoms.contains(Symptoms.FOOD) && this.random.nextInt((int) (500 * modifier)) <= this.meowdemic$spreadTime && entity.getMainHandItem().has(DataComponents.CONSUMABLE)) {
+            meowdemic$resetSpreadTime();
+
             LOGGER.debug("Attempting to infect food from {}", entity.getName().getString());
             if(!level().isClientSide() && entity.getMainHandItem().has(DataComponents.CONSUMABLE)) {
                 Consumable oldConsumable = entity.getMainHandItem().get(DataComponents.CONSUMABLE);
@@ -91,7 +93,6 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
                 if (consumable == null) return;
                 entity.getMainHandItem().set(DataComponents.CONSUMABLE, consumable);
                 entity.getMainHandItem().set(MeowdemicItems.STRAIN_TOOLTIP, new StrainTooltipComponent());
-                meowdemic$resetSpreadTime();
             }
             this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().begForFoodSound().value());
         }

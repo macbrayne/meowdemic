@@ -59,6 +59,6 @@ public record Config(float incubationTimeMultiplier, float recoveryTimeMultiplie
     }
 
     public static Config defaultConfig() {
-        return new Config(1.0f, 1.0f, 1.0f, 10.0f, 2.0f, 0.85f, 80, 1f);
+        return new Config(1.0f, 1.0f, 1.0f, 10.0f, 2.0f, 0.85f, 160, 1f);
     }
 }
