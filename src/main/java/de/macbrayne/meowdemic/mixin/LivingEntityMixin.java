@@ -100,6 +100,10 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
 
     @Inject(method = "remove", at = @At("HEAD"))
     public void meowdemic$onDeath(RemovalReason reason, CallbackInfo ci) {
+        if (this.level().isClientSide()) {
+            return;
+        }
+
         if ((reason == RemovalReason.DISCARDED || reason == RemovalReason.KILLED) && TransmissionAttachment.get((LivingEntity) (Object) this).getOptional().isPresent()) {
             ServerStatsAttachment.get((ServerLevel) this.level()).removeCurrentlyInfected();
         }
