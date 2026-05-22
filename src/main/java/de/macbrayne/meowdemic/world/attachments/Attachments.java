@@ -18,15 +18,12 @@ import java.util.ArrayDeque;
 public class Attachments {
     public static final Logger LOGGER = LoggerFactory.getLogger(Meowdemic.MOD_ID);
     public static final AttachmentType<Strain> IMMUNITY = AttachmentRegistry.create(Meowdemic.id("immunity"), builder -> builder
-            .persistent(Strain.CODEC)
-            .copyOnDeath());
+            .persistent(Strain.CODEC));
     public static final AttachmentType<TransmissionEvent> INCUBATION = AttachmentRegistry.create(Meowdemic.id("incubation"), builder -> builder
-            .persistent(TransmissionEvent.CODEC)
-            .copyOnDeath());
+            .persistent(TransmissionEvent.CODEC));
     public static final AttachmentType<TransmissionEvent> TRANSMISSION = AttachmentRegistry.create(Meowdemic.id("transmission"), builder -> builder
             .persistent(TransmissionEvent.CODEC)
-            .syncWith(TransmissionEvent.STREAM_CODEC, AttachmentSyncPredicate.targetOnly())
-            .copyOnDeath());
+            .syncWith(TransmissionEvent.STREAM_CODEC, AttachmentSyncPredicate.targetOnly()));
 
     public static class PlayerStats {
         public static final AttachmentType<Integer> ENTITIES_INFECTED = AttachmentRegistry.create(Meowdemic.id("entities_infected"), builder -> builder
