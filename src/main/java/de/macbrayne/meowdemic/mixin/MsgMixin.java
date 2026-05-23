@@ -21,11 +21,9 @@ public class MsgMixin {
     @Inject(method = "sendMessage(Lnet/minecraft/commands/CommandSourceStack;Ljava/util/Collection;Lnet/minecraft/network/chat/PlayerChatMessage;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;sendChatMessage(Lnet/minecraft/network/chat/OutgoingChatMessage;ZLnet/minecraft/network/chat/ChatType$Bound;)V"))
     private static void spreadMsg(CommandSourceStack source, Collection<ServerPlayer> players, PlayerChatMessage message, CallbackInfo ci, @Local(name = "player") ServerPlayer player) {
         Optional<TransmissionEvent> event = TransmissionAttachment.get(source.getPlayer()).getOptional();
-        if(source.getPlayer() != null && event.isPresent()) {
-            for (ServerPlayer target : players) {
-                if (target != source.getPlayer()) {
-                    IncubationAttachment.get(target).tryIncubate(event.get());
-                }
+        if(source.getPlayer() != null && player != null && event.isPresent()) {
+            if (player != source.getPlayer()) {
+                IncubationAttachment.get(target).tryIncubate(event.get());
             }
         }
     }
