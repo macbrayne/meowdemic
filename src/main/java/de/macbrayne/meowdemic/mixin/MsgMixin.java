@@ -23,7 +23,7 @@ public class MsgMixin {
         Optional<TransmissionEvent> event = TransmissionAttachment.get(source.getPlayer()).getOptional();
         if(source.getPlayer() != null && player != null && event.isPresent()) {
             if (player != source.getPlayer()) {
-                IncubationAttachment.get(target).tryIncubate(event.get());
+                IncubationAttachment.get(player).tryIncubate(event.get());
             }
         }
     }
