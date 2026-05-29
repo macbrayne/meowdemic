@@ -70,7 +70,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
             if (!entity.level().isClientSide()) {
                 SpreadUtil.spreadEyeSight(entity, strain);
             }
-            this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().ambientSound().value());
+            this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().ambientSound().value(), 0.5f, 1f);
         }
 
         if (symptoms.contains(Symptoms.MEOW_AND_PURR) && this.random.nextInt((int) (500 * modifier)) <= this.meowdemic$spreadTime) {
@@ -80,7 +80,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
             if (!entity.level().isClientSide()) {
                 SpreadUtil.spreadProximity(entity, strain);
             }
-            this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().purrSound().value());
+            this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().purrSound().value(), 0.5f, 1f);
         }
 
         if (symptoms.contains(Symptoms.FOOD) && this.random.nextInt((int) (500 * modifier)) <= this.meowdemic$spreadTime && entity.getMainHandItem().has(DataComponents.CONSUMABLE)) {
@@ -94,7 +94,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable, Wa
                 entity.getMainHandItem().set(DataComponents.CONSUMABLE, consumable);
                 entity.getMainHandItem().set(MeowdemicItems.STRAIN_TOOLTIP, new StrainTooltipComponent());
             }
-            this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().begForFoodSound().value());
+            this.playSound(SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds().begForFoodSound().value(), 0.5f, 1f);
         }
     }
 
